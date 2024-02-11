@@ -1,0 +1,173 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// TODO: make optional fields required
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model Company {
+  id Int       @id @default(autoincrement())
+  name String?
+  street String?
+  city String?
+  state String?
+  postcode String?
+  phone String?
+  logoUrl String
+  bankDetails String?
+  invoiceRemark String?
+  user User[]
+  invoice Invoice[]
+  customer Customer[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime? @updatedAt
+}
+
+
+model Invoice {
+  id Int       @id @default(autoincrement())
+  status Status @default(draft)
+  subtotal Decimal? @db.Decimal(10, 2)
+  discount Decimal? @db.Decimal(10, 2)
+  totalTax Decimal? @db.Decimal(10, 2)
+  totalAmount Decimal? @db.Decimal(10, 2)
+  invoiceUrl String?
+  issueDate DateTime?
+  dueDate DateTime?
+  user User? @relation(fields: [user_id], references: [id])
+  user_id Int?
+  customer Customer? @relation(fields: [customer_id], references: [id])
+  customer_id Int?
+  company Company? @relation(fields: [company_id], references: [id])
+  company_id Int?
+  items InvoiceItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime? @updatedAt
+
+  @@index([user_id])
+  @@index([customer_id])
+  @@index([company_id])
+}
+
+enum Status {
+ draft
+ submitted
+ approved
+ sent
+ paid
+}
+
+model InvoiceItem {
+  id Int       @id @default(autoincrement())
+  description String?
+  qty Int?
+  unitPrice Decimal? @db.Decimal(10, 2)
+  amount Decimal? @db.Decimal(10, 2)
+  taxRate Int?
+  invoice Invoice? @relation(fields: [invoice_id], references: [id])
+  invoice_id Int?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([invoice_id])
+}
+
+
+model User{
+  id Int       @id @default(autoincrement())
+  name String?
+  email String? @unique
+  password String?
+  role Role @default(user)
+  phone String?
+  signupDone Boolean @default(false)
+  company Company? @relation(fields: [company_id], references: [id])
+  company_id Int?
+  invoice Invoice[]
+  customer Customer[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+ @@index([company_id])
+}
+
+enum Role {
+  user
+  admin
+}
+
+model Customer {
+  id Int       @id @default(autoincrement())
+  name String?
+  street String?
+  city String?
+  state String?
+  postcode String?
+  phone String?
+  invoices Invoice[]
+  contact Contact[]
+  user User? @relation(fields: [user_id], references: [id])
+  user_id Int?
+  company Company? @relation(fields: [company_id], references: [id])
+  company_id Int?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([company_id])
+  @@index([user_id])
+}
+
+model Contact {
+  id Int       @id @default(autoincrement())
+  name String?
+  email String?
+  isPrimary Boolean @default(false)
+  title Title?
+  customer Customer? @relation(fields: [customer_id], references: [id])
+  customer_id Int?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([customer_id])
+}
+
+enum Title {
+  Mr
+  Mrs
+  Ms
+  Dr
+  Prof
+}
+
+///////////////////////// Product and Category //////////////////////////
+// model Product {
+//     id          Int       @id @default(autoincrement())
+//     name        String
+//     description String
+//     price       Decimal
+//     image       String
+//     category    Category? @relation(fields: [category_id], references: [id])
+//     category_id Int
+
+//     @@index([category_id])
+// }
+
+// model Category {
+//     id          Int       @id @default(autoincrement())
+//     name        String
+//     description String
+//     products    Product[]
+// }
