@@ -4,10 +4,10 @@ import { prisma } from "@/app/db";
 
 
 const s3Client = new S3Client({
-  region: "ap-southeast-2",
+  region: process.env.AWS_S3_REGION || "ap-southeast-2",
   credentials: {
-    accessKeyId: "AKIA47CRYBUVGJPXG6FH",
-    secretAccessKey: "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",
+    accessKeyId: process.env.AWS_S3_ACCESS_KEY_ID || "",
+    secretAccessKey: process.env.AWS_S3_SECRET_ACCESS_KEY || "",
   },
 });
 
@@ -19,7 +19,7 @@ const uploadFileToS3 = async (
   const fileBuffer = file;
   try {
     const params = {
-      Bucket: "smartinvoice-gacapstone",
+      Bucket: process.env.AWS_S3_BUCKET_NAME,
       Key: fileName,
       Body: fileBuffer,
       ContentType: contentType,

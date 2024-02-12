@@ -1,36 +1,33 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# SmartInvoice
 
-## Getting Started
+## Live URL
+https://chopeseats-iota.vercel.app/
 
-First, run the development server:
+## Screenshots
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Technologies Used
+### Backend API/DB
+* [Mongo DB](https://www.mongodb.com/)
+* [Mongoose](https://mongoosejs.com/)
+* [Express](https://expressjs.com/)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Frontend Application
+* [React](https://react.dev/)
+* [React router dom](https://reactrouter.com/en/main) -Routing system
+* [Mantine](https://mantine.dev/) -UI Library
+* [Mantine form](https://mantine.dev/form/use-form/) -Form validation
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Other packeges used
+* [dayjs](https://www.npmjs.com/package/dayjs) - Date formatting
+* [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken)
+* [bcrypt](https://www.npmjs.com/package/bcrypt)
+* [Nodemailer](https://nodemailer.com/)
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+### PaaS
+* [Vercel](https://vercel.com/)
 
-## Learn More
+## Key Challenges/takeaways
 
-To learn more about Next.js, take a look at the following resources:
+## Next Steps
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## References and Inspirations
