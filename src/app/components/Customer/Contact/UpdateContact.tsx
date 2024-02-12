@@ -11,7 +11,6 @@ import {
 import { useForm } from "@mantine/form";
 import useToast from "@/app/hooks/useToast";
 import { useRouter } from "next/navigation";
-import { on } from "events";
 
 type Props = {
   opened: boolean;

@@ -4,7 +4,9 @@ import { IconMail, IconMapPin, IconPhone } from "@tabler/icons-react";
 import Link from "next/link";
 
 const getCustomer = async (id: string) => {
-  const res = await fetch(`http://localhost:3000//api/customer/${id}`);
+  const res = await fetch(
+    `${process.env.NEXT_BASE_URL}/api/customer/${id}`
+  );
   const data = await res.json();
 
   return data;

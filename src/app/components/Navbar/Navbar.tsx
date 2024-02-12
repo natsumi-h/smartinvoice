@@ -29,6 +29,10 @@ const mockdata = [
   {
     label: "My Team",
     icon: IconCalendarStats,
+    initiallyOpened: false,
+    links: [
+      { label: "My Team Detail", link: "/company" },
+    ],
   },
   // { label: "Analytics", icon: IconPresentationAnalytics },
   // { label: "Contracts", icon: IconFileAnalytics },

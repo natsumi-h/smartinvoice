@@ -3,6 +3,82 @@ import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { prisma } from "@/app/db";
 import puppeteer from "puppeteer";
 
+// HTMLを生成（CSSをインラインで組み込む）
+// const html = `
+// <!DOCTYPE html>
+// <html lang="en">
+// <head>
+//   <meta charset="UTF-8">
+//   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+//   <title>Invoice</title>
+//   <style>
+//   body {
+//   font-family: Arial, sans-serif;
+//   margin: 0;
+//   padding: 0;
+// }
+
+// header, footer {
+//   background-color: #f2f2f2;
+//   padding: 10px;
+// }
+
+// table {
+//   width: 100%;
+//   border-collapse: collapse;
+// }
+
+// th, td {
+//   border: 1px solid #ddd;
+//   padding: 8px;
+// }
+
+// th {
+//   text-align: left;
+// }
+
+// tfoot {
+//   font-weight: bold;
+// }
+//   </style>
+// </head>
+// <body>
+//   <header>
+//     <h1>Invoice</h1>
+//     <p>Invoice number: 123456</p>
+//     <p>Date: February 12, 2024</p>
+//   </header>
+
+//   <main>
+//     <table>
+//       <thead>
+//         <tr>
+//           <th>Description</th>
+//           <th>Quantity</th>
+//           <th>Unit Price</th>
+//           <th>Total</th>
+//         </tr>
+//       </thead>
+//       <tbody>
+//         <tr>
+//           <td>Item 1</td>
+//           <td>2</td>
+//           <td>$10.00</td>
+//           <td>$20.00</td>
+//         </tr>
+//         <!-- More items here -->
+//       </tbody>
+//     </table>
+//   </main>
+
+//   <footer>
+//     <p>Total: $20.00</p>
+//     <p>Payment due by: February 28, 2024</p>
+//   </footer>
+// </body>
+// </html>
+//     `;
+
 const s3Client = new S3Client({
   region: process.env.AWS_S3_REGION || "ap-southeast-2",
   credentials: {
@@ -49,7 +125,7 @@ const generatePdf = async (html: string) => {
 // POST /api/invoice
 // @desc: Create a new invoice
 export async function POST(request: Request) {
-console.log(process.env.AWS_ACCESS_KEY_ID);
+  console.log(process.env.AWS_ACCESS_KEY_ID);
 
   try {
     // req.bodyの処理
@@ -72,7 +148,11 @@ console.log(process.env.AWS_ACCESS_KEY_ID);
     const res = await prisma.invoice.create({
       data: {
         invoiceUrl: fileUrl,
-        // customer: payload.customer,
+        customer: {
+          connect: {
+            id: payload.customer,
+          },
+        },
         issueDate: payload.issueDate,
         dueDate: payload.dueDate,
         items: {
@@ -101,3 +181,5 @@ console.log(process.env.AWS_ACCESS_KEY_ID);
     return NextResponse.json({ error: "Error" }, { status: 400 });
   }
 }
+
+

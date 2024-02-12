@@ -18,13 +18,12 @@ type Props = {
 };
 
 const SingleCustomer: FC<Props> = ({ contacts, id }) => {
-  const iconStyle = { width: rem(12), height: rem(12) };
+  const iconStyle = { width: rem(15), height: rem(15) };
   const router = useRouter();
   const pathname = usePathname();
 
   return (
     <Tabs
-      // defaultValue="invoice"
       defaultValue={pathname === `/customer/${id}` ? "invoice" : "contact"}
       mt="lg"
       onChange={(value) =>
@@ -34,12 +33,17 @@ const SingleCustomer: FC<Props> = ({ contacts, id }) => {
       }
     >
       <Tabs.List>
-        <Tabs.Tab value="invoice" leftSection={<IconNotes style={iconStyle} />}>
+        <Tabs.Tab
+          value="invoice"
+          leftSection={<IconNotes style={iconStyle} />}
+          fz="md"
+        >
           Invoices
         </Tabs.Tab>
         <Tabs.Tab
           value="contact"
           leftSection={<IconMessageCircle style={iconStyle} />}
+          fz="md"
         >
           Contact
         </Tabs.Tab>

@@ -1,3 +1,4 @@
+"use client";
 import {
   Box,
   Button,
@@ -12,18 +13,20 @@ import {
   rem,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { PdfComponent } from "../Pdf/PdfComponent";
-import { renderToString } from "react-dom/server";
-import { useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { IconTrash } from "@tabler/icons-react";
 import { DateInput } from "@mantine/dates";
 import { useRouter } from "next/navigation";
+import { generateHtml } from "@/app/consts/pdf";
 
-const CreateForm = () => {
+type Props = {
+  customers: { id: number; name: string }[];
+};
+const CreateForm: FC<Props> = ({ customers }) => {
   const router = useRouter();
   const form = useForm({
     initialValues: {
-      specialDiscount: "0.0",
+      specialDiscount: "0.00",
       qty0: 1,
       unitPrice0: "0.00",
       taxRate0: "9%",
@@ -59,8 +62,8 @@ const CreateForm = () => {
   const [totaltax, setTotaltax] = useState<number>(0.0);
   const [total, setTotal] = useState<number>(0.0);
   useEffect(() => {
-    let newSubtotal = 0;
-    let newTotaltax = 0;
+    let newSubtotal = 0.0;
+    let newTotaltax = 0.0;
     for (let i = 0; i < itemLength; i++) {
       newSubtotal +=
         (form.values as { [key: string]: any })[`qty${i}`] *
@@ -97,10 +100,8 @@ const CreateForm = () => {
           ).toFixed(2),
         });
       }
-      console.log(itemValues);
 
       const payload = {
-        customer: "customer name",
         issueDate: values.issueDate,
         dueDate: values.dueDate,
         items: itemValues,
@@ -108,19 +109,29 @@ const CreateForm = () => {
         discount: values.specialDiscount,
         totalTax: totaltax,
         total: total,
+        customer: customers.find(
+          (customer) => customer.name === values.customer
+        )?.id,
       };
-      console.log(payload);
 
-      const renderComponentToHtml = () => {
-        return renderToString(<PdfComponent props={payload} />);
+      const htmlPayload = {
+        ...payload,
+        customer: customers.find(
+          (customer) => customer.name === values.customer
+        ),
       };
-      console.log(renderComponentToHtml());
+
+      // const renderComponentToHtml = () => {
+      //   return renderToString(<PdfComponent payload={htmlPayload} />);
+      // };
+      const html = generateHtml(htmlPayload);
 
       const response = await fetch("/api/invoice", {
         method: "POST",
         body: JSON.stringify({
-          html: renderComponentToHtml(),
-          payload: payload,
+          // html: renderComponentToHtml(),
+          html,
+          payload,
         }),
       });
 
@@ -145,6 +156,7 @@ const CreateForm = () => {
     });
   };
 
+  // Item
   const rows = Array.from({ length: itemLength }).map((_, index) => (
     <Table.Tr key={index}>
       <Table.Td pl="0">
@@ -220,15 +232,15 @@ const CreateForm = () => {
   return (
     <Box maw={1200}>
       <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
-        <Flex gap="md" mt="lg">
-          {/* TODO:先にデータフェッチしておく */}
+        <Flex gap="md" mt="lg" justify={"space-between"}>
           <Select
             label="To"
-            placeholder="Custom layout"
-            data={["React", "Angular", "Vue", "Svelte"]}
+            placeholder="Choose Customer"
+            data={customers.map((customer) => customer.name)}
             searchable
             limit={5}
             {...form.getInputProps("customer")}
+            w={"50%"}
           />
           <Flex gap="md">
             <DateInput
@@ -267,29 +279,50 @@ const CreateForm = () => {
           </UnstyledButton>
         </Box>
 
-        <Box maw="60%" ta={"right"} ml={"auto"} mt="xl">
-          <Flex gap="md" justify={"flex-end"} align="center">
-            <Text>Subtotal</Text>
-            <Text>{subtotal}</Text>
-          </Flex>
-          <Flex gap="md" justify={"flex-end"} align="center" mt="md">
-            <Text>Special Discount</Text>
-            <TextInput
-              ta={"right"}
-              placeholder="500.00"
-              {...form.getInputProps("specialDiscount")}
-            ></TextInput>
-          </Flex>
-          <Flex gap="md" justify={"flex-end"} align="center" mt="md">
-            <Text>Total Tax</Text>
-            <Text>{totaltax}</Text>
-          </Flex>
+        {/* 合計のテーブル */}
+        <Table withRowBorders={false} maw="60%" mt="xl" ml={"auto"}>
+          <Table.Tbody>
+            <Table.Tr>
+              <Table.Td>
+                <Text>Subtotal</Text>
+              </Table.Td>
+              <Table.Td>
+                <Text ta="right">{subtotal.toFixed(2)}</Text>
+              </Table.Td>
+            </Table.Tr>
 
-          <Flex gap="md" justify={"flex-end"} align="center" mt="md">
-            <Text>Total</Text>
-            <Text>{total}</Text>
-          </Flex>
-        </Box>
+            <Table.Tr>
+              <Table.Td>
+                <Text>Spacial Discount</Text>
+              </Table.Td>
+              <Table.Td>
+                <TextInput
+                  ta="right"
+                  placeholder="500.00"
+                  {...form.getInputProps("specialDiscount")}
+                ></TextInput>
+              </Table.Td>
+            </Table.Tr>
+
+            <Table.Tr>
+              <Table.Td>
+                <Text>Total Tax</Text>
+              </Table.Td>
+              <Table.Td>
+                <Text ta="right">{totaltax.toFixed(2)}</Text>
+              </Table.Td>
+            </Table.Tr>
+
+            <Table.Tr>
+              <Table.Td>
+                <Text>Total</Text>
+              </Table.Td>
+              <Table.Td>
+                <Text ta="right">{total.toFixed(2)}</Text>
+              </Table.Td>
+            </Table.Tr>
+          </Table.Tbody>
+        </Table>
 
         <Flex justify="center" mt="xl" gap={"lg"}>
           <Button fullWidth type="submit" variant="outline">

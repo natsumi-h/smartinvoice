@@ -2,7 +2,9 @@ import UpdateForm from "@/app/components/Customer/UpdateForm";
 import { Box, Title } from "@mantine/core";
 
 const getCustomer = async (id: string) => {
-  const res = await fetch(`http://localhost:3000//api/customer/${id}`);
+  const res = await fetch(
+    `${process.env.NEXT_BASE_URL}/api/customer/${id}`
+  );
   const data = await res.json();
   return data;
 };

@@ -6,6 +6,7 @@ import { prisma } from "@/app/db";
 export async function POST(request: Request) {
   try {
     const req = await request.json();
+    
     // ORM
     const res = await prisma.customer.create({
       data: {

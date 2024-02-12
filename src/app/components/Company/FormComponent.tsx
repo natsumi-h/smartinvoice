@@ -5,6 +5,7 @@ import {
   Flex,
   Group,
   Image,
+  Select,
   Text,
   TextInput,
   Textarea,
@@ -15,29 +16,44 @@ import noimage from "../../../../public/images/companylogo-noimage.svg";
 import { useState } from "react";
 
 const FormComponent = () => {
+  const [file, setFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const form = useForm({
-    validate: {
-      file: (value) => (value ? null : "File is required"),
-    },
+    // validate: {
+    //   file: (value) => (value ? null : "File is required"),
+    // },
   });
 
   const handleSubmit = async (values: any) => {
     const formData = new FormData();
-    formData.append("file", values.file);
+    if (file) {
+      formData.append("file", file);
+    }
+    // テキストフィールドの値を追加
+    Object.keys(values).forEach((key) => {
+      if (key !== "file") {
+        formData.append(key, values[key]);
+      }
+      if (key === "accounttype") {
+        formData.append(key, values[key].toLowerCase());
+      }
+    });
 
     try {
       const response = await fetch("/api/company", {
         method: "POST",
         body: formData,
       });
-
       const data = await response.json();
     } catch (error) {
       console.log(error);
     }
   };
 
-  const [file, setFile] = useState<File | null>(null);
+  const handleFileChange = (file: File) => {
+    setFile(file);
+    setPreviewUrl(URL.createObjectURL(file));
+  };
 
   return (
     <Box maw="800px">
@@ -50,20 +66,18 @@ const FormComponent = () => {
             <Image
               radius="md"
               component={NextImage}
-              src={noimage}
+              src={previewUrl || noimage} // 変更部分
               width={100}
               height={100}
               // fallbackSrc="https://placehold.co/200x200?text=no image"
               alt="Company Logo"
             />
-            {/* <FileInput
-              label="Logo Image"
-              placeholder="Input placeholder"
-              {...form.getInputProps("file")}
-            /> */}
             <Box>
               <Group justify="flex-start">
-                <FileButton onChange={setFile} accept="image/png,image/jpeg">
+                <FileButton
+                  onChange={(file) => file && handleFileChange(file)}
+                  accept="image/png,image/jpeg"
+                >
                   {(props) => <Button {...props}>Upload image</Button>}
                 </FileButton>
               </Group>
@@ -81,34 +95,107 @@ const FormComponent = () => {
           label="Legal/Trading name"
           placeholder="Custom layout"
           mt="lg"
+          {...form.getInputProps("name")}
         />
-        <TextInput label="UEN" placeholder="Custom layout" mt="lg" />
+        <TextInput
+          label="UEN"
+          placeholder="Custom layout"
+          mt="lg"
+          {...form.getInputProps("uen")}
+        />
 
-        <TextInput label="Address" placeholder="Street address" mt="lg" />
-        <TextInput placeholder="Town/City" mt="lg" />
+        <TextInput
+          label="Address"
+          placeholder="Street address"
+          mt="lg"
+          {...form.getInputProps("street")}
+        />
+        <TextInput
+          placeholder="Town/City"
+          mt="lg"
+          {...form.getInputProps("city")}
+        />
         <Flex gap="md" mt="lg">
-          <TextInput placeholder="State/Region" w="50%" />
-          <TextInput placeholder="Postal code" w="50%" />
+          <TextInput
+            placeholder="State/Region"
+            w="50%"
+            {...form.getInputProps("state")}
+          />
+          <TextInput
+            placeholder="Postal code"
+            w="50%"
+            {...form.getInputProps("postcode")}
+          />
         </Flex>
 
-        <TextInput label="Phone" placeholder="Custom layout" mt="lg" />
-        <TextInput label="Bank Name" placeholder="Custom layout" mt="lg" />
-        <TextInput label="Branch Name" placeholder="Custom layout" mt="lg" />
-        <TextInput label="A/C Name" placeholder="Custom layout" mt="lg" />
-        <TextInput label="A/C Type" placeholder="Custom layout" mt="lg" />
-        <TextInput label="A/C #" placeholder="Custom layout" mt="lg" />
-        <TextInput label="Bank Code" placeholder="Custom layout" mt="lg" />
-        <TextInput label="Swift BIC Code" placeholder="Custom layout" mt="lg" />
-        <TextInput label="Branch #" placeholder="Custom layout" mt="lg" />
+        <TextInput
+          label="Phone"
+          placeholder="Custom layout"
+          mt="lg"
+          {...form.getInputProps("phone")}
+        />
+        {/* Bank */}
+        <TextInput
+          label="Bank Name"
+          placeholder="Custom layout"
+          mt="lg"
+          {...form.getInputProps("bankname")}
+        />
+        <TextInput
+          label="Branch Name"
+          placeholder="Custom layout"
+          mt="lg"
+          {...form.getInputProps("branchname")}
+        />
+        <TextInput
+          label="A/C Name"
+          placeholder="Custom layout"
+          mt="lg"
+          {...form.getInputProps("accountname")}
+        />
+        <Select
+          label="A/C Type"
+          placeholder="Custom layout"
+          mt="lg"
+          data={["Savings", "Current"]}
+          {...form.getInputProps("accounttype")}
+        />
+        <TextInput
+          label="A/C #"
+          placeholder="Custom layout"
+          mt="lg"
+          {...form.getInputProps("accountnumber")}
+        />
+        <TextInput
+          label="Bank Code"
+          placeholder="Custom layout"
+          mt="lg"
+          {...form.getInputProps("bankcode")}
+        />
+        <TextInput
+          label="Swift BIC Code"
+          placeholder="Custom layout"
+          mt="lg"
+          {...form.getInputProps("swiftcode")}
+        />
+        <TextInput
+          label="Branch #"
+          placeholder="Custom layout"
+          mt="lg"
+          {...form.getInputProps("branchnumber")}
+        />
         <Textarea
           label="Invoice Remarks"
           placeholder="Custom layout"
           mt="lg"
           resize="vertical"
+          {...form.getInputProps("remarks")}
         />
 
         <Group justify="center" mt="xl">
-          <Button fullWidth type="submit">Submit</Button>
+          <Button fullWidth type="submit">
+            Submit
+          </Button>
         </Group>
       </form>
     </Box>

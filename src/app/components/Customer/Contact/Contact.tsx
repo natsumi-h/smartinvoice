@@ -65,7 +65,7 @@ const Contact: FC<Props> = ({ contacts, id }) => {
             <li className={styles.li} key={contact.id}>
               <Anchor
                 component={Link}
-                href={`customer/1}`}
+                href={`customer/${id}`}
                 underline="never"
                 c="black"
               >
