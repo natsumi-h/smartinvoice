@@ -3,7 +3,7 @@ import { Box, Title } from "@mantine/core";
 
 const getCustomer = async (id: string) => {
   const res = await fetch(
-    `${process.env.NEXT_BASE_URL}/api/customer/${id}`
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/customer/${id}`
   );
   const data = await res.json();
   return data;

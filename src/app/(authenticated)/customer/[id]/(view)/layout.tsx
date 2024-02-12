@@ -5,7 +5,7 @@ import Link from "next/link";
 
 const getCustomer = async (id: string) => {
   const res = await fetch(
-    `${process.env.NEXT_BASE_URL}/api/customer/${id}`
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/customer/${id}`
   );
   const data = await res.json();
 
