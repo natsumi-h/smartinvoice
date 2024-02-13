@@ -31,17 +31,17 @@ export default async function Page({
   const { id } = params;
   const customer = await getCustomer(id);
   console.log(customer);
-  const address = `${customer.street}, ${customer.city}, ${customer.state}, ${customer.postcode}`;
-  const contacts = customer.contact;
+  const address = `${customer?.street}, ${customer?.city}, ${customer?.state}, ${customer?.postcode}`;
+  const contacts = customer?.contact;
 
   return (
     <Box>
       <Flex gap="md">
-        <Title order={2}>{customer.name}</Title>
+        <Title order={2}>{customer?.name}</Title>
         <Button
           variant="outline"
           component={Link}
-          href={`/customer/${customer.id}/update`}
+          href={`/customer/${customer?.id}/update`}
         >
           Update
         </Button>
@@ -49,7 +49,7 @@ export default async function Page({
           variant="outline"
           color="red"
           component={Link}
-          href={`/customer/${customer.id}/update`}
+          href={`/customer/${customer?.id}/update`}
         >
           Delete
         </Button>
@@ -70,7 +70,7 @@ export default async function Page({
           color="var(--mantine-color-blue-5)"
         />
         <Text c="gray.7">
-          {customer.contact.map((contact: any) =>
+          {customer?.contact.map((contact: any) =>
             contact.isPrimary ? contact.email : ""
           )}
         </Text>
@@ -81,10 +81,10 @@ export default async function Page({
           stroke={1}
           color="var(--mantine-color-blue-5)"
         />
-        <Text c="gray.7">{customer.phone}</Text>
+        <Text c="gray.7">{customer?.phone}</Text>
       </Flex>
       {/* {children} */}
-      <SingleCustomer contacts={contacts} id={customer.id} />
+      <SingleCustomer contacts={contacts as any} id={customer?.id as any} />
     </Box>
   );
 }
