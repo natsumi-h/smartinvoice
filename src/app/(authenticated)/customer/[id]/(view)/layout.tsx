@@ -4,18 +4,22 @@ import { IconMail, IconMapPin, IconPhone } from "@tabler/icons-react";
 import Link from "next/link";
 
 const getCustomer = async (id: string) => {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/customer/${id}`
-  );
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/customer/${id}`
+    );
 
-  if (!res.ok) {
-    // This will activate the closest `error.js` Error Boundary
-    throw new Error("Failed to fetch data");
+    if (!res.ok) {
+      // This will activate the closest `error.js` Error Boundary
+      throw new Error("Failed to fetch data");
+    }
+
+    const data = await res.json();
+
+    return data;
+  } catch (e) {
+    console.log(e);
   }
-
-  const data = await res.json();
-
-  return data;
 };
 
 const layout = async ({
