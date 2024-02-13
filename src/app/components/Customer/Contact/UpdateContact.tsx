@@ -51,7 +51,7 @@ const UpdateContact: FC<Props> = ({ opened, close, contact }) => {
       isPrimary: contact.isPrimary,
       title: title,
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [opened]);
 
   const handleSubmit = async () => {
@@ -67,6 +67,7 @@ const UpdateContact: FC<Props> = ({ opened, close, contact }) => {
       });
 
       const data = await response.json();
+      console.log(data);
       form.reset();
       setLoading(false);
       close();

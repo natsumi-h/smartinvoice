@@ -74,8 +74,8 @@ const UpdateForm: FC<Props> = ({ customer }) => {
       });
       close();
       setLoading(false);
-      router.refresh();
       router.push(`/customer/${id}`);
+      router.refresh();
     } catch (error) {
       console.log(error);
     }

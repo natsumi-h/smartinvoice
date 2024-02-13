@@ -61,7 +61,6 @@ const Contact: FC<Props> = ({ contacts, id }) => {
       </Button>
       <ul className={styles.ul}>
         {contacts.map((contact) => (
-          <>
             <li className={styles.li} key={contact.id}>
               <Anchor
                 component={Link}
@@ -118,7 +117,6 @@ const Contact: FC<Props> = ({ contacts, id }) => {
                 <Divider mt="md" />
               </Anchor>
             </li>
-          </>
         ))}
       </ul>
 
