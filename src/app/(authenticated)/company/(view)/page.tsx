@@ -1,10 +1,18 @@
-const page = () => {
-  return (
-    <div>
+import CompanyView from "@/app/components/Company/CompanyView";
 
-    </div>
-  )
-}
+const getCustomer = async () => {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/company`);
+  if (!res.ok) {
+    // This will activate the closest `error.js` Error Boundary
+    throw new Error("Failed to fetch data");
+  }
+  const data = await res.json();
+  return data.data;
+};
 
-export default page
+const page = async () => {
+  const data = await getCustomer();
+  return <CompanyView company={data} />;
+};
 
+export default page;
