@@ -9,7 +9,6 @@ export async function GET(
 ) {
   try {
     const id = params.id;
-
     const res = await prisma.customer.findUnique({
       where: {
         id: parseInt(id),
