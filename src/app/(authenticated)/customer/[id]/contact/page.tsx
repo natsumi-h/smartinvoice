@@ -20,13 +20,13 @@ const getCustomer = async (id: string) => {
   }
 };
 
-const page = async ({
+export default async function Page({
   params,
 }: {
   params: {
     id: string;
   };
-}) => {
+}) {
   const { id } = params;
   const customer = await getCustomer(id);
   const address = `${customer.street}, ${customer.city}, ${customer.state}, ${customer.postcode}`;
@@ -85,6 +85,4 @@ const page = async ({
       <SingleCustomer contacts={contacts} id={customer.id} />
     </Box>
   );
-};
-
-export default page;
+}

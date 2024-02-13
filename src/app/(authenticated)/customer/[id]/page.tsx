@@ -9,7 +9,6 @@ const getCustomer = async (id: string) => {
       `${process.env.NEXT_PUBLIC_BASE_URL}/api/customer/${id}/`
     );
     if (!res.ok) {
-      // This will activate the closest `error.js` Error Boundary
       throw new Error("Failed to fetch data");
     }
     const data = await res.json();
@@ -20,13 +19,13 @@ const getCustomer = async (id: string) => {
   }
 };
 
-const page = async ({
+export default async function Page ({
   params,
 }: {
   params: {
     id: string;
   };
-}) => {
+})  {
   const { id } = params;
   const customer = await getCustomer(id);
   const address = `${customer.street}, ${customer.city}, ${customer.state}, ${customer.postcode}`;
@@ -86,5 +85,3 @@ const page = async ({
     </Box>
   );
 };
-
-export default page;
