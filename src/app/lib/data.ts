@@ -1,9 +1,15 @@
 export const getCustomer = async (id: string) => {
-    console.log(id);
+  console.log(id);
 
   try {
     const res = await fetch(
-      `https://smartinvoice-dev.vercel.app/api/customer/${id}/`
+      `https://smartinvoice-dev.vercel.app/api/customer/${id}/`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
     );
     console.log(res); // ここでレスポンスをログに出力
     if (!res.ok) {
