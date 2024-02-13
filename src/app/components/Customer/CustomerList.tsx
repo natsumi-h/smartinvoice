@@ -48,7 +48,7 @@ const CustomerList = () => {
           <li key={customer.id} className={styles.li}>
             <Anchor
               component={Link}
-              href={`customer/${customer.id}`}
+              href={`/customer/${customer.id}`}
               underline="never"
               c="black"
             >
