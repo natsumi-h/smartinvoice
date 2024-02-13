@@ -20,7 +20,7 @@
 //   }
 // };
 
-const page = async ({
+const page = ({
   params,
 }: {
   params: {
