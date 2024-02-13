@@ -1,4 +1,6 @@
 export const getCustomer = async (id: string) => {
+    console.log(id);
+    
   try {
     const res = await fetch(
       `https://smartinvoice-dev.vercel.app/api/customer/${id}/`
