@@ -1,23 +1,24 @@
 import SingleCustomer from "@/app/components/Customer/SingleCustomer";
+import { getCustomer } from "@/app/lib/data";
 import { Box, Button, Flex, Text, Title, rem } from "@mantine/core";
 import { IconMail, IconMapPin, IconPhone } from "@tabler/icons-react";
 import Link from "next/link";
 
-const getCustomer = async (id: string) => {
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/customer/${id}/`
-    );
-    if (!res.ok) {
-      throw new Error("Failed to fetch data");
-    }
-    const data = await res.json();
-    console.log(data);
-    return data;
-  } catch (e) {
-    console.log(e);
-  }
-};
+// export const getCustomer = async (id: string) => {
+//   try {
+//     const res = await fetch(
+//       `/api/customer/${id}/`
+//     );
+//     if (!res.ok) {
+//       throw new Error("Failed to fetch data");
+//     }
+//     const data = await res.json();
+//     console.log(data);
+//     return data;
+//   } catch (e) {
+//     console.log(e);
+//   }
+// };
 
 export default async function Page ({
   params,
@@ -28,6 +29,7 @@ export default async function Page ({
 })  {
   const { id } = params;
   const customer = await getCustomer(id);
+  console.log(customer);
   const address = `${customer.street}, ${customer.city}, ${customer.state}, ${customer.postcode}`;
   const contacts = customer.contact;
 
