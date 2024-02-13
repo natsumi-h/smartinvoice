@@ -24,11 +24,15 @@ const InvoiceList = () => {
       }}
       onClick={() => router.push(`/invoice/${invoice.id}`)}
     >
-      <Table.Td>{invoice.customer.name}</Table.Td>
-      <Table.Td>{dayjs(invoice.issueDate).format("DD MMM YYYY")}</Table.Td>
-      <Table.Td>{dayjs(invoice.dueDate).format("DD MMM YYYY")}</Table.Td>
-      <Table.Td>{Number(invoice.totalAmount).toFixed(2)}</Table.Td>
-      <Table.Td>{invoice.status}</Table.Td>
+      <Table.Td pl="0">{invoice.customer.name}</Table.Td>
+      <Table.Td pl="0">
+        {dayjs(invoice.issueDate).format("DD MMM YYYY")}
+      </Table.Td>
+      <Table.Td pl="0">{dayjs(invoice.dueDate).format("DD MMM YYYY")}</Table.Td>
+      <Table.Td pl="0" ta="right">
+        {Number(invoice.totalAmount).toFixed(2)}
+      </Table.Td>
+      <Table.Td pl="0">{invoice.status}</Table.Td>
     </Table.Tr>
   ));
 
@@ -36,11 +40,11 @@ const InvoiceList = () => {
     <Table mt="lg" fz="md">
       <Table.Thead>
         <Table.Tr>
-          <Table.Th>Customer</Table.Th>
-          <Table.Th>Date</Table.Th>
-          <Table.Th>Due Date</Table.Th>
-          <Table.Th>Total Amount</Table.Th>
-          <Table.Th>Status</Table.Th>
+          <Table.Th pl="0">Customer</Table.Th>
+          <Table.Th pl="0">Date</Table.Th>
+          <Table.Th pl="0">Due Date</Table.Th>
+          <Table.Th pl="0">Total Amount</Table.Th>
+          <Table.Th pl="0">Status</Table.Th>
         </Table.Tr>
       </Table.Thead>
       <Table.Tbody>{rows}</Table.Tbody>

@@ -65,4 +65,40 @@ export const getCompany = async () => {
   }
 };
 
+export const getInvoices = async () => {
+  noStore();
+  try {
+    const res = await prisma.invoice.findMany({
+      include: {
+        customer: true,
+        items: true,
+      },
+    });
+    console.log(res);
+    return res;
+  } catch (e) {
+    console.log(e);
+    throw e;
+  }
+}
+
+export const getInvoice = async (id: string) => {
+  noStore();
+  try {
+    const res = await prisma.invoice.findUnique({
+      where: {
+        id: parseInt(id),
+      },
+      include: {
+        customer: true,
+        items: true,
+      },
+    });
+    console.log(res);
+    return res;
+  } catch (e) {
+    console.log(e);
+    throw e;
+  }
+}
 

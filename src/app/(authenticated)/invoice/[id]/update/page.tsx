@@ -1,9 +1,15 @@
-const page = () => {
+import CreateForm from "@/app/components/Invoice/CreateForm";
+import { getCustomers } from "@/app/lib/data";
+import { Box, Title } from "@mantine/core";
+
+const page = async () => {
+  const customers: any = await getCustomers();
   return (
-    <div>
+    <Box>
+      <Title order={2}>Update Invoice</Title>
+      <CreateForm customers={customers} />
+    </Box>
+  );
+};
 
-    </div>
-  )
-}
-
-export default page
+export default page;

@@ -1,7 +1,6 @@
 import CreateForm from "@/app/components/Invoice/CreateForm";
 import { getCustomers } from "@/app/lib/data";
 import { Box, Title } from "@mantine/core";
-import React from "react";
 
 const page = async () => {
   const customers: any = await getCustomers();
