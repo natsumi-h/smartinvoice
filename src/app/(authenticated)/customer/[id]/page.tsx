@@ -6,7 +6,7 @@ import Link from "next/link";
 const getCustomer = async (id: string) => {
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/customer/${id}`
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/customer/${id}/`
     );
     if (!res.ok) {
       // This will activate the closest `error.js` Error Boundary
