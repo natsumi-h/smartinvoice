@@ -11,7 +11,7 @@ import { Title } from "@mantine/core";
 //   return data.data;
 // };
 
-const layout = async ({
+const layout = ({
   children,
 }: Readonly<{
   children: React.ReactNode;
