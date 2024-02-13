@@ -1,7 +1,7 @@
 export const getCustomer = async (id: string) => {
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/customer/${id}/`
+      `https://smartinvoice-dev.vercel.app//api/customer/${id}/`
     );
     if (!res.ok) {
       throw new Error("Failed to fetch data");
