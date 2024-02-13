@@ -1,7 +1,6 @@
 "use client"
 import {
   Anchor,
-  Box,
   Divider,
   Flex,
   Text,

@@ -1,5 +1,7 @@
 import { prisma } from "@/app/db";
+import { unstable_noStore as noStore } from "next/cache";
 export const getCustomer = async (id: string) => {
+  noStore();
   console.log(id);
   try {
     const res = await prisma.customer.findUnique({
@@ -8,10 +10,7 @@ export const getCustomer = async (id: string) => {
       },
       include: {
         contact: {
-          orderBy: [
-            { isPrimary: "desc" },
-            { name: "asc" },
-          ],
+          orderBy: [{ isPrimary: "desc" }, { name: "asc" }],
         },
       },
     });
