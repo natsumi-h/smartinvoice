@@ -1,12 +1,13 @@
-import React from 'react'
+import InvoiceList from "@/app/components/Invoice/InvoiceList";
+import {  Title } from "@mantine/core";
 
 const page = () => {
   return (
-    <div>
-      invoice
-    
-    </div>
-  )
-}
+    <>
+      <Title order={2}>Invoice</Title>
+      <InvoiceList />
+    </>
+  );
+};
 
-export default page
+export default page;

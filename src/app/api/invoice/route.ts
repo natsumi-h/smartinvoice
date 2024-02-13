@@ -182,4 +182,20 @@ export async function POST(request: Request) {
   }
 }
 
-
+// GET /api/invoice
+// @desc: Get all invoices
+export async function GET(request: Request) {
+  try {
+    const res = await prisma.invoice.findMany({
+      include: {
+        customer: true,
+        items: true,
+      },
+    });
+    console.log(res);
+    return NextResponse.json({ data: res }, { status: 200 });
+  } catch (e) {
+    console.log(e);
+    return NextResponse.json({ error: "Error" }, { status: 400 });
+  }
+}

@@ -64,3 +64,5 @@ export const getCompany = async () => {
     throw e;
   }
 };
+
+
