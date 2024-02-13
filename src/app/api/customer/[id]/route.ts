@@ -23,7 +23,7 @@ export async function GET(
         },
       },
     });
-    // console.log(res);
+    console.log(res);
     return NextResponse.json(res, { status: 200 });
   } catch (e) {
     console.error(e);
