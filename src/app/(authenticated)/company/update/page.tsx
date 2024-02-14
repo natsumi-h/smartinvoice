@@ -1,5 +1,5 @@
 "use client";
-import FormComponent from "@/app/components/Company/FormComponent";
+import FormComponent from "@/app/components/Company/Onboarding";
 import { Box, Title } from "@mantine/core";
 
 const page = () => {

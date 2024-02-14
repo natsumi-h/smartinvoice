@@ -1,3 +1,4 @@
+"use client";
 import {
   Box,
   Button,
@@ -15,7 +16,7 @@ import NextImage from "next/image";
 import noimage from "../../../../public/images/companylogo-noimage.svg";
 import { useState } from "react";
 
-const FormComponent = () => {
+const Onboarding = () => {
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const form = useForm({
@@ -202,4 +203,4 @@ const FormComponent = () => {
   );
 };
 
-export default FormComponent;
+export default Onboarding;
