@@ -1,11 +1,25 @@
 "use client";
-
-import { Box, Group, ScrollArea, Title } from "@mantine/core";
-import { IconNotes, IconCalendarStats, IconGauge } from "@tabler/icons-react";
+import {
+  ActionIcon,
+  Box,
+  Group,
+  ScrollArea,
+  Title,
+  useComputedColorScheme,
+  useMantineColorScheme,
+} from "@mantine/core";
+import {
+  IconNotes,
+  IconCalendarStats,
+  IconGauge,
+  IconSun,
+  IconMoon,
+} from "@tabler/icons-react";
 import { LinksGroup } from "../NavbarLinksGroup/NavbarLinksGroup";
 // import { Logo } from "./Logo";
 import classes from "./Navbar.module.css";
 import { UserButton } from "../UserButton/UserButton";
+import cx from "clsx";
 
 const mockdata = [
   {
@@ -30,9 +44,7 @@ const mockdata = [
     label: "My Team",
     icon: IconCalendarStats,
     initiallyOpened: false,
-    links: [
-      { label: "My Team Detail", link: "/company" },
-    ],
+    links: [{ label: "My Team Detail", link: "/company" }],
   },
   // { label: "Analytics", icon: IconPresentationAnalytics },
   // { label: "Contracts", icon: IconFileAnalytics },
@@ -49,6 +61,10 @@ const mockdata = [
 ];
 
 export function Navbar() {
+  const { setColorScheme } = useMantineColorScheme();
+  const computedColorScheme = useComputedColorScheme("light", {
+    getInitialValueInEffect: true,
+  });
   const links = mockdata.map((item) => (
     <LinksGroup {...item} key={item.label} />
   ));
@@ -62,6 +78,17 @@ export function Navbar() {
           </Title>
           {/* <Logo style={{ width: rem(120) }} /> */}
           {/* <Code fw={700}>v3.1.2</Code> */}
+          <ActionIcon
+            onClick={() =>
+              setColorScheme(computedColorScheme === "light" ? "dark" : "light")
+            }
+            variant="default"
+            size="lg"
+            aria-label="Toggle color scheme"
+          >
+            <IconSun className={cx(classes.icon, classes.light)} stroke={1.0} />
+            <IconMoon className={cx(classes.icon, classes.dark)} stroke={1.0} />
+          </ActionIcon>
         </Group>
       </div>
 

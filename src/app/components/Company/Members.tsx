@@ -65,13 +65,14 @@ const Members: FC<Props> = () => {
             component={Link}
             href={`customer/1}`}
             underline="never"
-            c="black"
+            inherit
+            style={{ color: "inherit" }}
           >
             <Flex align={"center"} justify={"space-between"}>
               <Box>
                 <Flex align={"center"} gap="md">
                   <Title order={4}>Natsumi Hori</Title>
-                    <Badge variant="filled">Admin</Badge>
+                  <Badge variant="filled">Admin</Badge>
                 </Flex>
 
                 <Flex align={"center"} gap="sm" mt="sm">

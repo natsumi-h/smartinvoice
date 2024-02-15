@@ -50,7 +50,9 @@ const CustomerList = () => {
               component={Link}
               href={`/customer/${customer.id}/`}
               underline="never"
-              c="black"
+              // c="black"
+              inherit
+              style={{ color: "inherit" }}
             >
               <Title order={3}>{customer.name}</Title>
               <Flex align={"center"} gap="sm" mt="xs">

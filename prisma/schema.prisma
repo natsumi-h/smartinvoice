@@ -40,7 +40,6 @@ model Company {
   updatedAt DateTime? @updatedAt
 }
 
-
 model Invoice {
   id Int       @id @default(autoincrement())
   status Status @default(draft)
@@ -90,7 +89,6 @@ model InvoiceItem {
 
   @@index([invoice_id])
 }
-
 
 model User{
   id Int       @id @default(autoincrement())
