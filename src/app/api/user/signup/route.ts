@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/app/db";
 import { sendEmail } from "@/app/lib/sendEmail";
 import crypto from "crypto";
@@ -10,7 +10,7 @@ function generateRandomToken(length: number) {
 
 // POST /api/user/signup
 // @desc: Register a new user
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   const body = await request.json();
   const token = generateRandomToken(16);
   try {
