@@ -105,6 +105,13 @@ model User{
   invoice Invoice[]
   customer Customer[]
 
+  token String?
+  tokenExpiry DateTime?
+  salt String?
+  iterations Int?
+  jwt String?
+  jwtExpiry DateTime?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
