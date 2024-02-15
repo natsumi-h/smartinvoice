@@ -27,7 +27,6 @@ const ConfirmSignup = () => {
 
   const handleSubmit = async () => {
     setLoading(true);
-
     const password = form.values.password;
     const hash = hashData(password);
     const payload = {
