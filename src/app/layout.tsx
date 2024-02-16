@@ -31,7 +31,7 @@ export default function RootLayout({
         <ColorSchemeScript />
       </head>
       <body>
-          <MantineProvider  defaultColorScheme="dark">
+          <MantineProvider  defaultColorScheme="light">
             <Notifications position="top-right" />
             {children}
           </MantineProvider>

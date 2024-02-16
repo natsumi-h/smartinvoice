@@ -14,23 +14,13 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import useToast from "@/app/hooks/useToast";
-import {
-  getToken,
-  hashDataWithSaltRounds,
-  storeToken,
-} from "@/app/lib/security";
+import { hashDataWithSaltRounds } from "@/app/lib/security";
 
 const SigninForm = () => {
   const form = useForm({});
   const [loading, setLoading] = useState(false);
   const { successToast, errorToast } = useToast();
   const router = useRouter();
-
-  const getUser = () => {
-    // トークンがローカルストレージにある場合は、デコードしてペイロードを返す
-    const token = getToken();
-    return token ? JSON.parse(atob(token.split(".")[1])).payload : null;
-  };
 
   const handleSubmit = async (values: any) => {
     setLoading(true);
@@ -45,7 +35,6 @@ const SigninForm = () => {
         data.salt,
         data.iterations
       );
-      console.log(hashedPassword); //OK
       const payload = {
         email: values.email,
         password: hashedPassword,
@@ -54,14 +43,12 @@ const SigninForm = () => {
         method: "POST",
         body: JSON.stringify(payload),
       });
-      const tokenData = await tokenRes.json();
-      console.log(tokenData);
-      //   トークンをローカルストレージに保存
-      storeToken(tokenData.token);
-      //   ユーザーをローカルストレージに保存
-      //   setUser(getUser());
+      if(!tokenRes.ok){
+        throw new Error("Invalid credentials");
+      }
       setLoading(false);
       router.push("/invoice");
+      router.refresh();
       successToast({
         title: "Signin successful",
         message: "You are now signed in.",

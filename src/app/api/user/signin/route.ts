@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/app/db";
 import { createJWT, getExpiry } from "@/app/lib/security";
+import { cookies } from "next/headers";
 
 // GET /api/user/signin?email=
 // @desc: Get user login details
@@ -52,21 +53,23 @@ export async function POST(request: NextRequest) {
       name: user.name,
       id: user.id,
     };
-    const token = createJWT(jwtPayload);
-    // console.log(token); //OK
+    const jwt = createJWT(jwtPayload);
+    const expiry = getExpiry(jwt);
+    const expiryDate = new Date(expiry);
 
-    const expiry = getExpiry(token);
     await prisma.user.update({
       where: {
         id: user.id,
       },
       data: {
-        jwt: token,
-        jwtExpiry: new Date(expiry),
+        jwt,
+        jwtExpiry: expiryDate,
       },
     });
-    // console.log(updatedUser); //OK
-    return NextResponse.json({ token: token }, { status: 200 });
+    cookies().set("token", jwt, { expires: expiryDate, httpOnly: true });
+    // 以下のJWTをフロントに返す実装は不要かも
+    // return NextResponse.json({ token: jwt, expiryDate }, { status: 200 });
+    return NextResponse.json("signin success", { status: 200 });
   } catch (e) {
     console.log(e);
     return NextResponse.json({ error: "Error" }, { status: 400 });

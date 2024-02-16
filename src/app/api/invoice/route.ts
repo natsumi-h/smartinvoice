@@ -192,7 +192,7 @@ export async function GET(request: Request) {
         items: true,
       },
     });
-    console.log(res);
+    // console.log(res);
     return NextResponse.json({ data: res }, { status: 200 });
   } catch (e) {
     console.log(e);
