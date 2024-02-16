@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/app/db";
-import { createJWT, getExpiry } from "@/app/lib/security";
+import { createJWT, getExpiry } from "@/app/lib/action";
 import { cookies } from "next/headers";
 
 // GET /api/user/signin?email=
@@ -69,9 +69,16 @@ export async function POST(request: NextRequest) {
     cookies().set("token", jwt, { expires: expiryDate, httpOnly: true });
     // 以下のJWTをフロントに返す実装は不要かも
     // return NextResponse.json({ token: jwt, expiryDate }, { status: 200 });
-    return NextResponse.json("signin success", { status: 200 });
+
+    return NextResponse.json({ company: user.company_id }, { status: 200 });
   } catch (e) {
     console.log(e);
     return NextResponse.json({ error: "Error" }, { status: 400 });
   }
+
+  // if (user.company_id) {
+  // redirect("/invoice");
+  // } else {
+  // redirect("/customer/onboarding");
+  // }
 }

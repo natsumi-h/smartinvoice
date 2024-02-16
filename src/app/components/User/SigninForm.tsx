@@ -39,16 +39,22 @@ const SigninForm = () => {
         email: values.email,
         password: hashedPassword,
       };
-      const tokenRes = await fetch("/api/user/signin", {
+      const signinRes = await fetch("/api/user/signin", {
         method: "POST",
         body: JSON.stringify(payload),
       });
-      if(!tokenRes.ok){
+      if (!signinRes.ok) {
         throw new Error("Invalid credentials");
       }
+      const signinData = await signinRes.json();
+      console.log(signinData.company);
+
       setLoading(false);
-      router.push("/invoice");
-      router.refresh();
+      if (signinData.company) {
+        router.push("/invoice");
+      } else {
+        router.push("/company/onboarding");
+      }
       successToast({
         title: "Signin successful",
         message: "You are now signed in.",

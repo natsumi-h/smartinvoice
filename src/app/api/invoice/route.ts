@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { prisma } from "@/app/db";
 import puppeteer from "puppeteer";
+import { cookies } from "next/headers";
+import { getSession } from "@/app/lib/action";
 
 // HTMLを生成（CSSをインラインで組み込む）
 // const html = `
@@ -185,14 +187,22 @@ export async function POST(request: Request) {
 // GET /api/invoice
 // @desc: Get all invoices
 export async function GET(request: Request) {
+  const session: any = await getSession();
+  if (!session) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 400 });
+  }
+
   try {
     const res = await prisma.invoice.findMany({
+      where: {
+        customer_id: session.payload.id,
+      },
       include: {
         customer: true,
         items: true,
       },
     });
-    // console.log(res);
+    console.log(res);
     return NextResponse.json({ data: res }, { status: 200 });
   } catch (e) {
     console.log(e);

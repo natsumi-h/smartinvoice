@@ -1,10 +1,16 @@
-import { UnstyledButton, Group, Text, rem } from "@mantine/core";
+import { Group, Text, rem, Anchor } from "@mantine/core";
 import { IconChevronRight } from "@tabler/icons-react";
 import classes from "./UserButton.module.css";
+import Link from "next/link";
 
-export function UserButton() {
+export function UserButton({ session }: any) {
   return (
-    <UnstyledButton className={classes.user}>
+    <Anchor
+      className={classes.user}
+      component={Link}
+      href="/account"
+      td={"none"}
+    >
       <Group>
         {/* <Avatar
           src="https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-8.png"
@@ -13,11 +19,11 @@ export function UserButton() {
 
         <div style={{ flex: 1 }}>
           <Text size="sm" fw={500}>
-            Harriette Spoonlicker
+            {session?.payload?.name}
           </Text>
 
           <Text c="dimmed" size="xs">
-            hspoonlicker@outlook.com
+            {session?.payload?.email}
           </Text>
         </div>
 
@@ -26,6 +32,6 @@ export function UserButton() {
           stroke={1.5}
         />
       </Group>
-    </UnstyledButton>
+    </Anchor>
   );
 }

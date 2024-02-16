@@ -1,7 +1,6 @@
 "use client";
 import {
   ActionIcon,
-  Box,
   Group,
   ScrollArea,
   Title,
@@ -60,7 +59,7 @@ const mockdata = [
   // },
 ];
 
-export function Navbar() {
+export function Navbar({ session }: any) {
   const { setColorScheme } = useMantineColorScheme();
   const computedColorScheme = useComputedColorScheme("light", {
     getInitialValueInEffect: true,
@@ -97,7 +96,7 @@ export function Navbar() {
       </ScrollArea>
 
       <div className={classes.footer}>
-        <UserButton />
+        <UserButton session={session}/>
       </div>
     </nav>
   );

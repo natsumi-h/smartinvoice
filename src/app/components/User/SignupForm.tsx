@@ -18,7 +18,14 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 const SignupForm = () => {
-  const form = useForm({});
+  const form = useForm({
+    initialValues: {
+      name: "",
+      email: "",
+      phone: "",
+      agreewithtnc: false,
+    },
+  });
   const [loading, setLoading] = useState(false);
   const { successToast, errorToast } = useToast();
   const router = useRouter();
@@ -35,7 +42,8 @@ const SignupForm = () => {
       const data = await response.json();
       console.log(values);
       setLoading(false);
-      router.push("/");
+      // router.push("/");
+      form.reset();
       successToast({
         title: "Signup request sent",
         message: "You will receive an email to verify your account shortly.",
@@ -61,22 +69,19 @@ const SignupForm = () => {
       <Paper withBorder shadow="md" p={30} mt={30} radius="md">
         <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
           <TextInput
-            label="Email"
-            placeholder="john@smartinvoice.com"
-            required
-            {...form.getInputProps("email")}
-          />
-          <TextInput
             label="Name"
             placeholder="John Doe"
-            required
-            mt="md"
             {...form.getInputProps("name")}
+          />
+          <TextInput
+            label="Email"
+            placeholder="john@smartinvoice.com"
+            mt="md"
+            {...form.getInputProps("email")}
           />
           <TextInput
             label="Phone"
             placeholder="12345678"
-            required
             mt="md"
             {...form.getInputProps("phone")}
           />

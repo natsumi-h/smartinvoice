@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { prisma } from "@/app/db";
+import { getSession } from "@/app/lib/action";
 
 const s3Client = new S3Client({
   region: process.env.AWS_S3_REGION || "ap-southeast-2",
@@ -36,8 +37,14 @@ const uploadFileToS3 = async (
   }
 };
 
+// POST /api/company
+// @desc: Create a new company
 export async function POST(request: Request) {
   try {
+    const session: any = await getSession();
+    const userId = session.payload.id;
+    console.log(userId);
+
     const formData = await request.formData();
     const file = formData.get("file") as File;
     if (!file) {
@@ -92,7 +99,7 @@ export async function POST(request: Request) {
     const swiftcode = formData.get("swiftcode") as string;
     const branchnumber = formData.get("branchnumber") as string;
 
-    // ここでORM処理
+    //ORM処理
     const res = await prisma.company.create({
       data: {
         name,
@@ -111,6 +118,11 @@ export async function POST(request: Request) {
         swiftcode,
         branchnumber,
         logoUrl: fileUrl,
+        user: {
+          connect: {
+            id: userId,
+          },
+        },
       },
     });
     console.log(res);

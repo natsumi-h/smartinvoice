@@ -19,6 +19,7 @@ import { useState } from "react";
 const Onboarding = () => {
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
   const form = useForm({
     // validate: {
     //   file: (value) => (value ? null : "File is required"),
@@ -26,6 +27,7 @@ const Onboarding = () => {
   });
 
   const handleSubmit = async (values: any) => {
+    setLoading(true);
     const formData = new FormData();
     if (file) {
       formData.append("file", file);
@@ -46,8 +48,11 @@ const Onboarding = () => {
         body: formData,
       });
       const data = await response.json();
+      console.log(data);
+      setLoading(false);
     } catch (error) {
       console.log(error);
+      setLoading(false);
     }
   };
 
@@ -194,7 +199,7 @@ const Onboarding = () => {
         />
 
         <Group justify="center" mt="xl">
-          <Button fullWidth type="submit">
+          <Button fullWidth type="submit" loading={loading}>
             Submit
           </Button>
         </Group>
