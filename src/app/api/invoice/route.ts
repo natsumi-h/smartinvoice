@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { prisma } from "@/app/db";
-import puppeteer from "puppeteer";
+import puppeteer from "puppeteer-core";
+// import puppeteer from "puppeteer";
+import chromium from "@sparticuz/chromium";
 import { getSession } from "@/app/lib/action";
 import { generateHtml } from "@/app/lib/pdf";
 
@@ -40,11 +42,18 @@ const uploadFileToS3 = async (
 };
 
 const generatePdf = async (html: string) => {
-  // const browser = await puppeteer.launch();
+  // const browser = await puppeteer.launch({ headless: true });
+
   const browser = await puppeteer.launch({
+    args: chromium.args,
+    defaultViewport: chromium.defaultViewport,
+    executablePath: await chromium.executablePath(),
     headless: true,
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });
+
+  // const browser = await puppeteer.connect({
+  //   browserWSEndpoint: `wss://chrome.browserless.io?token=${process.env.BLESS_TOKEN}`,
+  // });
   const page = await browser.newPage();
   await page.setContent(html);
   const pdfBuffer = await page.pdf();
