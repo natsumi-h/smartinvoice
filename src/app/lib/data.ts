@@ -76,26 +76,24 @@ export const getCompany = async () => {
   }
 };
 
-export const getInvoices = async () => {
-  noStore();
-  try {
-    const res = await prisma.invoice.findMany({
-      include: {
-        customer: true,
-        items: true,
-      },
-    });
-    console.log(res);
-    return res;
-  } catch (e) {
-    console.log(e);
-    throw e;
-  }
-};
-
 export const getInvoice = async (id: string) => {
   noStore();
   try {
+    const session: any = getSession();
+    if (!session) {
+      throw new Error("Unauthorized");
+    }
+    const userId = session.payload.id;
+    const usersCompany = await prisma.company.findFirst({
+      where: {
+        user: {
+          some: {
+            id: userId,
+          },
+        },
+      },
+    });
+
     const res = await prisma.invoice.findUnique({
       where: {
         id: parseInt(id),
@@ -105,6 +103,11 @@ export const getInvoice = async (id: string) => {
         items: true,
       },
     });
+
+    if (res?.company_id !== usersCompany?.id) {
+      throw new Error("Unauthorized");
+    }
+
     console.log(res);
     return res;
   } catch (e) {

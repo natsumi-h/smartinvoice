@@ -1,12 +1,41 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/app/db";
+import { getSession } from "@/app/lib/action";
 
 // POST /api/icustomer
 // @desc: Create a new customer
 export async function POST(request: Request) {
   try {
+    const session: any = getSession();
+    if (!session) {
+      return NextResponse.json(
+        {
+          message: "Unauthorized",
+        },
+        { status: 401 }
+      );
+    }
+    const userId = session.payload.id;
+
+    const userCompany = await prisma.company.findFirst({
+      where: {
+        user: {
+          some: {
+            id: userId,
+          },
+        },
+      },
+    });
+    if (!userCompany) {
+      return NextResponse.json(
+        {
+          message: "Company not found",
+        },
+        { status: 404 }
+      );
+    }
+
     const req = await request.json();
-    
     // ORM
     const res = await prisma.customer.create({
       data: {
@@ -22,6 +51,16 @@ export async function POST(request: Request) {
             title: req.Title,
             name: req.contactName,
             isPrimary: true,
+          },
+        },
+        user: {
+          connect: {
+            id: userId,
+          },
+        },
+        company: {
+          connect: {
+            id: userCompany.id,
           },
         },
       },

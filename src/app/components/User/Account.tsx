@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import useToast from "@/app/hooks/useToast";
 import { useState } from "react";
 
-const Account = () => {
+const Account = ({ session }: any) => {
   const { successToast, errorToast } = useToast();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -13,7 +13,6 @@ const Account = () => {
   const handleLogout = async () => {
     setLoading(true);
     try {
-      const session: any = await getSession();
       const email = session.payload.email;
       const res = await fetch("/api/user/signout", {
         method: "POST",

@@ -4,20 +4,12 @@ import type { NextRequest } from "next/server";
 export function middleware(request: NextRequest) {
   console.log("middleware");
   const url = new URL(request.url);
-  const user = request.cookies.get("token");
+  const user: any = request.cookies.get("token");
+  console.log(user);
 
   if (!user && url.pathname !== "/signin") {
     return NextResponse.redirect(new URL("/signin", request.url));
   }
-
-  // パスが/apiの場合
-  // リクエストのヘッダーにクッキーがあるかどうか
-  // なければリダイレクト
-  // if (url.pathname.startsWith("/api")) {
-  //   if (!request.cookies.get("token")) {
-  //     return NextResponse.json({ error: "Unauthorized" }, { status: 400 });
-  //   }
-  // }
 
   return NextResponse.next();
 }
@@ -32,11 +24,10 @@ export const config = {
      * - favicon.ico (favicon file)
      */
     // "/((?!api|_next/static|_next/image|.*\\.png$).*)",
-    "/invoice/:path",
-    "/account/:patht",
-    "/company/:path",
-    // "/customer/:path",
-    "/customer",
-    "/customer/onboarding",
+    // ↓のパスがミドルウェアを通る
+    "/invoice/:path*",
+    "/account/:path*",
+    "/company/:path*",
+    "/customer/:path*",
   ],
 };

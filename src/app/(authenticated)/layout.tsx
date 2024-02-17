@@ -5,8 +5,7 @@ import { getSession } from "../lib/action";
 
 const layout = ({ children }: { children: React.ReactNode }) => {
   const session = getSession();
-  console.log(session);
-  
+
   return (
     <>
       <Navbar session={session} />

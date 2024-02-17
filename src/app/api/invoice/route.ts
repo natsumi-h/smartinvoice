@@ -127,6 +127,24 @@ const generatePdf = async (html: string) => {
 // POST /api/invoice
 // @desc: Create a new invoice
 export async function POST(request: Request) {
+  const session: any = getSession();
+  if (!session) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 400 });
+  }
+  const userId = session.payload.id;
+  const usersCompany = await prisma.company.findFirst({
+    where: {
+      user: {
+        some: {
+          id: userId,
+        },
+      },
+    },
+  });
+  if (!usersCompany) {
+    return NextResponse.json({ error: "Company not found" }, { status: 404 });
+  }
+
   console.log(process.env.AWS_ACCESS_KEY_ID);
 
   try {
@@ -164,6 +182,16 @@ export async function POST(request: Request) {
         discount: payload.specialDiscount,
         totalTax: payload.totalTax,
         totalAmount: payload.total,
+        user: {
+          connect: {
+            id: userId,
+          },
+        },
+        company: {
+          connect: {
+            id: usersCompany.id,
+          },
+        },
       },
       include: {
         items: true,
@@ -187,15 +215,28 @@ export async function POST(request: Request) {
 // GET /api/invoice
 // @desc: Get all invoices
 export async function GET(request: Request) {
-  const session: any = await getSession();
+  const session: any = getSession();
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 400 });
+  }
+  const userId = session.payload.id;
+  const usersCompany = await prisma.company.findFirst({
+    where: {
+      user: {
+        some: {
+          id: userId,
+        },
+      },
+    },
+  });
+  if (!usersCompany) {
+    return NextResponse.json({ error: "Company not found" }, { status: 404 });
   }
 
   try {
     const res = await prisma.invoice.findMany({
       where: {
-        customer_id: session.payload.id,
+        company_id: usersCompany.id,
       },
       include: {
         customer: true,

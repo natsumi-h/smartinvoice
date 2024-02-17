@@ -8,7 +8,7 @@ const layout = ({
   // const data = await getCustomer();
   return (
     <>
-      <Title order={2}>My Team</Title>
+      <Title order={2}>My Organization</Title>
       {children}
     </>
   );

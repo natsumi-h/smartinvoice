@@ -9,6 +9,8 @@ export async function POST(request: NextRequest) {
   const user = await prisma.user.findFirst({
     where: { email: body.email },
   });
+  console.log(user);
+  
   if (!user) {
     return NextResponse.json({ error: "User not found" }, { status: 404 });
   }

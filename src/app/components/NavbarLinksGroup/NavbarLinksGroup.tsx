@@ -46,9 +46,9 @@ export function LinksGroup({
       >
         <Group justify="space-between" gap={0}>
           <Box style={{ display: "flex", alignItems: "center" }}>
-            <ThemeIcon variant="light" size={30}>
+            {/* <ThemeIcon variant="light" size={30}>
               <Icon style={{ width: rem(18), height: rem(18) }} />
-            </ThemeIcon>
+            </ThemeIcon> */}
             <Box ml="md">{label}</Box>
           </Box>
           {hasLinks && (
