@@ -1,7 +1,28 @@
 // const cssPath = path.join(process.cwd(), "public", "pdf.css");
 // const css = fs.readFileSync(cssPath, "utf-8");
+import dayjs from "dayjs";
 
 export const generateHtml = (payload: any) => {
+  const issueDate = dayjs(payload.issueDate).format("DD MMMM YYYY");
+  const dueDate = dayjs(payload.dueDate).format("DD MMMM YYYY");
+  const company = payload.company;
+  const customer = payload.customer;
+  const bankDetails1 = `Bank: ${company.bankname}, Branch: ${company.branchname}, A/C Name: ${company.accountname},`;
+  const bankDetails2 = `A/C Type: ${company.accounttype}, A/C #: ${company.accountnumber},`;
+  const bankDetails3 = `Bank Code: ${company.bankcode}, SWIFT BIC Code: ${company.swiftcode}, Branch #: ${company.branchnumber}`;
+  const items = payload.items
+    .map((item: any) => {
+      return `
+      <tr>
+        <td>${item.description}</td>
+        <td>${item.qty}</td>
+        <td>${Number(item.unitPrice).toFixed(2)}</td>
+        <td>${Number(item.amount).toFixed(2)}</td>
+      </tr>
+    `;
+    })
+    .join("");
+
   return `
   <!DOCTYPE html>
 <html lang="en">
@@ -17,33 +38,34 @@ export const generateHtml = (payload: any) => {
         <h1>Invoice</h1>
         <div class="image">
           <img
-            src="https://smartinvoice-gacapstone.s3.ap-southeast-2.amazonaws.com/img_206.jpg"
-            alt="logo"
+            src=${company.logoUrl}
+            alt=${company.name}
           />
         </div>
       </div>
 
       <div class="flex">
         <div>
-          <p>General Assembly Singapore</p>
-          <p>Attn: Mr.Saito</p>
-          <p>Address</p>
+          <p>${customer.name}</p>
+          <p>Attn: ${customer.contact[0].title} ${customer.contact[0].name}</p>
+          <p>${customer.street} ${customer.city}</p>
+          <p>${customer.state} ${customer.postcode}</p>
         </div>
 
         <div class="flex right">
           <div>
             <p class="bold">Invoice number</p>
-            <p>123456</p>
+            <p>INV-${payload.id}</p>
             <p class="bold invoicedate">Invoice Date</p>
-            <p>February 12, 2024</p>
+            <p>${issueDate}</p>
           </div>
           <div class="company">
-            <p>TAMSAN Pte Ltd</p>
-            <p>WeWork</p>
-            <p>36 Robinson Road</p>
-            <p>Singapore, 068877</p>
-            <p>phone:12345667</p>
-            <p>UEN:1234455</p>
+            <p>${company.name}</p>
+            <p>${company.street}</p>
+            <p>${company.city}</p>
+            <p>${company.state}, ${company.postcode}</p>
+            <p>phone: ${company.phone}</p>
+            <p>UEN: ${company.uen}</p>
           </div>
         </div>
       </div>
@@ -60,52 +82,37 @@ export const generateHtml = (payload: any) => {
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>Item 1</td>
-            <td>2</td>
-            <td>$10.00</td>
-            <td>$20.00</td>
-          </tr>
-          <tr>
-            <td>Item 1</td>
-            <td>2</td>
-            <td>$10.00</td>
-            <td>$20.00</td>
-          </tr>
-          <tr>
-            <td>Item 1</td>
-            <td>2</td>
-            <td>$10.00</td>
-            <td>$20.00</td>
-          </tr>
+             ${items}
         </tbody>
       </table>
 
       <table class="total">
         <tr>
           <td>Subtoal:</td>
-          <td>$20.00</td>
+          <td>$${Number(payload.subtotal).toFixed(2)}</td>
         </tr>
         <tr>
           <td>Total Tax:</td>
-          <td>$20.00</td>
+          <td>$${Number(payload.totalTax).toFixed(2)}</td>
         </tr>
         <tr>
           <td>Total:</td>
-          <td>$20.00</td>
+          <td>$${Number(payload.totalAmount).toFixed(2)}</td>
         </tr>
       </table>
     </main>
 
     <footer>
-      <p class="bold duedate">Due Date: 14 Feb 2024</p>
+      <p class="bold duedate">Due Date: ${dueDate}</p>
       <p>
-        For cheque payment, no receipt will be issued. Cheque is to be crossed
-        and made payable to TAMSAN PTE. LTD.
+        For cheque payment, no receipt will be issued.
       </p>
-      <p>Bank: DBS Bank Ltd, Branch: MBFC Branch, A/C Name: TAMSAN PTE. LTD.</p>
-      <p>A/C Type: Current Account, A/C #: 001-907810-5</p>
-      <p>Bank Code: 7171, SWIFT BIC Code: DBSSSGSG, Branch #: 001</p>
+      <p>
+        Cheque is to be crossed and made payable to ${company.name}.
+      </p>
+      <p>${bankDetails1}</p>
+      <p>${bankDetails2}</p>
+      <p>${bankDetails3}</p>
     </footer>
   </body>
 </html>

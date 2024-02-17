@@ -14,9 +14,9 @@ import {
   IconSun,
   IconMoon,
 } from "@tabler/icons-react";
-import { LinksGroup } from "../NavbarLinksGroup/NavbarLinksGroup";
+import { LinksGroup } from "./NavbarLinksGroup/NavbarLinksGroup";
 import classes from "./Navbar.module.css";
-import { UserButton } from "../UserButton/UserButton";
+import { UserButton } from "./UserButton/UserButton";
 import cx from "clsx";
 
 export function Navbar({ session }: any) {

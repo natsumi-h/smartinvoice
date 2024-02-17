@@ -2,8 +2,8 @@ import { NextResponse } from "next/server";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { prisma } from "@/app/db";
 import puppeteer from "puppeteer";
-import { cookies } from "next/headers";
 import { getSession } from "@/app/lib/action";
+import { generateHtml } from "@/app/lib/pdf";
 
 // HTMLを生成（CSSをインラインで組み込む）
 // const html = `
@@ -141,33 +141,29 @@ export async function POST(request: Request) {
       },
     },
   });
+
   if (!usersCompany) {
     return NextResponse.json({ error: "Company not found" }, { status: 404 });
   }
 
-  console.log(process.env.AWS_ACCESS_KEY_ID);
-
   try {
-    // req.bodyの処理
-    // const formData = await request.formData();
-    // console.log(formData);
-    // const html = formData.get("html") as string;
-    // console.log(html);
     const req = await request.json();
-    const html = req.html;
     const payload = req.payload;
     // PDFを生成
-    const pdfBuffer = await generatePdf(html);
-    const contentType = "application/pdf";
-    // S3へのアップロード処理
-    // TODO:Invoice name
-    const fileUrl = await uploadFileToS3(pdfBuffer, "invoice.pdf", contentType);
-    console.log(fileUrl);
+    // const html = req.html;
+    const customer = await prisma.customer.findUnique({
+      where: {
+        id: payload.customer,
+      },
+      include: {
+        contact: true,
+      },
+    });
 
     // ORM
-    const res = await prisma.invoice.create({
+    const createRes = await prisma.invoice.create({
       data: {
-        invoiceUrl: fileUrl,
+        // invoiceUrl: fileUrl,
         customer: {
           connect: {
             id: payload.customer,
@@ -195,14 +191,49 @@ export async function POST(request: Request) {
       },
       include: {
         items: true,
+        customer: {
+          include: {
+            contact: true,
+          },
+        },
+        company: true,
       },
     });
-    console.log(res);
+    console.log(createRes);
+    const html = generateHtml(createRes);
+    const pdfBuffer = await generatePdf(html);
+    const contentType = "application/pdf";
+    // S3へのアップロード処理
+    // TODO:Invoice name
+    const uniqueInvoiceName = `invoice-${createRes.id}.pdf`;
+    const fileUrl = await uploadFileToS3(
+      pdfBuffer,
+      uniqueInvoiceName,
+      contentType
+    );
+    console.log(fileUrl);
+
+    const updateRes = await prisma.invoice.update({
+      where: {
+        id: createRes.id,
+      },
+      data: {
+        invoiceUrl: fileUrl,
+      },
+      include: {
+        items: true,
+        customer: {
+          include: {
+            contact: true,
+          },
+        },
+        company: true,
+      },
+    });
 
     return NextResponse.json(
       {
-        message: "File upload Success",
-        data: res,
+        data: updateRes,
       },
       { status: 200 }
     );

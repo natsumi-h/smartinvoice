@@ -17,7 +17,7 @@ import { FC, useEffect, useState } from "react";
 import { IconTrash } from "@tabler/icons-react";
 import { DateInput } from "@mantine/dates";
 import { useRouter } from "next/navigation";
-import { generateHtml } from "@/app/consts/pdf";
+import { generateHtml } from "@/app/lib/pdf";
 
 type Props = {
   customers: { id: number; name: string }[];
@@ -114,23 +114,18 @@ const CreateForm: FC<Props> = ({ customers }) => {
         )?.id,
       };
 
-      const htmlPayload = {
-        ...payload,
-        customer: customers.find(
-          (customer) => customer.name === values.customer
-        ),
-      };
-
-      // const renderComponentToHtml = () => {
-      //   return renderToString(<PdfComponent payload={htmlPayload} />);
+      // const htmlPayload = {
+      //   ...payload,
+      //   customer: customers.find(
+      //     (customer) => customer.name === values.customer
+      //   ),
       // };
-      const html = generateHtml(htmlPayload);
+      // const html = generateHtml(htmlPayload);
 
       const response = await fetch("/api/invoice", {
         method: "POST",
         body: JSON.stringify({
-          // html: renderComponentToHtml(),
-          html,
+          // html,
           payload,
         }),
       });
