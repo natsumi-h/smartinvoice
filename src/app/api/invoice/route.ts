@@ -3,7 +3,7 @@ import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { prisma } from "@/app/db";
 import puppeteer from "puppeteer-core";
 // import puppeteer from "puppeteer";
-import chromium from "@sparticuz/chromium-min";
+import chromium from "@sparticuz/chromium";
 import { getSession } from "@/app/lib/action";
 import { generateHtml } from "@/app/lib/pdf";
 
