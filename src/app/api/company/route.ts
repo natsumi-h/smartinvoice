@@ -40,6 +40,10 @@ const uploadFileToS3 = async (
 // POST /api/company
 // @desc: Create a new company
 export async function POST(request: Request) {
+  const session = getSession();
+  if (!session) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 400 });
+  }
   try {
     const session: any = await getSession();
     const userId = session.payload.id;
@@ -139,11 +143,22 @@ export async function POST(request: Request) {
 
 export async function GET(request: Request) {
   try {
-    // ここでORM処理
     // TODO:ユーザーのCompany情報を取得する
-    const res = await prisma.company.findUnique({
+    const session: any = getSession();
+    if (!session) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 400 });
+    }
+    const userId = session.payload.id;
+    const res = await prisma.company.findFirst({
       where: {
-        id: 4,
+        user: {
+          some: {
+            id: userId,
+          },
+        },
+      },
+      include: {
+        user: true,
       },
     });
     console.log(res);

@@ -19,6 +19,7 @@ export async function POST(request: NextRequest) {
         ...body,
         token,
         tokenExpiry: new Date(Date.now() + 3600000),
+        role: "admin",
       },
     });
     console.log(res);

@@ -3,6 +3,7 @@ import { getCompany } from "@/app/lib/data";
 
 const page = async () => {
   const data: any = await getCompany();
+  
   return <CompanyView company={data} />;
 };
 

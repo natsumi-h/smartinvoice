@@ -1,5 +1,6 @@
 import { prisma } from "@/app/db";
 import { unstable_noStore as noStore } from "next/cache";
+import { getSession } from "./action";
 
 export const getCustomers = async () => {
   noStore();
@@ -50,11 +51,21 @@ export const getCustomer = async (id: string) => {
 export const getCompany = async () => {
   noStore();
   try {
-    // ここでORM処理
-    // TODO:ユーザーのCompany情報を取得する
-    const res = await prisma.company.findUnique({
+    const session: any = getSession();
+    if (!session || session.payload.role !== "admin") {
+      throw new Error("Unauthorized");
+    }
+    const userId = session.payload.id;
+    const res = await prisma.company.findFirst({
       where: {
-        id: 4,
+        user: {
+          some: {
+            id: userId,
+          },
+        },
+      },
+      include: {
+        user: true,
       },
     });
     console.log(res);
@@ -80,7 +91,7 @@ export const getInvoices = async () => {
     console.log(e);
     throw e;
   }
-}
+};
 
 export const getInvoice = async (id: string) => {
   noStore();
@@ -100,5 +111,4 @@ export const getInvoice = async (id: string) => {
     console.log(e);
     throw e;
   }
-}
-
+};

@@ -4,9 +4,9 @@ import type { NextRequest } from "next/server";
 export function middleware(request: NextRequest) {
   console.log("middleware");
   const url = new URL(request.url);
-  const currentUser = request.cookies.get("token");
+  const user = request.cookies.get("token");
 
-  if (!currentUser && url.pathname !== "/signin") {
+  if (!user && url.pathname !== "/signin") {
     return NextResponse.redirect(new URL("/signin", request.url));
   }
 
