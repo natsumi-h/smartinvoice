@@ -19,10 +19,10 @@ export default function Home() {
               invoices quickly and easily.
             </Text>
             <Flex gap="md" mt="xl">
-              <Button component={Link} href="signup">
+              <Button component={Link} href="/signup">
                 Signup
               </Button>
-              <Button component={Link} href="signup" variant="outline">
+              <Button component={Link} href="/" variant="outline">
                 Learn more
               </Button>
             </Flex>

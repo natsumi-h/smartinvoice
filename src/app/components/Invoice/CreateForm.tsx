@@ -17,7 +17,8 @@ import { FC, useEffect, useState } from "react";
 import { IconTrash } from "@tabler/icons-react";
 import { DateInput } from "@mantine/dates";
 import { useRouter } from "next/navigation";
-import { generateHtml } from "@/app/lib/pdf";
+import useToast from "@/app/hooks/useToast";
+// import { generateHtml } from "@/app/lib/pdf";
 
 type Props = {
   customers: { id: number; name: string }[];
@@ -57,6 +58,8 @@ const CreateForm: FC<Props> = ({ customers }) => {
   });
 
   // console.log(form.values);
+  const [loading, setLoading] = useState<boolean>(false);
+  const { successToast, errorToast } = useToast();
   const [itemLength, setItemLength] = useState<number>(1);
   const [subtotal, setSubtotal] = useState<number>(0.0);
   const [totaltax, setTotaltax] = useState<number>(0.0);
@@ -86,6 +89,7 @@ const CreateForm: FC<Props> = ({ customers }) => {
 
   const handleSubmit = async (values: any) => {
     try {
+      setLoading(true);
       const itemValues = [];
       for (let i = 0; i < itemLength; i++) {
         itemValues.push({
@@ -129,12 +133,17 @@ const CreateForm: FC<Props> = ({ customers }) => {
           payload,
         }),
       });
-
       const data = await response.json();
       console.log(data);
       router.push(`/invoice/${data.data.id}`);
+      successToast({
+        title: "Invoice created",
+        message: "Invoice has been created successfully",
+      });
+      setLoading(false);
     } catch (error) {
       console.log(error);
+      setLoading(false);
     }
   };
 
@@ -320,10 +329,10 @@ const CreateForm: FC<Props> = ({ customers }) => {
         </Table>
 
         <Flex justify="center" mt="xl" gap={"lg"}>
-          <Button fullWidth type="submit" variant="outline">
+          <Button fullWidth type="submit" variant="outline" loading={loading}>
             Save Draft
           </Button>
-          <Button fullWidth type="submit">
+          <Button fullWidth type="submit" loading={loading}>
             Submit for approval
           </Button>
           {/* <Button fullWidth type="submit">

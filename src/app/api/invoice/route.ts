@@ -5,82 +5,6 @@ import puppeteer from "puppeteer";
 import { getSession } from "@/app/lib/action";
 import { generateHtml } from "@/app/lib/pdf";
 
-// HTMLを生成（CSSをインラインで組み込む）
-// const html = `
-// <!DOCTYPE html>
-// <html lang="en">
-// <head>
-//   <meta charset="UTF-8">
-//   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-//   <title>Invoice</title>
-//   <style>
-//   body {
-//   font-family: Arial, sans-serif;
-//   margin: 0;
-//   padding: 0;
-// }
-
-// header, footer {
-//   background-color: #f2f2f2;
-//   padding: 10px;
-// }
-
-// table {
-//   width: 100%;
-//   border-collapse: collapse;
-// }
-
-// th, td {
-//   border: 1px solid #ddd;
-//   padding: 8px;
-// }
-
-// th {
-//   text-align: left;
-// }
-
-// tfoot {
-//   font-weight: bold;
-// }
-//   </style>
-// </head>
-// <body>
-//   <header>
-//     <h1>Invoice</h1>
-//     <p>Invoice number: 123456</p>
-//     <p>Date: February 12, 2024</p>
-//   </header>
-
-//   <main>
-//     <table>
-//       <thead>
-//         <tr>
-//           <th>Description</th>
-//           <th>Quantity</th>
-//           <th>Unit Price</th>
-//           <th>Total</th>
-//         </tr>
-//       </thead>
-//       <tbody>
-//         <tr>
-//           <td>Item 1</td>
-//           <td>2</td>
-//           <td>$10.00</td>
-//           <td>$20.00</td>
-//         </tr>
-//         <!-- More items here -->
-//       </tbody>
-//     </table>
-//   </main>
-
-//   <footer>
-//     <p>Total: $20.00</p>
-//     <p>Payment due by: February 28, 2024</p>
-//   </footer>
-// </body>
-// </html>
-//     `;
-
 const s3Client = new S3Client({
   region: process.env.AWS_S3_REGION || "ap-southeast-2",
   credentials: {
@@ -116,10 +40,14 @@ const uploadFileToS3 = async (
 };
 
 const generatePdf = async (html: string) => {
-  const browser = await puppeteer.launch();
+  // const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+  });
   const page = await browser.newPage();
   await page.setContent(html);
-  const pdfBuffer = await page.pdf(); // PDFのBufferを取得
+  const pdfBuffer = await page.pdf();
   await browser.close();
   return pdfBuffer;
 };
@@ -159,6 +87,12 @@ export async function POST(request: Request) {
         contact: true,
       },
     });
+    if (!customer) {
+      return NextResponse.json(
+        { error: "Customer not found" },
+        { status: 404 }
+      );
+    }
 
     // ORM
     const createRes = await prisma.invoice.create({
@@ -166,7 +100,7 @@ export async function POST(request: Request) {
         // invoiceUrl: fileUrl,
         customer: {
           connect: {
-            id: payload.customer,
+            id: customer.id,
           },
         },
         issueDate: payload.issueDate,
@@ -204,7 +138,6 @@ export async function POST(request: Request) {
     const pdfBuffer = await generatePdf(html);
     const contentType = "application/pdf";
     // S3へのアップロード処理
-    // TODO:Invoice name
     const uniqueInvoiceName = `invoice-${createRes.id}.pdf`;
     const fileUrl = await uploadFileToS3(
       pdfBuffer,

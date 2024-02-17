@@ -54,6 +54,7 @@ const CreateForm = () => {
       setLoading(false);
       router.push("/customer");
       router.refresh();
+      
     } catch (error) {
       console.log(error);
     }
