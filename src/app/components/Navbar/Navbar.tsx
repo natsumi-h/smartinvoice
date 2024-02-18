@@ -25,8 +25,6 @@ export function Navbar({ session }: any) {
     getInitialValueInEffect: true,
   });
 
-  console.log(session.payload.role);
-
   const mockdata =
     session.payload.role === "admin"
       ? [

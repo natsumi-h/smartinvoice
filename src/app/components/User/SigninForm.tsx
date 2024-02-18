@@ -15,12 +15,32 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import useToast from "@/app/hooks/useToast";
 import { hashDataWithSaltRounds } from "@/app/lib/security";
+import { zodResolver } from "mantine-form-zod-resolver";
+import { z } from "zod";
 
 const SigninForm = () => {
-  const form = useForm({});
   const [loading, setLoading] = useState(false);
   const { successToast, errorToast } = useToast();
   const router = useRouter();
+
+  const schema = z.object({
+    email: z
+      .string({
+        required_error: "Email is required",
+      })
+      .email({ message: "Invalid email" }),
+    password: z.string({
+      required_error: "Password is required",
+    }),
+  });
+
+  const form = useForm({
+    validate: zodResolver(schema),
+    initialValues: {
+      name: "",
+      email: "",
+    },
+  });
 
   const handleSubmit = async (values: any) => {
     setLoading(true);
@@ -29,6 +49,9 @@ const SigninForm = () => {
       const response = await fetch(`/api/user/signin?email=${encodedEmail}`, {
         method: "GET",
       });
+      if (!response.ok) {
+        throw new Error("Invalid credentials");
+      }
       const data = await response.json();
       const hashedPassword = hashDataWithSaltRounds(
         values.password,
@@ -47,21 +70,20 @@ const SigninForm = () => {
         throw new Error("Invalid credentials");
       }
       const signinData = await signinRes.json();
-      console.log(signinData.company);
-
       setLoading(false);
       if (signinData.company) {
-        router.push("/invoice");
+        await router.push("/invoice");
       } else {
-        router.push("/company/onboarding");
+        await router.push("/company/onboarding");
       }
       successToast({
         title: "Signin successful",
         message: "You are now signed in.",
       });
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      console.log(error.message);
       setLoading(false);
+      errorToast(error.message);
     }
   };
 
@@ -82,13 +104,11 @@ const SigninForm = () => {
           <TextInput
             label="Email"
             placeholder="john@smartinvoice"
-            required
             {...form.getInputProps("email")}
           />
           <PasswordInput
             label="Password"
             placeholder="Your password"
-            required
             mt="md"
             {...form.getInputProps("password")}
           />

@@ -8,7 +8,6 @@ import { cookies } from "next/headers";
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const email = searchParams.get("email");
-
   try {
     const user = await prisma.user.findFirst({
       where: {
@@ -16,7 +15,7 @@ export async function GET(request: NextRequest) {
       },
     });
     if (!user) {
-      throw new Error("User not found");
+      throw new Error("Invalid credentials");
     }
     // name/salt/iterationsだけを返す
     return NextResponse.json(
@@ -27,9 +26,12 @@ export async function GET(request: NextRequest) {
       },
       { status: 200 }
     );
-  } catch (e) {
+  } catch (e: any) {
     console.log(e);
-    return NextResponse.json({ error: "Error" }, { status: 400 });
+    const message =
+      e.message === "Invalid credentials" ? e.message : "Internal server error";
+    const status = e.message === "Invalid credentials" ? 401 : 500;
+    return NextResponse.json({ error: message }, { status: status });
   }
 }
 
@@ -37,8 +39,9 @@ export async function GET(request: NextRequest) {
 // @desc: Login user
 export async function POST(request: NextRequest) {
   const body = await request.json();
+  let user;
   try {
-    const user = await prisma.user.findFirst({
+    user = await prisma.user.findUnique({
       where: {
         email: body.email,
         password: body.password,
@@ -71,13 +74,17 @@ export async function POST(request: NextRequest) {
       },
     });
     cookies().set("token", jwt, { expires: expiryDate, httpOnly: true });
-    // 以下のJWTをフロントに返す実装は不要かも
+    // 以下のJWTをフロントに返す実装は不要そう
     // return NextResponse.json({ token: jwt, expiryDate }, { status: 200 });
 
-    return NextResponse.json({ company: user.company_id }, { status: 200 });
-  } catch (e) {
+    // 会社がある場合はinvoiceにリダイレクト、ない場合はcompany/onboardingにリダイレクト(フロントで実装)
+    return NextResponse.json({ company: user?.company_id }, { status: 200 });
+  } catch (e: any) {
     console.log(e);
-    return NextResponse.json({ error: "Error" }, { status: 400 });
+    const message =
+      e.message === "Invalid credentials" ? e.message : "Internal server error";
+    const status = e.message === "Invalid credentials" ? 401 : 500;
+    return NextResponse.json({ error: message }, { status: status });
   }
 
   // if (user.company_id) {
