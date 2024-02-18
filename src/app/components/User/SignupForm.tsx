@@ -11,6 +11,7 @@ import {
   Group,
   Button,
   Flex,
+  Box,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import Link from "next/link";
@@ -55,7 +56,7 @@ const SignupForm = () => {
   };
 
   return (
-    <Container size={420} my={80} flex={1}>
+    <Container size={420} py={80} flex={1}>
       <Title ta="center" fw={"bold"}>
         Signup to SmartInvoice
       </Title>

@@ -8,3 +8,19 @@
   }
 }
 
+.flex {
+  @media (max-width: $mantine-breakpoint-md) {
+    flex-direction: column;
+    gap: 50px;
+  }
+}
+
+.imagebox {
+  position: relative;
+  width: 800px;
+  height: 450px;
+  @media (max-width: $mantine-breakpoint-md) {
+    width: 100%;
+    height: 450px;
+  }
+}

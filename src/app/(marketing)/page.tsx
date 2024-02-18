@@ -4,12 +4,14 @@ import {
   Box,
   Button,
   Flex,
+  Image,
   Stack,
   Text,
   Title,
   rem,
 } from "@mantine/core";
 import HomeHeader from "../components/Navbar/HomeHeader";
+import NextImage from "next/image";
 
 export default function Home() {
   return (
@@ -26,13 +28,32 @@ export default function Home() {
               stress-free.<br></br>As a small business owner, create and manage
               your invoices quickly and easily.
             </Text>
-            <Flex gap="md" mt="xl">
-              <Button component={Link} href="/signup">
-                Signup
-              </Button>
-              <Button component={Link} href="/" variant="outline">
-                Learn more
-              </Button>
+            <Flex
+              justify={"space-between"}
+              align={"self-start"}
+              mt="xl"
+              maw={"1200px"}
+              className={styles.flex}
+            >
+              <Flex gap="md">
+                <Button component={Link} href="/signup">
+                  Signup
+                </Button>
+                <Button component={Link} href="/" variant="outline">
+                  Learn more
+                </Button>
+              </Flex>
+              <Box
+
+                className={styles.imagebox}
+              >
+                <Image
+                  src="/images/kv.png"
+                  component={NextImage}
+                  alt="invoice"
+                  fill
+                />
+              </Box>
             </Flex>
           </main>
         </Box>

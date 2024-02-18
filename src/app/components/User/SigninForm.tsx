@@ -88,7 +88,7 @@ const SigninForm = () => {
   };
 
   return (
-    <Container size={420} my={80} flex={1}>
+    <Container size={420} py={80} flex={1}>
       <Title ta="center" fw={"bold"}>
         Signin to SmartInvoice
       </Title>
