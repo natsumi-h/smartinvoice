@@ -43,6 +43,9 @@ export async function POST(request: NextRequest) {
         email: body.email,
         password: body.password,
       },
+      include: {
+        company: true,
+      },
     });
     if (!user) {
       throw new Error("Invalid credentials");
@@ -52,6 +55,7 @@ export async function POST(request: NextRequest) {
       role: user.role,
       name: user.name,
       id: user.id,
+      company: user.company_id,
     };
     const jwt = createJWT(jwtPayload);
     const expiry = getExpiry(jwt);

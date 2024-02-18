@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { prisma } from "@/app/db";
-import puppeteer from "puppeteer-core";
-// import puppeteer from "puppeteer";
-import chromium from "@sparticuz/chromium";
 import { getSession } from "@/app/lib/action";
 import { generateHtml } from "@/app/lib/pdf";
+import chromium from "@sparticuz/chromium";
+import puppeteercore from "puppeteer-core";
+import puppeteer from "puppeteer";
 
 const s3Client = new S3Client({
   region: process.env.AWS_S3_REGION || "ap-southeast-2",
@@ -42,18 +42,31 @@ const uploadFileToS3 = async (
 };
 
 const generatePdf = async (html: string) => {
+  const getBrowser = async () => {
+    let browser;
+    if (process.env.NODE_ENV !== "development") {
+      browser = await puppeteercore.launch({
+        args: chromium.args,
+        defaultViewport: chromium.defaultViewport,
+        executablePath: await chromium.executablePath(),
+        headless: true,
+      });
+    } else {
+      browser = await puppeteer.launch({ headless: true });
+    }
+    return browser;
+  };
+  const browser: any = await getBrowser();
+
+  //   const browser = await puppeteer.launch({
+  //     args: chromium.args,
+  //     defaultViewport: chromium.defaultViewport,
+  //     executablePath: await chromium.executablePath(),
+  //     headless: true,
+  //   });
+
   // const browser = await puppeteer.launch({ headless: true });
 
-  const browser = await puppeteer.launch({
-    args: chromium.args,
-    defaultViewport: chromium.defaultViewport,
-    executablePath: await chromium.executablePath(),
-    headless: true,
-  });
-
-  // const browser = await puppeteer.connect({
-  //   browserWSEndpoint: `wss://chrome.browserless.io?token=${process.env.BLESS_TOKEN}`,
-  // });
   const page = await browser.newPage();
   await page.setContent(html);
   const pdfBuffer = await page.pdf();
@@ -65,43 +78,16 @@ const generatePdf = async (html: string) => {
 // @desc: Create a new invoice
 export async function POST(request: Request) {
   const session: any = getSession();
+  console.log(session);
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 400 });
   }
   const userId = session.payload.id;
-  const usersCompany = await prisma.company.findFirst({
-    where: {
-      user: {
-        some: {
-          id: userId,
-        },
-      },
-    },
-  });
-
-  if (!usersCompany) {
-    return NextResponse.json({ error: "Company not found" }, { status: 404 });
-  }
+  const usersCompany = session.payload.company;
 
   try {
     const req = await request.json();
     const payload = req.payload;
-    // PDFを生成
-    // const html = req.html;
-    const customer = await prisma.customer.findUnique({
-      where: {
-        id: payload.customer,
-      },
-      include: {
-        contact: true,
-      },
-    });
-    if (!customer) {
-      return NextResponse.json(
-        { error: "Customer not found" },
-        { status: 404 }
-      );
-    }
 
     // ORM
     const createRes = await prisma.invoice.create({
@@ -109,7 +95,7 @@ export async function POST(request: Request) {
         // invoiceUrl: fileUrl,
         customer: {
           connect: {
-            id: customer.id,
+            id: payload.customer,
           },
         },
         issueDate: payload.issueDate,
@@ -128,7 +114,7 @@ export async function POST(request: Request) {
         },
         company: {
           connect: {
-            id: usersCompany.id,
+            id: usersCompany,
           },
         },
       },
@@ -143,6 +129,8 @@ export async function POST(request: Request) {
       },
     });
     console.log(createRes);
+
+    // PDFを生成
     const html = generateHtml(createRes);
     const pdfBuffer = await generatePdf(html);
     const contentType = "application/pdf";
@@ -154,7 +142,7 @@ export async function POST(request: Request) {
       contentType
     );
     console.log(fileUrl);
-
+    // ORM update
     const updateRes = await prisma.invoice.update({
       where: {
         id: createRes.id,
