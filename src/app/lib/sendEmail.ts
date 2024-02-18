@@ -25,6 +25,17 @@ const mailOptions = (obj: any) => {
           `Best regards,\n` +
           `SmartInvoice`,
       };
+    // Invite
+    case "invite":
+      return {
+        subject: "Invitation to SmartInvoice",
+        text:
+          `Hello ${userName},\n\n` +
+          `You have been invited to join SmartInvoice. Please click the link below to verify your email address.\n\n` +
+          `${process.env.BASE_URL}/confirminvite?token=${token}\n\n` +
+          `Best regards,\n` +
+          `SmartInvoice`,
+      };
   }
 };
 

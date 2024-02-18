@@ -1,37 +1,47 @@
-"use client"
-import {
-  Box,
-  Button,
-  Group,
-  Select,
-  TextInput,
-} from "@mantine/core";
+"use client";
+import useToast from "@/app/hooks/useToast";
+import { createNewUserSchema } from "@/app/schema/Company/schema";
+import { Box, Button, Group, Select, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
+import { zodResolver } from "mantine-form-zod-resolver";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 const CreateNewUser = () => {
+  const [loading, setLoading] = useState(false);
+  const { successToast, errorToast } = useToast();
+  const router = useRouter();
+
   const form = useForm({
+    validate: zodResolver(createNewUserSchema),
+    initialValues: {
+      name: "",
+      email: "",
+      role: "",
+    },
   });
 
   const handleSubmit = async (values: any) => {
-    const formData = new FormData();
-    // テキストフィールドの値を追加
-    Object.keys(values).forEach((key) => {
-      if (key !== "file") {
-        formData.append(key, values[key]);
-      }
-      if (key === "accounttype") {
-        formData.append(key, values[key].toLowerCase());
-      }
-    });
-
+    setLoading(true);
+    const role = values.role.toLowerCase();
     try {
-      const response = await fetch("/api/company", {
+      const response = await fetch("/api/user/invite", {
         method: "POST",
-        body: formData,
+        body: JSON.stringify({ ...values, role }),
       });
       const data = await response.json();
-    } catch (error) {
-      console.log(error);
+      if (data.error) throw new Error(data.error);
+      router.push("/company/member");
+      router.refresh();
+      setLoading(false);
+      successToast({
+        title: "Invitation sent",
+        message: "User will receive an email to verify their account shortly.",
+      });
+    } catch (error: any) {
+      console.log(error.message);
+      setLoading(false);
+      errorToast(error.message);
     }
   };
 
@@ -40,27 +50,27 @@ const CreateNewUser = () => {
       <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
         <TextInput
           label="Name"
-          placeholder="Custom layout"
+          placeholder="John Roe"
           mt="lg"
           {...form.getInputProps("name")}
         />
 
         <TextInput
           label="Email"
-          placeholder="Custom layout"
+          placeholder="user@smartinvoice.com"
           mt="lg"
-          {...form.getInputProps("uen")}
+          {...form.getInputProps("email")}
         />
         <Select
           label="Role"
-          placeholder="Custom layout"
+          placeholder="Pick one"
           mt="lg"
           data={["Admin", "User"]}
-          {...form.getInputProps("accounttype")}
+          {...form.getInputProps("role")}
         />
 
         <Group justify="center" mt="xl">
-          <Button fullWidth type="submit">
+          <Button fullWidth type="submit" loading={loading}>
             Send invitation
           </Button>
         </Group>

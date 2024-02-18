@@ -38,7 +38,7 @@ const SigninForm = () => {
     validate: zodResolver(schema),
     initialValues: {
       name: "",
-      email: "",
+      password: "",
     },
   });
 
