@@ -25,6 +25,13 @@ type Props = {
     bankcode: string;
     branchnumber: string;
     accountnumber: string;
+    user: {
+      id: number;
+      name: string;
+      email: string;
+      signupDone: boolean;
+      role: "admin" | "user";
+    }[];
   };
 };
 

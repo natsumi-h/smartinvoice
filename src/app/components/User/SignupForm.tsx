@@ -57,7 +57,7 @@ const SignupForm = () => {
   return (
     <Container size={420} my={80} flex={1}>
       <Title ta="center" fw={"bold"}>
-        Welcome!
+        Signup to SmartInvoice
       </Title>
       <Text c="dimmed" size="sm" ta="center" mt={5}>
         Do you have an account yet?{" "}

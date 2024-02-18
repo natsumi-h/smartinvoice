@@ -65,7 +65,15 @@ export const getCompany = async () => {
         },
       },
       include: {
-        user: true,
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            signupDone: true,
+            role: true,
+          },
+        },
       },
     });
     console.log(res);

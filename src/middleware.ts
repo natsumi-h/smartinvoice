@@ -5,10 +5,19 @@ export function middleware(request: NextRequest) {
   console.log("middleware");
   const url = new URL(request.url);
   const user: any = request.cookies.get("token");
-  console.log(user);
 
   if (!user && url.pathname !== "/signin") {
     return NextResponse.redirect(new URL("/signin", request.url));
+  }
+
+  if (
+    user &&
+    (url.pathname === "/signin" ||
+      url.pathname === "/signup" ||
+      url.pathname === "/confirmsignup" ||
+      url.pathname === "/confirminvite")
+  ) {
+    return NextResponse.redirect(new URL("/invoice", request.url));
   }
 
   return NextResponse.next();

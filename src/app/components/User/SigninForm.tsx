@@ -90,7 +90,7 @@ const SigninForm = () => {
   return (
     <Container size={420} my={80} flex={1}>
       <Title ta="center" fw={"bold"}>
-        Welcome back!
+        Signin to SmartInvoice
       </Title>
       <Text c="dimmed" size="sm" ta="center" mt={5}>
         Do not have an account yet?{" "}
