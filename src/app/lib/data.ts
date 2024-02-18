@@ -91,17 +91,7 @@ export const getInvoice = async (id: string) => {
     if (!session) {
       throw new Error("Unauthorized");
     }
-    const userId = session.payload.id;
     const usersCompany = session.payload.company;
-    // const usersCompany = await prisma.company.findFirst({
-    //   where: {
-    //     user: {
-    //       some: {
-    //         id: userId,
-    //       },
-    //     },
-    //   },
-    // });
 
     const res = await prisma.invoice.findUnique({
       where: {
@@ -117,6 +107,38 @@ export const getInvoice = async (id: string) => {
       throw new Error("Unauthorized");
     }
 
+    console.log(res);
+    return res;
+  } catch (e) {
+    console.log(e);
+    throw e;
+  }
+};
+
+export const getUser = async () => {
+  noStore();
+  try {
+    const session: any = getSession();
+    if (!session) {
+      throw new Error("Unauthorized");
+    }
+    const res = await prisma.user.findUnique({
+      where: {
+        id: session.payload.id,
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        phone: true,
+        role: true,
+        company: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
     console.log(res);
     return res;
   } catch (e) {

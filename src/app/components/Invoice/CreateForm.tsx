@@ -224,10 +224,13 @@ const CreateForm: FC<Props> = ({ customers }) => {
             setItemLength((prev) => prev - 1);
           }}
         >
-          <IconTrash
-            style={{ width: rem(24), height: rem(24) }}
-            color="var(--mantine-color-blue-filled)"
-          />
+          {index !== 0 && (
+            <IconTrash
+              style={{ width: rem(24), height: rem(24) }}
+              color="var(--mantine-color-blue-filled)"
+              stroke={1.5}
+            />
+          )}
         </UnstyledButton>
       </Table.Td>
     </Table.Tr>
@@ -288,7 +291,7 @@ const CreateForm: FC<Props> = ({ customers }) => {
           <Table.Tbody>
             <Table.Tr>
               <Table.Td>
-                <Text>Subtotal</Text>
+                <Text fw={"bold"}>Subtotal</Text>
               </Table.Td>
               <Table.Td>
                 <Text ta="right">{subtotal.toFixed(2)}</Text>
@@ -297,7 +300,7 @@ const CreateForm: FC<Props> = ({ customers }) => {
 
             <Table.Tr>
               <Table.Td>
-                <Text>Spacial Discount</Text>
+                <Text fw={"bold"}>Spacial Discount</Text>
               </Table.Td>
               <Table.Td>
                 <TextInput
@@ -310,7 +313,7 @@ const CreateForm: FC<Props> = ({ customers }) => {
 
             <Table.Tr>
               <Table.Td>
-                <Text>Total Tax</Text>
+                <Text fw={"bold"}>Total Tax</Text>
               </Table.Td>
               <Table.Td>
                 <Text ta="right">{totaltax.toFixed(2)}</Text>
@@ -319,7 +322,7 @@ const CreateForm: FC<Props> = ({ customers }) => {
 
             <Table.Tr>
               <Table.Td>
-                <Text>Total</Text>
+                <Text fw={"bold"}>Total</Text>
               </Table.Td>
               <Table.Td>
                 <Text ta="right">{total.toFixed(2)}</Text>
@@ -333,7 +336,7 @@ const CreateForm: FC<Props> = ({ customers }) => {
             Save Draft
           </Button>
           <Button fullWidth type="submit" loading={loading}>
-            Submit for approval
+            Issue Invoice
           </Button>
           {/* <Button fullWidth type="submit">
             Create

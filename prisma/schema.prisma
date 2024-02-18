@@ -97,7 +97,7 @@ model User{
   password String?
   role Role @default(user)
   phone String?
-  signupDone Boolean @default(false)
+
   company Company? @relation(fields: [company_id], references: [id])
   company_id Int?
   invoice Invoice[]
@@ -109,6 +109,7 @@ model User{
   iterations Int?
   jwt String? @db.VarChar(2048)
   jwtExpiry DateTime?
+  signupDone Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

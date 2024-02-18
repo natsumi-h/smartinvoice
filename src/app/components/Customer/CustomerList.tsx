@@ -61,7 +61,7 @@ const CustomerList = () => {
                   stroke={1}
                   color="var(--mantine-color-blue-5)"
                 />
-                <Text c="gray.7">
+                <Text>
                   {customer.street}, {customer.city}, {customer.postcode}
                 </Text>
               </Flex>
@@ -71,7 +71,7 @@ const CustomerList = () => {
                   stroke={1}
                   color="var(--mantine-color-blue-5)"
                 />
-                <Text c="gray.7">
+                <Text>
                   {
                     (
                       customer?.contact?.find(

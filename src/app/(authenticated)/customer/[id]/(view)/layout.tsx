@@ -43,7 +43,7 @@ const Layout = async ({
           stroke={1}
           color="var(--mantine-color-blue-5)"
         />
-        <Text c="gray.7">{address}</Text>
+        <Text>{address}</Text>
       </Flex>
       <Flex align={"center"} gap="sm">
         <IconMail
@@ -51,7 +51,7 @@ const Layout = async ({
           stroke={1}
           color="var(--mantine-color-blue-5)"
         />
-        <Text c="gray.7">
+        <Text>
           {customer?.contact.map((contact: any) =>
             contact.isPrimary ? contact.email : ""
           )}
@@ -63,7 +63,7 @@ const Layout = async ({
           stroke={1}
           color="var(--mantine-color-blue-5)"
         />
-        <Text c="gray.7">{customer?.phone}</Text>
+        <Text>{customer?.phone}</Text>
       </Flex>
       {/* {children} */}
       <SingleCustomer contacts={contacts as any} id={customer?.id as any} />

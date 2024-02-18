@@ -93,7 +93,7 @@ const Members: FC<Props> = ({ company }) => {
                       stroke={1}
                       color="var(--mantine-color-blue-5)"
                     />
-                    <Text c="gray.7">{user.email}</Text>
+                    <Text>{user.email}</Text>
                   </Flex>
                 </Box>
 

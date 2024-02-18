@@ -84,7 +84,7 @@ const Contact: FC<Props> = ({ contacts, id }) => {
                       stroke={1}
                       color="var(--mantine-color-blue-5)"
                     />
-                    <Text c="gray.7">{contact.email}</Text>
+                    <Text>{contact.email}</Text>
                   </Flex>
                 </Box>
 

@@ -1,10 +1,10 @@
 "use client";
-
 import { Tabs, rem } from "@mantine/core";
 import { IconMessageCircle, IconNotes } from "@tabler/icons-react";
 import { FC } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Contact from "./Contact/Contact";
+import CustomerInvoice from "./Invoice/CustomerInvoice";
 
 type Props = {
   id: string;
@@ -50,7 +50,7 @@ const SingleCustomer: FC<Props> = ({ contacts, id }) => {
       </Tabs.List>
 
       <Tabs.Panel value="invoice" py="lg">
-        Invoice tab component
+        <CustomerInvoice />
       </Tabs.Panel>
 
       <Tabs.Panel value="contact" py="lg">
