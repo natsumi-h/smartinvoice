@@ -40,7 +40,7 @@ export default function RootLayout({
       <body>
         <MantineProvider theme={theme} defaultColorScheme="light">
           <Notifications position="top-right" />
-          {children}
+          <main style={{ position: "relative", minHeight:"100vh" }}>{children}</main>
         </MantineProvider>
       </body>
     </html>
