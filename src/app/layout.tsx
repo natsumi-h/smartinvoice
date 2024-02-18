@@ -18,6 +18,13 @@ const theme = createTheme({
   // fontFamily: "Montserrat, sans-serif",
   defaultRadius: "md",
   cursorType: "pointer",
+  // breakpoints: {
+  //   xs: "36em",
+  //   sm: "48em",
+  //   md: "62em",
+  //   lg: "75em",
+  //   xl: "88em",
+  // },
 });
 
 export default function RootLayout({
@@ -31,10 +38,10 @@ export default function RootLayout({
         <ColorSchemeScript />
       </head>
       <body>
-          <MantineProvider  defaultColorScheme="light">
-            <Notifications position="top-right" />
-            {children}
-          </MantineProvider>
+        <MantineProvider theme={theme} defaultColorScheme="light">
+          <Notifications position="top-right" />
+          {children}
+        </MantineProvider>
       </body>
     </html>
   );

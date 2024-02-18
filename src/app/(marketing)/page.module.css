@@ -1,0 +1,10 @@
+.main {
+  height: 100%;
+}
+
+.title {
+  @media (max-width: $mantine-breakpoint-sm) {
+    font-size: 50px;
+  }
+}
+

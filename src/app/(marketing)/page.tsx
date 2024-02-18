@@ -1,22 +1,30 @@
 import Link from "next/link";
 import styles from "./page.module.css";
-
-import { Box, Button, Flex, Stack, Text, Title, rem } from "@mantine/core";
+import {
+  Box,
+  Button,
+  Flex,
+  Stack,
+  Text,
+  Title,
+  rem,
+} from "@mantine/core";
+import HomeHeader from "../components/Navbar/HomeHeader";
 
 export default function Home() {
   return (
     <>
-      <Stack h="100vh" p="xl">
-        <header>header</header>
+      <Stack h="100vh" px="xl">
+        <HomeHeader />
         <Box flex="1">
           <main className={styles.main}>
-            <Title order={1} size={rem(70)}>
+            <Title order={1} size={rem(70)} className={styles.title}>
               Effortlessly Create &<br></br> Manage your Invoices.
             </Title>
-            <Text>
+            <Text fz={"lg"} mt={"lg"}>
               Our invoice app is designed to make invoicing simple and
-              stress-free. As a small business owner, create and manage your
-              invoices quickly and easily.
+              stress-free.<br></br>As a small business owner, create and manage
+              your invoices quickly and easily.
             </Text>
             <Flex gap="md" mt="xl">
               <Button component={Link} href="/signup">
@@ -28,7 +36,7 @@ export default function Home() {
             </Flex>
           </main>
         </Box>
-        <footer>footer</footer>
+        {/* <footer>footer</footer> */}
       </Stack>
     </>
   );
