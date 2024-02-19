@@ -1,7 +1,6 @@
 # SmartInvoice
 
 ## Live URL
-https://chopeseats-iota.vercel.app/
 
 ## Screenshots
 
@@ -31,3 +30,4 @@ https://chopeseats-iota.vercel.app/
 ## Next Steps
 
 ## References and Inspirations
+* [Xero Online Invoicing Software]([https://vercel.com/](https://www.xero.com/sg/accounting-software/send-invoices/)https://www.xero.com/sg/accounting-software/send-invoices/)
