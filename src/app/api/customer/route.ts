@@ -104,10 +104,7 @@ export async function GET(request: Request) {
       },
       include: {
         contact: {
-          orderBy: [
-            { isPrimary: "desc" },
-            { name: "asc" },
-          ],
+          orderBy: [{ isPrimary: "desc" }, { name: "asc" }],
         },
       },
       orderBy: {

@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { prisma } from "@/app/db";
 import { getSession } from "@/app/lib/action";
@@ -175,30 +175,39 @@ export async function POST(request: Request) {
 
 // GET /api/invoice
 // @desc: Get all invoices
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   const session: any = getSession();
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 400 });
   }
-  const userId = session.payload.id;
-  const usersCompany = await prisma.company.findFirst({
-    where: {
-      user: {
-        some: {
-          id: userId,
-        },
-      },
-    },
-  });
-  if (!usersCompany) {
-    return NextResponse.json({ error: "Company not found" }, { status: 404 });
-  }
+  const usersCompany = session.payload.company;
+
+  const searchParams = request.nextUrl.searchParams;
+  const customerParam = searchParams.get("customer");
+  const issueDateStartParam = searchParams.get("issueDateStart");
+  const issueDateEndParam = searchParams.get("issueDateEnd");
+  const dueDateStartParam = searchParams.get("dueDateStart");
+  const dueDateEndParam = searchParams.get("dueDateEnd");
 
   try {
+    const whereCondition = {
+      company_id: usersCompany,
+      ...(customerParam && { customer_id: parseInt(customerParam) }),
+      ...(issueDateStartParam && {
+        issueDate: { gte: new Date(issueDateStartParam) },
+      }),
+      ...(issueDateEndParam && {
+        issueDate: { lte: new Date(issueDateEndParam) },
+      }),
+      ...(dueDateStartParam && {
+        dueDate: { gte: new Date(dueDateStartParam) },
+      }),
+      ...(dueDateEndParam && {
+        dueDate: { lte: new Date(dueDateEndParam) },
+      }),
+    };
     const res = await prisma.invoice.findMany({
-      where: {
-        company_id: usersCompany.id,
-      },
+      where: whereCondition,
       include: {
         customer: true,
         items: true,
