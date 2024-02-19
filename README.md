@@ -30,4 +30,4 @@
 ## Next Steps
 
 ## References and Inspirations
-* [Xero Online Invoicing Software]([https://vercel.com/](https://www.xero.com/sg/accounting-software/send-invoices/)https://www.xero.com/sg/accounting-software/send-invoices/)
+* [Xero Online Invoicing Software](https://www.xero.com/sg/accounting-software/send-invoices/)
