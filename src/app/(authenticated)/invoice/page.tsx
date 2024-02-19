@@ -1,4 +1,4 @@
-import InvoiceList from "@/app/components/Invoice/InvoiceList";
+import InvoiceView from "@/app/components/Invoice/InvoiceView";
 import { Box, Button, Flex, Title } from "@mantine/core";
 import Link from "next/link";
 // import { Suspense } from "react";
@@ -19,9 +19,7 @@ const page = () => {
         </Button>
       </Flex>
 
-      {/* <Suspense fallback={<Loading />}> */}
-      <InvoiceList />
-      {/* </Suspense> */}
+      <InvoiceView />
     </Box>
   );
 };

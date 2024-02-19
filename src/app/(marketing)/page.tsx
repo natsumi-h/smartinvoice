@@ -12,6 +12,7 @@ import {
 } from "@mantine/core";
 import HomeHeader from "../components/Navbar/HomeHeader";
 import NextImage from "next/image";
+import kv from "../assets/images/kv.png";
 
 export default function Home() {
   return (
@@ -43,15 +44,16 @@ export default function Home() {
                   Learn more
                 </Button>
               </Flex>
-              <Box
-
-                className={styles.imagebox}
-              >
+              <Box className={styles.imagebox}>
                 <Image
-                  src="/images/kv.png"
+                  src={kv}
                   component={NextImage}
-                  alt="invoice"
-                  fill
+                  alt="smartinvoice"
+                  sizes="50%"
+                  style={{
+                    width: "100%",
+                    height: "auto",
+                  }}
                 />
               </Box>
             </Flex>

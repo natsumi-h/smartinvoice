@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/app/db";
 import { getSession } from "@/app/lib/action";
 
-// POST /api/icustomer
+// POST /api/customer
 // @desc: Create a new customer
 export async function POST(request: Request) {
   try {
@@ -85,13 +85,28 @@ export async function POST(request: Request) {
 // GET /api/customer
 // @desc: Get all customers
 export async function GET(request: Request) {
+  const session: any = getSession();
+  if (!session) {
+    return NextResponse.json(
+      {
+        message: "Unauthorized",
+      },
+      { status: 401 }
+    );
+  }
+  const usersCompany = session.payload.company;
   try {
     const res = await prisma.customer.findMany({
+      where: {
+        company: {
+          id: usersCompany,
+        },
+      },
       include: {
         contact: {
           orderBy: [
-            { isPrimary: "desc" }, // まず isPrimary で降順に並べる
-            { name: "asc" }, // 次に name で昇順に並べる
+            { isPrimary: "desc" },
+            { name: "asc" },
           ],
         },
       },

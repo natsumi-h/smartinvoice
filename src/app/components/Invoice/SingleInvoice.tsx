@@ -2,6 +2,7 @@
 import { Box, Flex, Table, Text } from "@mantine/core";
 import { FC } from "react";
 import dayjs from "dayjs";
+import { addCommasToNumber } from "@/app/lib/addCommas";
 
 type Props = {
   invoice: any;
@@ -22,14 +23,20 @@ const SingleInvoice: FC<Props> = ({ invoice }) => {
         <Text>{item.qty}</Text>
       </Table.Td>
       <Table.Td pl="0">
-        <Text ta="right">{Number(item.unitPrice).toFixed(2)}</Text>
+        <Text ta="right">{addCommasToNumber(Number(item.unitPrice))}</Text>
       </Table.Td>
       <Table.Td pl="0">
         <Text>{item.taxRate}%</Text>
       </Table.Td>
       <Table.Td pl="0">
         <Text fw={500} size="sm" ta="right">
-          0.00
+          {addCommasToNumber(
+            Number(item.qty) * Number(item.unitPrice) +
+              (Number(item.qty) *
+                Number(item.unitPrice) *
+                Number(item.taxRate)) /
+                100
+          )}
         </Text>
       </Table.Td>
     </Table.Tr>
@@ -42,7 +49,7 @@ const SingleInvoice: FC<Props> = ({ invoice }) => {
           <Text fw={"bold"}>To</Text>
           <Text>{invoice.customer.name}</Text>
           <Text>{address}</Text>
-          <Text>Attn: Mr. Kanazawa</Text>
+          <Text>Attn: Ms. Tailor Swift</Text>
         </Box>
 
         <Flex gap="md">
@@ -79,7 +86,9 @@ const SingleInvoice: FC<Props> = ({ invoice }) => {
               <Text fw={"bold"}>Subtotal</Text>
             </Table.Td>
             <Table.Td>
-              <Text ta="right">{Number(invoice.subtotal).toFixed(2)}</Text>
+              <Text ta="right">
+                {addCommasToNumber(Number(invoice.subtotal))}
+              </Text>
             </Table.Td>
           </Table.Tr>
 
@@ -88,7 +97,9 @@ const SingleInvoice: FC<Props> = ({ invoice }) => {
               <Text fw={"bold"}>Spacial Discount</Text>
             </Table.Td>
             <Table.Td>
-              <Text ta="right">{Number(invoice.discount).toFixed(2)}</Text>
+              <Text ta="right">
+                {addCommasToNumber(Number(invoice.discount))}
+              </Text>
             </Table.Td>
           </Table.Tr>
 
@@ -97,7 +108,9 @@ const SingleInvoice: FC<Props> = ({ invoice }) => {
               <Text fw={"bold"}>Total Tax</Text>
             </Table.Td>
             <Table.Td>
-              <Text ta="right">{Number(invoice.totalTax).toFixed(2)}</Text>
+              <Text ta="right">
+                {addCommasToNumber(Number(invoice.totalTax))}
+              </Text>
             </Table.Td>
           </Table.Tr>
 
@@ -106,7 +119,9 @@ const SingleInvoice: FC<Props> = ({ invoice }) => {
               <Text fw={"bold"}>Total</Text>
             </Table.Td>
             <Table.Td>
-              <Text ta="right">{Number(invoice.totalAmount).toFixed(2)}</Text>
+              <Text ta="right">
+                {addCommasToNumber(Number(invoice.totalAmount))}
+              </Text>
             </Table.Td>
           </Table.Tr>
         </Table.Tbody>

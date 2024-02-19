@@ -1,6 +1,7 @@
 "use client";
 import {
   ActionIcon,
+  Anchor,
   Group,
   ScrollArea,
   Title,
@@ -18,6 +19,7 @@ import { LinksGroup } from "./NavbarLinksGroup/NavbarLinksGroup";
 import classes from "./Navbar.module.css";
 import { UserButton } from "./UserButton/UserButton";
 import cx from "clsx";
+import Link from "next/link";
 
 export function Navbar({ session }: any) {
   const { setColorScheme } = useMantineColorScheme();
@@ -83,8 +85,20 @@ export function Navbar({ session }: any) {
       <div className={classes.header}>
         <Group justify="space-between">
           <Title order={1} size="h3">
-            SmartInvoice
+            <Anchor
+              href="/invoice"
+              component={Link}
+              underline="never"
+              style={{
+                color: "inherit",
+                fontSize: "inherit",
+                fontWeight: "inherit",
+              }}
+            >
+              SmartInvoice
+            </Anchor>
           </Title>
+
           <ActionIcon
             onClick={() =>
               setColorScheme(computedColorScheme === "light" ? "dark" : "light")

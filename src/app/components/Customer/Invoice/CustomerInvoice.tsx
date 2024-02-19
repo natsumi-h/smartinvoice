@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import dayjs from "dayjs";
 import { useParams } from "next/navigation";
+import { addCommasToNumber } from "@/app/lib/addCommas";
 
 const CustomerInvoice = () => {
   const [invoices, setInvoices] = useState([]);
@@ -33,7 +34,7 @@ const CustomerInvoice = () => {
       </Table.Td>
       <Table.Td pl="0">{dayjs(invoice.dueDate).format("DD MMM YYYY")}</Table.Td>
       <Table.Td pl="0" ta="right">
-        {Number(invoice.totalAmount).toFixed(2)}
+        {addCommasToNumber(Number(invoice.totalAmount))}
       </Table.Td>
       <Table.Td pl="0">{invoice.status}</Table.Td>
     </Table.Tr>

@@ -42,7 +42,7 @@ model Company {
 
 model Invoice {
   id Int       @id @default(autoincrement())
-  status Status @default(draft)
+  status Status @default(Draft)
   subtotal Decimal? @db.Decimal(10, 2)
   discount Decimal? @db.Decimal(10, 2)
   totalTax Decimal? @db.Decimal(10, 2)
@@ -67,11 +67,11 @@ model Invoice {
 }
 
 enum Status {
- draft
- submitted
- approved
- sent
- paid
+ Draft
+ Submitted
+ Approved
+ Sent
+ Paid
 }
 
 model InvoiceItem {

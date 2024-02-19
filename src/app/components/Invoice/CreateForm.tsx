@@ -18,7 +18,7 @@ import { IconTrash } from "@tabler/icons-react";
 import { DateInput } from "@mantine/dates";
 import { useRouter } from "next/navigation";
 import useToast from "@/app/hooks/useToast";
-// import { generateHtml } from "@/app/lib/pdf";
+import { addCommasToNumber } from "@/app/lib/addCommas";
 
 type Props = {
   customers: { id: number; name: string }[];
@@ -79,8 +79,8 @@ const CreateForm: FC<Props> = ({ customers }) => {
           ? 0.09
           : 0);
     }
-    setSubtotal(Number(newSubtotal.toFixed(2)));
-    setTotaltax(Number(newTotaltax.toFixed(2)));
+    setSubtotal(Number(newSubtotal));
+    setTotaltax(Number(newTotaltax));
 
     let newTotal =
       newSubtotal + newTotaltax - Number(form.values.specialDiscount);
@@ -118,18 +118,9 @@ const CreateForm: FC<Props> = ({ customers }) => {
         )?.id,
       };
 
-      // const htmlPayload = {
-      //   ...payload,
-      //   customer: customers.find(
-      //     (customer) => customer.name === values.customer
-      //   ),
-      // };
-      // const html = generateHtml(htmlPayload);
-
       const response = await fetch("/api/invoice", {
         method: "POST",
         body: JSON.stringify({
-          // html,
           payload,
         }),
       });
@@ -198,24 +189,25 @@ const CreateForm: FC<Props> = ({ customers }) => {
       </Table.Td>
       <Table.Td pl="0">
         <Text fw={500} size="sm" ta={"right"}>
-          {(form.values as { [key: string]: any })[`qty${index}`] &&
-          (form.values as { [key: string]: any })[`unitPrice${index}`] &&
-          (form.values as { [key: string]: any })[`taxRate${index}`]
-            ? (
-                ((
+          {addCommasToNumber(
+            (form.values as { [key: string]: any })[`qty${index}`] &&
+              (form.values as { [key: string]: any })[`unitPrice${index}`] &&
+              (form.values as { [key: string]: any })[`taxRate${index}`]
+              ? ((
                   form.values as {
                     [key: string]: any;
                   }
                 )[`qty${index}`] as number) *
-                Number(
-                  (form.values as { [key: string]: any })[`unitPrice${index}`]
-                ) *
-                ((form.values as { [key: string]: any })[`taxRate${index}`] ===
-                "9%"
-                  ? 1.09
-                  : 1)
-              ).toFixed(2)
-            : "0.00"}
+                  Number(
+                    (form.values as { [key: string]: any })[`unitPrice${index}`]
+                  ) *
+                  ((form.values as { [key: string]: any })[
+                    `taxRate${index}`
+                  ] === "9%"
+                    ? 1.09
+                    : 1)
+              : 0
+          )}
         </Text>
       </Table.Td>
       <Table.Td pl="0">
@@ -294,7 +286,7 @@ const CreateForm: FC<Props> = ({ customers }) => {
                 <Text fw={"bold"}>Subtotal</Text>
               </Table.Td>
               <Table.Td>
-                <Text ta="right">{subtotal.toFixed(2)}</Text>
+                <Text ta="right">{addCommasToNumber(subtotal)}</Text>
               </Table.Td>
             </Table.Tr>
 
@@ -316,7 +308,7 @@ const CreateForm: FC<Props> = ({ customers }) => {
                 <Text fw={"bold"}>Total Tax</Text>
               </Table.Td>
               <Table.Td>
-                <Text ta="right">{totaltax.toFixed(2)}</Text>
+                <Text ta="right">{addCommasToNumber(totaltax)}</Text>
               </Table.Td>
             </Table.Tr>
 
@@ -325,7 +317,7 @@ const CreateForm: FC<Props> = ({ customers }) => {
                 <Text fw={"bold"}>Total</Text>
               </Table.Td>
               <Table.Td>
-                <Text ta="right">{total.toFixed(2)}</Text>
+                <Text ta="right">{addCommasToNumber(total)}</Text>
               </Table.Td>
             </Table.Tr>
           </Table.Tbody>
