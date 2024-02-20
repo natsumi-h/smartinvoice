@@ -30,7 +30,7 @@ type Props = {
       name: string;
       email: string;
       signupDone: boolean;
-      role: "admin" | "user";
+      role: "Admin" | "User";
     }[];
   };
 };

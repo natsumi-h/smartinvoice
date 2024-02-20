@@ -52,7 +52,7 @@ export const getCompany = async () => {
   noStore();
   try {
     const session: any = getSession();
-    if (!session || session.payload.role !== "admin") {
+    if (!session || session.payload.role !== "Admin") {
       throw new Error("Unauthorized");
     }
     const userId = session.payload.id;

@@ -28,7 +28,7 @@ export function Navbar({ session }: any) {
   });
 
   const mockdata =
-    session.payload.role === "admin"
+    session.payload.role === "Admin"
       ? [
           {
             label: "Invoice",

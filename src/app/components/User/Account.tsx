@@ -71,7 +71,7 @@ const Account = ({ session, user }: any) => {
           </Table.Tr>
           <Table.Tr>
             <Table.Td pl="0">
-              {user.role === "admin" ? "Admin" : "User"}
+              {user.role}
             </Table.Td>
           </Table.Tr>
           {/* Org */}

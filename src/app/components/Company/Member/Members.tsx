@@ -40,7 +40,7 @@ type Props = {
       name: string;
       email: string;
       signupDone: boolean;
-      role: "admin" | "user";
+      role: "Admin" | "User";
     }[];
   };
 };
@@ -52,13 +52,13 @@ const Members: FC<Props> = ({ company }) => {
     id: number;
     name: string;
     email: string;
-    role: "admin" | "user";
+    role: "Admin" | "User";
     signupDone: boolean;
   }>({
     id: 0,
     name: "",
     email: "",
-    role: "user",
+    role: "User",
     signupDone: false,
   });
 
@@ -101,7 +101,7 @@ const Members: FC<Props> = ({ company }) => {
                 >
                   Update
                 </Button>
-                {user.role !== "admin" && (
+                {user.role !== "Admin" && (
                   <Button
                     variant={"outline"}
                     color="red"

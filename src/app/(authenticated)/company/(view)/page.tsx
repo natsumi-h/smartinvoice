@@ -7,7 +7,7 @@ const page = async () => {
   const data: any = await getCompany();
 
   const session: any = getSession();
-  if (!session || session.payload.role !== "admin") {
+  if (!session || session.payload.role !== "Admin") {
     return redirect("/signin");
   }
 

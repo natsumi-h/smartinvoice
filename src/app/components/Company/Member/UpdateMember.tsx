@@ -12,7 +12,7 @@ type Props = {
     id: number;
     name: string;
     email: string;
-    role: "admin" | "user";
+    role: "Admin" | "User";
   };
 };
 
