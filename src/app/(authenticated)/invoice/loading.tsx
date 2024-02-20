@@ -1,9 +1,9 @@
-import { Text, Title } from "@mantine/core";
+import { Text } from "@mantine/core";
 
 export default function Loading() {
   return (
     <>
-      <Title order={2}>Invoice</Title>
+      {/* <Title order={2}>Invoice</Title> */}
       <Text>Loading...</Text>
     </>
   );

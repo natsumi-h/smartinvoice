@@ -1,4 +1,4 @@
-import CreateNewUser from "@/app/components/Company/CreateNewUser";
+import CreateNewUser from "@/app/components/Company/Member/CreateNewUser";
 import { Box, Title } from "@mantine/core";
 
 const page = () => {

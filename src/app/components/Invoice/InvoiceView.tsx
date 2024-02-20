@@ -3,8 +3,9 @@ import { Button, Flex, Select } from "@mantine/core";
 import InvoiceList from "./InvoiceList";
 import StatusCards from "./StatusCards";
 import { DatePickerInput } from "@mantine/dates";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useForm } from "@mantine/form";
+import Loading from "@/app/(authenticated)/invoice/loading";
 
 const InvoiceView = () => {
   const [filterLoading, setFilterLoading] = useState(false);
@@ -136,9 +137,9 @@ const InvoiceView = () => {
       {/* Cards */}
       <StatusCards invoices={invoices} />
 
-      {/* <Suspense fallback={<Loading />}> */}
-      <InvoiceList invoices={invoices} />
-      {/* </Suspense> */}
+      <Suspense fallback={<Loading />}>
+        <InvoiceList invoices={invoices} />
+      </Suspense>
     </>
   );
 };

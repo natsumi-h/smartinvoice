@@ -23,11 +23,10 @@ const CreateNewUser = () => {
 
   const handleSubmit = async (values: any) => {
     setLoading(true);
-    const role = values.role.toLowerCase();
     try {
       const response = await fetch("/api/user/invite", {
         method: "POST",
-        body: JSON.stringify({ ...values, role }),
+        body: JSON.stringify({ ...values }),
       });
       const data = await response.json();
       if (data.error) throw new Error(data.error);

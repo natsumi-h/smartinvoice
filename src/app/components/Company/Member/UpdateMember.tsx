@@ -1,13 +1,6 @@
 "use client";
 import { FC, useEffect, useState } from "react";
-import {
-  Button,
-  Checkbox,
-  Group,
-  Modal,
-  Select,
-  TextInput,
-} from "@mantine/core";
+import { Button, Group, Modal, Select, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import useToast from "@/app/hooks/useToast";
 import { useRouter } from "next/navigation";
@@ -15,31 +8,24 @@ import { useRouter } from "next/navigation";
 type Props = {
   opened: boolean;
   close: () => void;
-  contact: {
-    id: string;
+  member: {
+    id: number;
     name: string;
     email: string;
-    isPrimary: boolean;
-    title: string;
+    role: "admin" | "user";
   };
 };
 
-const UpdateContact: FC<Props> = ({ opened, close, contact }) => {
+const UpdateMember: FC<Props> = ({ opened, close, member }) => {
   const [loadiing, setLoading] = useState(false);
   const { successToast, errorToast } = useToast();
   const router = useRouter();
 
-  const title = `${contact.title}.`;
-
-  console.log(contact);
-  
-
   const form = useForm({
     initialValues: {
-      email: contact.email,
-      name: contact.name,
-      isPrimary: contact.isPrimary,
-      title: title,
+      email: member.email,
+      name: member.name,
+      role: member.role,
     },
 
     validate: {
@@ -47,12 +33,13 @@ const UpdateContact: FC<Props> = ({ opened, close, contact }) => {
     },
   });
 
+  console.log(member);
+
   useEffect(() => {
     form.setValues({
-      email: contact.email,
-      name: contact.name,
-      isPrimary: contact.isPrimary,
-      title: title,
+      email: member.email,
+      name: member.name,
+      role: member.role,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [opened]);
@@ -60,24 +47,21 @@ const UpdateContact: FC<Props> = ({ opened, close, contact }) => {
   const handleSubmit = async () => {
     try {
       setLoading(true);
-      const title = form.values.title.replace(/\.$/, "");
-      const response = await fetch(`/api/contact/${contact.id}/`, {
+      const response = await fetch(`/api/user/${member.id}/`, {
         method: "POST",
         body: JSON.stringify({
           ...form.values,
-          title,
         }),
       });
 
       const data = await response.json();
-      console.log(data);
       form.reset();
       setLoading(false);
       close();
       router.refresh();
       successToast({
-        title: "Contact updated",
-        message: "Contact has been updated successfully",
+        title: "Member updated",
+        message: "Member has been updated successfully",
       });
     } catch (error) {
       console.log(error);
@@ -103,28 +87,22 @@ const UpdateContact: FC<Props> = ({ opened, close, contact }) => {
           mt="lg"
           {...form.getInputProps("name")}
         />
-        <Select
-          label="Title"
-          placeholder="Select title"
-          mt="lg"
-          data={["Mr.", "Mrs.", "Ms.", "Dr.", "Prof."]}
-          defaultValue="Mr."
-          allowDeselect={false}
-          {...form.getInputProps("title")}
-        />
         <TextInput
           label="Email"
           placeholder="email@email.com"
           mt="lg"
           {...form.getInputProps("email")}
         />
-        {!contact.isPrimary && (
-          <Checkbox
-            mt="lg"
-            label="Primary contact"
-            {...form.getInputProps("isPrimary")}
-          />
-        )}
+        <Select
+          label="Role"
+          placeholder="Select role"
+          mt="lg"
+          data={["Admin", "User"]}
+          defaultValue="User"
+          allowDeselect={false}
+          {...form.getInputProps("role")}
+        />
+
         <Group mt="xl" justify="center">
           <Button
             variant="outline"
@@ -144,4 +122,4 @@ const UpdateContact: FC<Props> = ({ opened, close, contact }) => {
   );
 };
 
-export default UpdateContact;
+export default UpdateMember;

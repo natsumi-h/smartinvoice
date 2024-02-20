@@ -1,8 +1,9 @@
 "use client";
-import { Burger, Flex, Text, Title, UnstyledButton } from "@mantine/core";
+import { Anchor, Burger, Flex, Text, Title, UnstyledButton } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useRouter } from "next/navigation";
 import styles from "../../components/Navbar/Navbar.module.css"
+import Link from "next/link";
 
 const BurgerButton = () => {
   const [opened, { toggle }] = useDisclosure();
@@ -17,8 +18,19 @@ const BurgerButton = () => {
         px={"md"}
         style={{ zIndex: 1000 }}
       >
-        <Title order={1} size="h2">
-          SmartInvoice
+        <Title order={1} size="h3">
+          <Anchor
+            href="/invoice"
+            component={Link}
+            underline="never"
+            style={{
+              color: "inherit",
+              fontSize: "inherit",
+              fontWeight: "inherit",
+            }}
+          >
+            SmartInvoice
+          </Anchor>
         </Title>
         <Burger
           opened={opened}

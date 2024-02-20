@@ -95,7 +95,7 @@ model User{
   name String?
   email String? @unique
   password String?
-  role Role @default(user)
+  role Role @default(User)
   phone String?
 
   company Company? @relation(fields: [company_id], references: [id])
@@ -118,8 +118,8 @@ model User{
 }
 
 enum Role {
-  user
-  admin
+  User
+  Admin
 }
 
 model Customer {

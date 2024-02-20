@@ -4,7 +4,7 @@ import { IconMessageCircle, IconNotes } from "@tabler/icons-react";
 import { usePathname, useRouter } from "next/navigation";
 import { FC } from "react";
 import CompanyDetail from "./CompanyDetail";
-import Members from "./Members";
+import Members from "./Member/Members";
 
 type Props = {
   company: {

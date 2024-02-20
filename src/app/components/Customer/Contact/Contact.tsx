@@ -62,13 +62,6 @@ const Contact: FC<Props> = ({ contacts, id }) => {
       <ul className={styles.ul}>
         {contacts.map((contact) => (
           <li className={styles.li} key={contact.id}>
-            <Anchor
-              component={Link}
-              href={`customer/${id}`}
-              underline="never"
-              inherit
-              style={{ color: "inherit" }}
-            >
               <Flex align={"center"} justify={"space-between"}>
                 <Box>
                   <Flex align={"center"} gap="md">
@@ -116,7 +109,6 @@ const Contact: FC<Props> = ({ contacts, id }) => {
               </Flex>
 
               <Divider mt="md" />
-            </Anchor>
           </li>
         ))}
       </ul>

@@ -1,8 +1,8 @@
 import InvoiceView from "@/app/components/Invoice/InvoiceView";
 import { Box, Button, Flex, Title } from "@mantine/core";
 import Link from "next/link";
-// import { Suspense } from "react";
-// import Loading from "./loading";
+import { Suspense } from "react";
+import Skelton from "@/app/components/Skelton";
 
 const page = () => {
   return (
@@ -19,7 +19,9 @@ const page = () => {
         </Button>
       </Flex>
 
-      <InvoiceView />
+      <Suspense fallback={<Skelton />}>
+        <InvoiceView />
+      </Suspense>
     </Box>
   );
 };

@@ -13,7 +13,6 @@ const Layout = async ({
 }) => {
   const { id } = params;
   const customer = await getCustomer(id);
-  console.log(customer);
   const address = `${customer?.street}, ${customer?.city}, ${customer?.state}, ${customer?.postcode}`;
   const contacts = customer?.contact;
   return (
