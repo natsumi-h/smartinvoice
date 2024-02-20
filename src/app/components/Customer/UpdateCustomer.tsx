@@ -13,7 +13,6 @@ import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
 import { useRouter } from "next/navigation";
 import { FC, useState } from "react";
-import { revalidatePath } from "next/cache";
 
 type Props = {
   customer: {
@@ -33,7 +32,7 @@ type Props = {
   };
 };
 
-const UpdateForm: FC<Props> = ({ customer }) => {
+const UpdateCustomer: FC<Props> = ({ customer }) => {
   const { id, name, street, city, state, postcode, phone } = customer;
 
   const [opened, { close, open }] = useDisclosure(false);
@@ -173,4 +172,4 @@ const UpdateForm: FC<Props> = ({ customer }) => {
   );
 };
 
-export default UpdateForm;
+export default UpdateCustomer;

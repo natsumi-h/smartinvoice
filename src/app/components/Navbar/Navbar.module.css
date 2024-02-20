@@ -22,8 +22,7 @@
 }
 
 .content {
-  padding: 0 100px;
-  padding-top: var(--mantine-spacing-xl);
+  padding: var(--mantine-spacing-xl) 100px;
   margin-left: rem(300px);
   min-height: 100vh;
   @media (max-width: $mantine-breakpoint-md) {
@@ -33,7 +32,7 @@
   }
 }
 
-.spMenu{
+.spMenu {
   background-color: var(--mantine-color-body);
 }
 

@@ -25,7 +25,7 @@ model Company {
   bankname String?
   branchname String?
   accountname String?
-  accounttype String?
+  accounttype AccountType? @default(Savings)
   accountnumber String?
   bankcode String?
   swiftcode String?
@@ -38,6 +38,11 @@ model Company {
 
   createdAt DateTime @default(now())
   updatedAt DateTime? @updatedAt
+}
+
+enum AccountType {
+  Savings
+  Current
 }
 
 model Invoice {

@@ -1,4 +1,4 @@
-import UpdateForm from "@/app/components/Customer/UpdateForm";
+import UpdateCustomer from "@/app/components/Customer/UpdateCustomer";
 import { getCustomer } from "@/app/lib/data";
 import { Box, Title } from "@mantine/core";
 
@@ -32,7 +32,7 @@ const page = async ({
   return (
     <Box>
       <Title order={2}>Update Customer</Title>
-      <UpdateForm customer={customer} />
+      <UpdateCustomer customer={customer} />
     </Box>
   );
 };

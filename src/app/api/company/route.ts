@@ -11,7 +11,6 @@ const s3Client = new S3Client({
   },
 });
 
-
 const uploadFileToS3 = async (
   file: Buffer,
   fileName: string,
@@ -98,7 +97,7 @@ export async function POST(request: Request) {
     const bankname = formData.get("bankname") as string;
     const branchname = formData.get("branchname") as string;
     const accountname = formData.get("accountname") as string;
-    const accounttype = formData.get("accounttype") as string;
+    const accounttype = formData.get("accounttype") as "Savings" | "Current";
     const accountnumber = formData.get("accountnumber") as string;
     const bankcode = formData.get("bankcode") as string;
     const swiftcode = formData.get("swiftcode") as string;
