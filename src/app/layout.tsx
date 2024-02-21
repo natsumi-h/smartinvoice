@@ -36,11 +36,14 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <ColorSchemeScript />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
       </head>
       <body>
         <MantineProvider theme={theme} defaultColorScheme="light">
           <Notifications position="top-right" />
-          <main style={{ position: "relative", minHeight:"100vh" }}>{children}</main>
+          <main style={{ position: "relative", minHeight: "100vh" }}>
+            {children}
+          </main>
         </MantineProvider>
       </body>
     </html>
