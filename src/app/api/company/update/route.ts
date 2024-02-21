@@ -3,15 +3,15 @@ import { prisma } from "@/app/db";
 import { getSession } from "@/app/lib/action";
 import { uploadFileToS3 } from "@/app/lib/s3";
 
-// POST /api/company
-// @desc: Create a new company
+// POST /api/company/update
+// @desc: Update a company
 export async function POST(request: Request) {
-  const session: any = getSession();
-  if (!session || session.payload.role !== "Admin") {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 400 });
-  }
   try {
-    const userId = session.payload.id;
+    const session: any = getSession();
+    if (!session || session.payload.role !== "Admin") {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 400 });
+    }
+    const usersCompany = session.payload.company;
 
     const formData = await request.formData();
     const file = formData.get("file") as File;
@@ -68,7 +68,8 @@ export async function POST(request: Request) {
     const branchnumber = formData.get("branchnumber") as string;
 
     //ORM処理
-    const res = await prisma.company.create({
+    const res = await prisma.company.update({
+      where: { id: usersCompany },
       data: {
         name,
         uen,
@@ -86,11 +87,6 @@ export async function POST(request: Request) {
         swiftcode,
         branchnumber,
         logoUrl: fileUrl,
-        user: {
-          connect: {
-            id: userId,
-          },
-        },
       },
     });
     console.log(res);
@@ -99,34 +95,6 @@ export async function POST(request: Request) {
       { message: "File upload Success", data: res },
       { status: 200 }
     );
-  } catch (e) {
-    console.log(e);
-    return NextResponse.json({ error: "Error" }, { status: 400 });
-  }
-}
-
-export async function GET(request: Request) {
-  try {
-    // TODO:ユーザーのCompany情報を取得する
-    const session: any = getSession();
-    if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 400 });
-    }
-    const userId = session.payload.id;
-    const res = await prisma.company.findFirst({
-      where: {
-        user: {
-          some: {
-            id: userId,
-          },
-        },
-      },
-      include: {
-        user: true,
-      },
-    });
-    console.log(res);
-    return NextResponse.json({ data: res }, { status: 200 });
   } catch (e) {
     console.log(e);
     return NextResponse.json({ error: "Error" }, { status: 400 });

@@ -15,17 +15,18 @@ import { useForm } from "@mantine/form";
 import NextImage from "next/image";
 import noimage from "../../../../public/images/companylogo-noimage.svg";
 import { FC, useState } from "react";
+import { useRouter } from "next/navigation";
 
 type Props = {
   company: any;
 };
 
 const UpdateCompany: FC<Props> = ({ company }) => {
-  console.log(company);
-
   const [file, setFile] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(company.logoUrl);
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
+
   const form = useForm({
     initialValues: {
       name: company?.name || "",
@@ -67,12 +68,14 @@ const UpdateCompany: FC<Props> = ({ company }) => {
     });
 
     try {
-      const response = await fetch("/api/company", {
+      const response = await fetch("/api/company/update", {
         method: "POST",
         body: formData,
       });
       const data = await response.json();
       console.log(data);
+      router.push("/company");
+      router.refresh();
       setLoading(false);
     } catch (error) {
       console.log(error);
@@ -99,7 +102,6 @@ const UpdateCompany: FC<Props> = ({ company }) => {
               src={previewUrl || noimage} // 変更部分
               width={100}
               height={100}
-              // fallbackSrc="https://placehold.co/200x200?text=no image"
               alt="Company Logo"
             />
             <Box>
