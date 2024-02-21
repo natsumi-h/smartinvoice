@@ -15,23 +15,23 @@ export async function POST(request: Request) {
 
     const formData = await request.formData();
     const file = formData.get("file") as File;
-    if (!file) {
-      return NextResponse.json({ error: "File is required" }, { status: 400 });
+
+    let fileUrl;
+    if (file) {
+      const buffer = Buffer.from(await file.arrayBuffer());
+      const contentType = file.type;
+      const generateUniqueFileName = (originalFileName: string) => {
+        const fileExtension = originalFileName.split(".").pop();
+        const timestamp = new Date().getTime();
+        const randomString = Math.random().toString(36).substring(2, 15);
+        return `file_${timestamp}_${randomString}.${fileExtension}`;
+      };
+      const uniqueFileName = generateUniqueFileName(file.name);
+
+      // S3へのアップロード処理
+      fileUrl = await uploadFileToS3(buffer, uniqueFileName, contentType);
+      console.log(fileUrl);
     }
-
-    const buffer = Buffer.from(await file.arrayBuffer());
-    const contentType = file.type;
-    const generateUniqueFileName = (originalFileName: string) => {
-      const fileExtension = originalFileName.split(".").pop();
-      const timestamp = new Date().getTime();
-      const randomString = Math.random().toString(36).substring(2, 15);
-      return `file_${timestamp}_${randomString}.${fileExtension}`;
-    };
-    const uniqueFileName = generateUniqueFileName(file.name);
-
-    // S3へのアップロード処理
-    const fileUrl = await uploadFileToS3(buffer, uniqueFileName, contentType);
-    console.log(fileUrl);
 
     const body = {
       name: formData.get("name"),
@@ -67,27 +67,33 @@ export async function POST(request: Request) {
     const swiftcode = formData.get("swiftcode") as string;
     const branchnumber = formData.get("branchnumber") as string;
 
+    const dataWithoutFile = {
+      name,
+      uen,
+      street,
+      city,
+      state,
+      postcode,
+      phone,
+      bankname,
+      branchname,
+      accountname,
+      accounttype,
+      accountnumber,
+      bankcode,
+      swiftcode,
+      branchnumber,
+      logoUrl: fileUrl ? fileUrl : undefined,
+    };
+    const dataWithFile = {
+      ...dataWithoutFile,
+      logoUrl: fileUrl,
+    };
+
     //ORM処理
     const res = await prisma.company.update({
       where: { id: usersCompany },
-      data: {
-        name,
-        uen,
-        street,
-        city,
-        state,
-        postcode,
-        phone,
-        bankname,
-        branchname,
-        accountname,
-        accounttype,
-        accountnumber,
-        bankcode,
-        swiftcode,
-        branchnumber,
-        logoUrl: fileUrl,
-      },
+      data: file ? dataWithFile : dataWithoutFile,
     });
     console.log(res);
 

@@ -66,6 +66,7 @@ const UpdateCompany: FC<Props> = ({ company }) => {
         formData.append(key, values[key].toLowerCase());
       }
     });
+    console.log(formData);
 
     try {
       const response = await fetch("/api/company/update", {

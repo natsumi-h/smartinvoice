@@ -22,48 +22,38 @@ import { addCommasToNumber } from "@/app/lib/addCommas";
 
 type Props = {
   customers: { id: number; name: string }[];
+  invoice: any;
 };
-const CreateForm: FC<Props> = ({ customers }) => {
+const UpdateInvoice: FC<Props> = ({ customers, invoice }) => {
   const router = useRouter();
+
+  const itemInitialValues = invoice.items.reduce(
+    (acc: any, item: any, index: number) => {
+      acc[`description${index}`] = item.description;
+      acc[`qty${index}`] = item.qty;
+      acc[`unitPrice${index}`] = item.unitPrice;
+      acc[`taxRate${index}`] = item.taxRate === 9 ? "9%" : "No Tax(0%)";
+      return acc;
+    },
+    {}
+  );
+
   const form = useForm({
     initialValues: {
-      specialDiscount: "0.00",
-      qty0: 1,
-      unitPrice0: "0.00",
-      taxRate0: "9%",
+      customer: invoice.customer.name,
+      issueDate: new Date(invoice.issueDate),
+      dueDate: new Date(invoice.dueDate),
+      specialDiscount: Number(invoice.discount),
+      ...itemInitialValues,
     },
-    // validate: (values) => {
-    //   const errors: any = {};
-    //   // 既存のバリデーション
-    //   if (!values.customer) errors.customer = "Customer is required";
-    //   if (!values.issueDate) errors.issueDate = "Issue date is required";
-    //   if (!values.dueDate) errors.dueDate = "Due date is required";
-    //   // 動的フィールドのバリデーション
-    //   for (let i = 0; i < itemLength; i++) {
-    //     if (!values[`description-${i}`]) {
-    //       errors[`description-${i}`] = "Description is required";
-    //     }
-    //     if (!values[`qty-${i}`]) {
-    //       errors[`qty-${i}`] = "Quantity is required";
-    //     }
-    //     if (!values[`unitPrice-${i}`]) {
-    //       errors[`unitPrice-${i}`] = "Unit price is required";
-    //     }
-    //     if (!values[`taxRate-${i}`]) {
-    //       errors[`taxRate-${i}`] = "Tax rate is required";
-    //     }
-    //   }
-    //   return errors;
-    // },
   });
 
-  // console.log(form.values);
   const [loading, setLoading] = useState<boolean>(false);
   const { successToast, errorToast } = useToast();
-  const [itemLength, setItemLength] = useState<number>(1);
-  const [subtotal, setSubtotal] = useState<number>(0.0);
-  const [totaltax, setTotaltax] = useState<number>(0.0);
-  const [total, setTotal] = useState<number>(0.0);
+  const [itemLength, setItemLength] = useState<number>(invoice.items.length);
+  const [subtotal, setSubtotal] = useState<number>(Number(invoice.subtotal));
+  const [totaltax, setTotaltax] = useState<number>(Number(invoice.totalTax));
+  const [total, setTotal] = useState<number>(Number(invoice.totalAmount));
   useEffect(() => {
     let newSubtotal = 0.0;
     let newTotaltax = 0.0;
@@ -81,10 +71,13 @@ const CreateForm: FC<Props> = ({ customers }) => {
     }
     setSubtotal(Number(newSubtotal));
     setTotaltax(Number(newTotaltax));
+    console.log(total);
+    console.log(addCommasToNumber(total));
 
     let newTotal =
       newSubtotal + newTotaltax - Number(form.values.specialDiscount);
     setTotal(Number(newTotal.toFixed(2)));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form.values, itemLength]);
 
   const handleSubmit = async (values: any) => {
@@ -140,7 +133,6 @@ const CreateForm: FC<Props> = ({ customers }) => {
 
   const handleAddItem = () => {
     setItemLength((prev) => prev + 1);
-
     // フォームの状態を更新して新しい項目の初期値をセット
     form.setValues({
       ...form.values,
@@ -339,4 +331,4 @@ const CreateForm: FC<Props> = ({ customers }) => {
   );
 };
 
-export default CreateForm;
+export default UpdateInvoice;

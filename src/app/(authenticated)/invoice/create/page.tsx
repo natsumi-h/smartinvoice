@@ -1,4 +1,4 @@
-import CreateForm from "@/app/components/Invoice/CreateForm";
+import CreateInvoice from "@/app/components/Invoice/CreateInvoice";
 import { getCustomers } from "@/app/lib/data";
 import { Box, Title } from "@mantine/core";
 
@@ -7,7 +7,7 @@ const page = async () => {
   return (
     <Box>
       <Title order={2}>New Invoice</Title>
-      <CreateForm customers={customers} />
+      <CreateInvoice customers={customers} />
     </Box>
   );
 };
