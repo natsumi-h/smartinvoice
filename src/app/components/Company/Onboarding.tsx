@@ -15,11 +15,13 @@ import { useForm } from "@mantine/form";
 import NextImage from "next/image";
 import noimage from "../../../../public/images/companylogo-noimage.svg";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const Onboarding = () => {
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
   const form = useForm({
     // validate: {
     //   file: (value) => (value ? null : "File is required"),
@@ -49,6 +51,8 @@ const Onboarding = () => {
       });
       const data = await response.json();
       console.log(data);
+      router.push("/company");
+      router.refresh();
       setLoading(false);
     } catch (error) {
       console.log(error);

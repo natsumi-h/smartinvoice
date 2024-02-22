@@ -3,7 +3,7 @@ import { Box, Title } from "@mantine/core";
 
 const page = () => {
   return (
-    <Box>
+    <Box mx={"auto"} maw={"800px"} p={"lg"}>
       <Title order={2}>Register your organization detail.</Title>
       <Onboarding />
     </Box>

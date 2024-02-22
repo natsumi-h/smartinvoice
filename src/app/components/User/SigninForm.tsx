@@ -72,9 +72,10 @@ const SigninForm = () => {
       const signinData = await signinRes.json();
       setLoading(false);
       if (signinData.company) {
-        await router.push("/invoice");
+        router.push("/invoice");
       } else {
-        await router.push("/company/onboarding");
+        // router.push("/company/onboarding");
+        router.push("/onboarding");
       }
       successToast({
         title: "Signin successful",
