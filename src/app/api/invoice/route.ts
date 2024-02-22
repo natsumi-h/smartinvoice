@@ -1,78 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { prisma } from "@/app/db";
 import { getSession } from "@/app/lib/action";
-import { generateHtml } from "@/app/lib/pdf";
-import chromium from "@sparticuz/chromium";
-import puppeteercore from "puppeteer-core";
-import puppeteer from "puppeteer";
-
-const s3Client = new S3Client({
-  region: process.env.AWS_S3_REGION || "ap-southeast-2",
-  credentials: {
-    accessKeyId: process.env.AWS_S3_ACCESS_KEY_ID || "",
-    secretAccessKey: process.env.AWS_S3_SECRET_ACCESS_KEY || "",
-  },
-});
-
-const uploadFileToS3 = async (
-  file: Buffer,
-  fileName: string,
-  contentType: string
-) => {
-  const fileBuffer = file;
-  try {
-    const params = {
-      Bucket: process.env.AWS_S3_BUCKET_NAME,
-      Key: fileName,
-      Body: fileBuffer,
-      ContentType: contentType,
-    };
-    const command = new PutObjectCommand(params);
-    await s3Client.send(command);
-
-    const fileUrl = `https://smartinvoice-gacapstone.s3.ap-southeast-2.amazonaws.com/${encodeURIComponent(
-      fileName
-    )}`;
-    return fileUrl;
-  } catch (e) {
-    console.error(e);
-    throw e;
-  }
-};
-
-const generatePdf = async (html: string) => {
-  const getBrowser = async () => {
-    let browser;
-    if (process.env.NODE_ENV !== "development") {
-      browser = await puppeteercore.launch({
-        args: chromium.args,
-        defaultViewport: chromium.defaultViewport,
-        executablePath: await chromium.executablePath(),
-        headless: true,
-      });
-    } else {
-      browser = await puppeteer.launch({ headless: true });
-    }
-    return browser;
-  };
-  const browser: any = await getBrowser();
-
-  //   const browser = await puppeteer.launch({
-  //     args: chromium.args,
-  //     defaultViewport: chromium.defaultViewport,
-  //     executablePath: await chromium.executablePath(),
-  //     headless: true,
-  //   });
-
-  // const browser = await puppeteer.launch({ headless: true });
-
-  const page = await browser.newPage();
-  await page.setContent(html);
-  const pdfBuffer = await page.pdf();
-  await browser.close();
-  return pdfBuffer;
-};
+import { generateHtml, generatePdf } from "@/app/lib/pdf";
+import { uploadFileToS3 } from "@/app/lib/s3";
 
 // POST /api/invoice
 // @desc: Create a new invoice
@@ -101,7 +31,18 @@ export async function POST(request: Request) {
         issueDate: payload.issueDate,
         dueDate: payload.dueDate,
         items: {
-          create: payload.items,
+          create: payload.items.map((item: any) => {
+            return {
+              description: item.description,
+              qty: item.qty,
+              unitPrice: item.unitPrice,
+              taxRate: item.taxRate === "9%" ? 9 : 0,
+              amount: (
+                item.qty * Number(item.unitPrice) * (item.taxRate === "9%" ? 1.09 : 1)
+              ).toFixed(2),
+            };
+          }
+          ),
         },
         subtotal: payload.subtotal,
         discount: payload.specialDiscount,

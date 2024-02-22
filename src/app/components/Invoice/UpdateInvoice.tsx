@@ -24,7 +24,7 @@ type Props = {
   customers: { id: number; name: string }[];
   invoice: any;
 };
-const UpdateInvoice: FC<Props> = ({ customers, invoice }) => {
+const UpdateInvoice: FC<Props> = ({ invoice }) => {
   const router = useRouter();
 
   const itemInitialValues = invoice.items.reduce(
@@ -71,9 +71,6 @@ const UpdateInvoice: FC<Props> = ({ customers, invoice }) => {
     }
     setSubtotal(Number(newSubtotal));
     setTotaltax(Number(newTotaltax));
-    console.log(total);
-    console.log(addCommasToNumber(total));
-
     let newTotal =
       newSubtotal + newTotaltax - Number(form.values.specialDiscount);
     setTotal(Number(newTotal.toFixed(2)));
@@ -105,13 +102,10 @@ const UpdateInvoice: FC<Props> = ({ customers, invoice }) => {
         subtotal: subtotal,
         discount: values.specialDiscount,
         totalTax: totaltax,
-        total: total,
-        customer: customers.find(
-          (customer) => customer.name === values.customer
-        )?.id,
+        totalAmount: total,
       };
 
-      const response = await fetch("/api/invoice", {
+      const response = await fetch(`/api/invoice/${invoice.id}`, {
         method: "POST",
         body: JSON.stringify({
           payload,
@@ -120,9 +114,10 @@ const UpdateInvoice: FC<Props> = ({ customers, invoice }) => {
       const data = await response.json();
       console.log(data);
       router.push(`/invoice/${data.data.id}`);
+      router.refresh()
       successToast({
-        title: "Invoice created",
-        message: "Invoice has been created successfully",
+        title: "Invoice updated",
+        message: "Invoice has been updated successfully",
       });
       setLoading(false);
     } catch (error) {
@@ -224,15 +219,11 @@ const UpdateInvoice: FC<Props> = ({ customers, invoice }) => {
     <Box maw={1200}>
       <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
         <Flex gap="md" mt="lg" justify={"space-between"}>
-          <Select
-            label="To"
-            placeholder="Choose Customer"
-            data={customers.map((customer) => customer.name)}
-            searchable
-            limit={5}
-            {...form.getInputProps("customer")}
-            w={"50%"}
-          />
+          <Box>
+            <Text fw={"500"} fz={"sm"}>To</Text>
+            <Text>{invoice.customer.name}</Text>
+          </Box>
+
           <Flex gap="md">
             <DateInput
               label="Issue date"

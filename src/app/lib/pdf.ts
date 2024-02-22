@@ -1,6 +1,40 @@
-// const cssPath = path.join(process.cwd(), "public", "pdf.css");
-// const css = fs.readFileSync(cssPath, "utf-8");
 import dayjs from "dayjs";
+import chromium from "@sparticuz/chromium";
+import puppeteercore from "puppeteer-core";
+import puppeteer from "puppeteer";
+
+export const generatePdf = async (html: string) => {
+  const getBrowser = async () => {
+    let browser;
+    if (process.env.NODE_ENV !== "development") {
+      browser = await puppeteercore.launch({
+        args: chromium.args,
+        defaultViewport: chromium.defaultViewport,
+        executablePath: await chromium.executablePath(),
+        headless: true,
+      });
+    } else {
+      browser = await puppeteer.launch({ headless: true });
+    }
+    return browser;
+  };
+  const browser: any = await getBrowser();
+
+  //   const browser = await puppeteer.launch({
+  //     args: chromium.args,
+  //     defaultViewport: chromium.defaultViewport,
+  //     executablePath: await chromium.executablePath(),
+  //     headless: true,
+  //   });
+
+  // const browser = await puppeteer.launch({ headless: true });
+
+  const page = await browser.newPage();
+  await page.setContent(html);
+  const pdfBuffer = await page.pdf();
+  await browser.close();
+  return pdfBuffer;
+};
 
 export const generateHtml = (payload: any) => {
   const issueDate = dayjs(payload.issueDate).format("DD MMMM YYYY");
