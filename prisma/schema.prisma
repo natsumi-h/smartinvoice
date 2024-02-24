@@ -59,6 +59,8 @@ model Invoice {
   user_id Int?
   customer Customer? @relation(fields: [customer_id], references: [id])
   customer_id Int?
+  contact Contact? @relation(fields: [contact_id], references: [id])
+  contact_id Int?
   company Company? @relation(fields: [company_id], references: [id])
   company_id Int?
   items InvoiceItem[]
@@ -69,6 +71,7 @@ model Invoice {
   @@index([user_id])
   @@index([customer_id])
   @@index([company_id])
+  @@index([contact_id])
 }
 
 enum Status {
@@ -157,6 +160,7 @@ model Contact {
   title Title?
   customer Customer? @relation(fields: [customer_id], references: [id])
   customer_id Int?
+  invoices Invoice[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

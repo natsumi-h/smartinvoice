@@ -5,6 +5,7 @@ import {
   Flex,
   NumberInput,
   Select,
+  Stack,
   Table,
   Text,
   TextInput,
@@ -114,7 +115,7 @@ const UpdateInvoice: FC<Props> = ({ invoice }) => {
       const data = await response.json();
       console.log(data);
       router.push(`/invoice/${data.data.id}`);
-      router.refresh()
+      router.refresh();
       successToast({
         title: "Invoice updated",
         message: "Invoice has been updated successfully",
@@ -219,10 +220,22 @@ const UpdateInvoice: FC<Props> = ({ invoice }) => {
     <Box maw={1200}>
       <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
         <Flex gap="md" mt="lg" justify={"space-between"}>
-          <Box>
-            <Text fw={"500"} fz={"sm"}>To</Text>
-            <Text>{invoice.customer.name}</Text>
-          </Box>
+          <Stack gap="md">
+            <Box>
+              <Text fw={"500"} fz={"sm"}>
+                To
+              </Text>
+              <Text>{invoice.customer.name}</Text>
+            </Box>
+            <Box>
+              <Text fw={"500"} fz={"sm"}>
+                Attention to
+              </Text>
+              <Text>
+                {invoice.contact.title}. {invoice.contact.name}
+              </Text>
+            </Box>
+          </Stack>
 
           <Flex gap="md">
             <DateInput

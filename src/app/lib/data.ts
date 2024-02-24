@@ -100,6 +100,7 @@ export const getInvoice = async (id: string) => {
       include: {
         customer: true,
         items: true,
+        contact: true,
       },
     });
 

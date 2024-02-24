@@ -5,6 +5,7 @@ import {
   Flex,
   NumberInput,
   Select,
+  Stack,
   Table,
   Text,
   TextInput,
@@ -21,8 +22,16 @@ import useToast from "@/app/hooks/useToast";
 import { addCommasToNumber } from "@/app/lib/addCommas";
 
 type Props = {
-  customers: { id: number; name: string }[];
+  customers: {
+    id: number;
+    name: string;
+    contact: {
+      id: number;
+      name: string;
+    }[];
+  }[];
 };
+
 const CreateInvoice: FC<Props> = ({ customers }) => {
   const router = useRouter();
   const form = useForm({
@@ -31,6 +40,8 @@ const CreateInvoice: FC<Props> = ({ customers }) => {
       qty0: 1,
       unitPrice0: "0.00",
       taxRate0: "9%",
+      customer: null,
+      contact: null,
     },
     // validate: (values) => {
     //   const errors: any = {};
@@ -112,10 +123,15 @@ const CreateInvoice: FC<Props> = ({ customers }) => {
         discount: values.specialDiscount,
         totalTax: totaltax,
         total: total,
-        customer: customers.find(
-          (customer) => customer.name === values.customer
-        )?.id,
+        // customer: customers.find(
+        //   (customer) => customer.name === values.customer
+        // )?.id,
+        customer: values.customer,
+        contact: values.contact,
       };
+
+      console.log(payload);
+      
 
       const response = await fetch("/api/invoice", {
         method: "POST",
@@ -231,16 +247,36 @@ const CreateInvoice: FC<Props> = ({ customers }) => {
     <Box maw={1200}>
       <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
         <Flex gap="md" mt="lg" justify={"space-between"}>
-          <Select
-            label="To"
-            placeholder="Choose Customer"
-            data={customers.map((customer) => customer.name)}
-            searchable
-            limit={5}
-            {...form.getInputProps("customer")}
-            w={"50%"}
-          />
-          <Flex gap="md">
+          <Stack w={"50%"} gap="md">
+            <Select
+              label="Company"
+              placeholder="Choose Customer"
+              searchable
+              limit={5}
+              data={customers.map((customer: any) => ({
+                label: customer.name,
+                value: customer.id.toString(),
+              }))}
+              {...form.getInputProps("customer")}
+            />
+            <Select
+              label="Attention to"
+              placeholder="Choose Contact"
+              disabled={!form.values?.customer}
+              data={customers
+                .find(
+                  (customer) => customer.id === Number(form.values?.customer)
+                )
+                ?.contact.map((contact: any) => ({
+                  label: contact.name,
+                  value: contact.id.toString(),
+                }))}
+              searchable
+              limit={5}
+              {...form.getInputProps("contact")}
+            />
+          </Stack>
+          <Stack gap="md">
             <DateInput
               label="Issue date"
               placeholder="Date input"
@@ -251,7 +287,7 @@ const CreateInvoice: FC<Props> = ({ customers }) => {
               placeholder="Date input"
               {...form.getInputProps("dueDate")}
             />
-          </Flex>
+          </Stack>
         </Flex>
 
         <Table mt="xl" verticalSpacing={"md"} horizontalSpacing={"md"}>

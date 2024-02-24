@@ -3,6 +3,7 @@ import { prisma } from "@/app/db";
 import { getSession } from "@/app/lib/action";
 import { generateHtml, generatePdf } from "@/app/lib/pdf";
 import { uploadFileToS3 } from "@/app/lib/s3";
+import { parse } from "path";
 
 // POST /api/invoice
 // @desc: Create a new invoice
@@ -22,10 +23,14 @@ export async function POST(request: Request) {
     // ORM
     const createRes = await prisma.invoice.create({
       data: {
-        // invoiceUrl: fileUrl,
         customer: {
           connect: {
-            id: payload.customer,
+            id: parseInt(payload.customer),
+          },
+        },
+        contact: {
+          connect: {
+            id: parseInt(payload.contact),
           },
         },
         issueDate: payload.issueDate,
@@ -38,11 +43,12 @@ export async function POST(request: Request) {
               unitPrice: item.unitPrice,
               taxRate: item.taxRate === "9%" ? 9 : 0,
               amount: (
-                item.qty * Number(item.unitPrice) * (item.taxRate === "9%" ? 1.09 : 1)
+                item.qty *
+                Number(item.unitPrice) *
+                (item.taxRate === "9%" ? 1.09 : 1)
               ).toFixed(2),
             };
-          }
-          ),
+          }),
         },
         subtotal: payload.subtotal,
         discount: payload.specialDiscount,

@@ -11,6 +11,7 @@ type Props = {
 const SingleInvoice: FC<Props> = ({ invoice }) => {
   const items = invoice.items;
   const customer = invoice.customer;
+  const contact = invoice.contact;
   const address = `${customer?.street}, ${customer?.city}, ${customer?.state}, ${customer?.postcode}`;
 
   // Item
@@ -49,7 +50,9 @@ const SingleInvoice: FC<Props> = ({ invoice }) => {
           <Text fw={"bold"}>To</Text>
           <Text>{invoice.customer.name}</Text>
           <Text>{address}</Text>
-          <Text>Attn: Ms. Tailor Swift</Text>
+          <Text>
+            Attn: {contact.title}. {contact.name}
+          </Text>
         </Box>
 
         <Flex gap="md">
