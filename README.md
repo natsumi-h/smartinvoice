@@ -38,6 +38,9 @@ Smartinvoice is an intuitive application designed for generating professional in
   * Users belonging to multiple organizations
   * Invoice status handling
   * User profile update
+* Security enhancement
+  * Token handling
+  * S3 data protection  
 
 ## References and Inspirations
 * [Xero Online Invoicing Software](https://www.xero.com/sg/accounting-software/send-invoices/)
