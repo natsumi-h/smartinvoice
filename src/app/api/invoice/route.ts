@@ -3,13 +3,11 @@ import { prisma } from "@/app/db";
 import { getSession } from "@/app/lib/action";
 import { generateHtml, generatePdf } from "@/app/lib/pdf";
 import { uploadFileToS3 } from "@/app/lib/s3";
-import { parse } from "path";
 
 // POST /api/invoice
 // @desc: Create a new invoice
 export async function POST(request: Request) {
   const session: any = getSession();
-  console.log(session);
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 400 });
   }
@@ -41,11 +39,11 @@ export async function POST(request: Request) {
               description: item.description,
               qty: item.qty,
               unitPrice: item.unitPrice,
-              taxRate: item.taxRate === "9%" ? 9 : 0,
+              taxRate: parseInt(item.taxRate),
               amount: (
                 item.qty *
                 Number(item.unitPrice) *
-                (item.taxRate === "9%" ? 1.09 : 1)
+                (item.taxRate === "9" ? 1.09 : 1)
               ).toFixed(2),
             };
           }),
@@ -73,6 +71,7 @@ export async function POST(request: Request) {
           },
         },
         company: true,
+        contact: true,
       },
     });
     console.log(createRes);
@@ -105,6 +104,7 @@ export async function POST(request: Request) {
           },
         },
         company: true,
+        contact: true,
       },
     });
 

@@ -41,6 +41,7 @@ export const generateHtml = (payload: any) => {
   const dueDate = dayjs(payload.dueDate).format("DD MMMM YYYY");
   const company = payload.company;
   const customer = payload.customer;
+  const contact = payload.contact;
   const bankDetails1 = `Bank: ${company.bankname}, Branch: ${company.branchname}, A/C Name: ${company.accountname},`;
   const bankDetails2 = `A/C Type: ${company.accounttype}, A/C #: ${company.accountnumber},`;
   const bankDetails3 = `Bank Code: ${company.bankcode}, SWIFT BIC Code: ${company.swiftcode}, Branch #: ${company.branchnumber}`;
@@ -51,6 +52,7 @@ export const generateHtml = (payload: any) => {
         <td>${item.description}</td>
         <td>${item.qty}</td>
         <td>${Number(item.unitPrice).toFixed(2)}</td>
+        <td>${item.taxRate}%</td>
         <td>${Number(item.amount).toFixed(2)}</td>
       </tr>
     `;
@@ -59,7 +61,7 @@ export const generateHtml = (payload: any) => {
 
   return `
   <!DOCTYPE html>
-<html lang="en">
+  <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -81,7 +83,7 @@ export const generateHtml = (payload: any) => {
       <div class="flex">
         <div>
           <p>${customer.name}</p>
-          <p>Attn: ${customer.contact[0].title} ${customer.contact[0].name}</p>
+          <p>Attn: ${contact.title}. ${contact.name}</p>
           <p>${customer.street} ${customer.city}</p>
           <p>${customer.state} ${customer.postcode}</p>
         </div>
@@ -112,6 +114,7 @@ export const generateHtml = (payload: any) => {
             <th>Description</th>
             <th>Quantity</th>
             <th>Unit Price</th>
+            <th>Tax Rate</th>
             <th>Total</th>
           </tr>
         </thead>

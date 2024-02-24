@@ -61,6 +61,7 @@ export async function POST(
           },
         },
         company: true,
+        contact: true,
       },
     });
     console.log(updateRes);

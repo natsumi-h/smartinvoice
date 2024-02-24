@@ -39,7 +39,7 @@ const CreateInvoice: FC<Props> = ({ customers }) => {
       specialDiscount: "0.00",
       qty0: 1,
       unitPrice0: "0.00",
-      taxRate0: "9%",
+      taxRate0: "9",
       customer: null,
       contact: null,
     },
@@ -85,7 +85,7 @@ const CreateInvoice: FC<Props> = ({ customers }) => {
       newTotaltax +=
         (form.values as { [key: string]: any })[`qty${i}`] *
         Number((form.values as { [key: string]: any })[`unitPrice${i}`]) *
-        ((form.values as { [key: string]: any })[`taxRate${i}`] === "9%"
+        ((form.values as { [key: string]: any })[`taxRate${i}`] === "9"
           ? 0.09
           : 0);
     }
@@ -106,7 +106,7 @@ const CreateInvoice: FC<Props> = ({ customers }) => {
           description: values[`description${i}`],
           qty: values[`qty${i}`],
           unitPrice: values[`unitPrice${i}`],
-          taxRate: values[`taxRate${i}`] === "9%" ? 9 : 0,
+          taxRate: values[`taxRate${i}`] === "9" ? "9" : "0",
           amount: (
             (values[`qty${i}`] as number) *
             Number(values[`unitPrice${i}`]) *
@@ -131,7 +131,6 @@ const CreateInvoice: FC<Props> = ({ customers }) => {
       };
 
       console.log(payload);
-      
 
       const response = await fetch("/api/invoice", {
         method: "POST",
@@ -196,8 +195,12 @@ const CreateInvoice: FC<Props> = ({ customers }) => {
       <Table.Td pl="0">
         <Select
           placeholder="Select title"
-          data={["9%", "No Tax(0%)"]}
-          defaultValue="9%"
+          // data={["9%", "No Tax(0%)"]}
+          data={[
+            { label: "9%", value: "9" },
+            { label: "No Tax(0%)", value: "0" },
+          ]}
+          defaultValue={"9%"}
           allowDeselect={false}
           {...form.getInputProps(`taxRate${index}`)}
         />
@@ -218,7 +221,7 @@ const CreateInvoice: FC<Props> = ({ customers }) => {
                   ) *
                   ((form.values as { [key: string]: any })[
                     `taxRate${index}`
-                  ] === "9%"
+                  ] === "9"
                     ? 1.09
                     : 1)
               : 0
