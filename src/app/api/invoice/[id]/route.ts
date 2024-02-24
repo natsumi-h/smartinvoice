@@ -19,6 +19,7 @@ export async function POST(
   try {
     const req = await request.json();
     const { items: newItems, ...payload } = req.payload;
+    delete payload.requestType;
 
     // Get exisiting invoice items
     const existingItems = await prisma.invoiceItem.findMany({
@@ -66,6 +67,16 @@ export async function POST(
     });
     console.log(updateRes);
 
+    if (req.payload.requestType === "draft") {
+      console.log(updateRes);
+      return NextResponse.json(
+        {
+          data: updateRes,
+        },
+        { status: 200 }
+      );
+    }
+
     // Generate PDF
     const html = generateHtml(updateRes);
     const pdfBuffer = await generatePdf(html);
@@ -85,6 +96,8 @@ export async function POST(
       },
       data: {
         invoiceUrl: fileUrl,
+        status:
+          req.payload.requestType === "issue" ? "Issued" : updateRes.status,
       },
       include: {
         items: true,

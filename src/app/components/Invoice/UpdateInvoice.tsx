@@ -49,7 +49,8 @@ const UpdateInvoice: FC<Props> = ({ invoice }) => {
     },
   });
 
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loadingDraft, setLoadingDraft] = useState<boolean>(false);
+  const [loadingIssue, setLoadingIssue] = useState<boolean>(false);
   const { successToast, errorToast } = useToast();
   const [itemLength, setItemLength] = useState<number>(invoice.items.length);
   const [subtotal, setSubtotal] = useState<number>(Number(invoice.subtotal));
@@ -78,9 +79,10 @@ const UpdateInvoice: FC<Props> = ({ invoice }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form.values, itemLength]);
 
-  const handleSubmit = async (values: any) => {
+  const handleSubmit = async (type: "issue" | "draft" | "update") => {
+    const values: any = form.values;
     try {
-      setLoading(true);
+      type === "draft" ? setLoadingDraft(true) : setLoadingIssue(true);
       const itemValues = [];
       for (let i = 0; i < itemLength; i++) {
         itemValues.push({
@@ -97,6 +99,7 @@ const UpdateInvoice: FC<Props> = ({ invoice }) => {
       }
 
       const payload = {
+        requestType: type,
         issueDate: values.issueDate,
         dueDate: values.dueDate,
         items: itemValues,
@@ -120,10 +123,10 @@ const UpdateInvoice: FC<Props> = ({ invoice }) => {
         title: "Invoice updated",
         message: "Invoice has been updated successfully",
       });
-      setLoading(false);
+      type === "issue" ? setLoadingIssue(false) : setLoadingDraft(false);
     } catch (error) {
       console.log(error);
-      setLoading(false);
+      type === "issue" ? setLoadingIssue(false) : setLoadingDraft(false);
     }
   };
 
@@ -139,7 +142,7 @@ const UpdateInvoice: FC<Props> = ({ invoice }) => {
     });
   };
 
-  // Item
+  // InvoiceItem
   const rows = Array.from({ length: itemLength }).map((_, index) => (
     <Table.Tr key={index}>
       <Table.Td pl="0">
@@ -218,7 +221,9 @@ const UpdateInvoice: FC<Props> = ({ invoice }) => {
 
   return (
     <Box maw={1200}>
-      <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
+      <form
+      // onSubmit={form.onSubmit((values) => handleSubmit(values))}
+      >
         <Flex gap="md" mt="lg" justify={"space-between"}>
           <Stack gap="md">
             <Box>
@@ -318,19 +323,39 @@ const UpdateInvoice: FC<Props> = ({ invoice }) => {
             </Table.Tr>
           </Table.Tbody>
         </Table>
-
-        <Flex justify="center" mt="xl" gap={"lg"}>
-          <Button fullWidth type="submit" variant="outline" loading={loading}>
-            Save Draft
-          </Button>
-          <Button fullWidth type="submit" loading={loading}>
-            Issue Invoice
-          </Button>
-          {/* <Button fullWidth type="submit">
-            Create
-          </Button> */}
-        </Flex>
       </form>
+      <Flex justify="center" mt="xl" gap={"lg"}>
+        {invoice.status === "Draft" && (
+          <>
+            <Button
+              fullWidth
+              variant="outline"
+              loading={loadingDraft}
+              disabled={loadingIssue}
+              onClick={() => handleSubmit("draft")}
+            >
+              Save Draft
+            </Button>
+            <Button
+              fullWidth
+              loading={loadingIssue}
+              disabled={loadingDraft}
+              onClick={() => handleSubmit("issue")}
+            >
+              Issue Invoice
+            </Button>
+          </>
+        )}
+        {invoice.status !== "Draft" && (
+          <Button
+            fullWidth
+            loading={loadingIssue}
+            onClick={() => handleSubmit("update")}
+          >
+            Update Invoice
+          </Button>
+        )}
+      </Flex>
     </Box>
   );
 };

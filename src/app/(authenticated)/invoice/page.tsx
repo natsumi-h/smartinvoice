@@ -4,7 +4,7 @@ import Link from "next/link";
 
 const page = () => {
   return (
-    <Box maw="800px">
+    <Box>
       <Flex justify={"space-between"} align="center">
         <Title order={2}>Invoice</Title>
         <Button

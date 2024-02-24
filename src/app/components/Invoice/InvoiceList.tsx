@@ -1,6 +1,6 @@
 "use client";
-import { Skeleton, Table } from "@mantine/core";
-import { FC, useEffect, useState } from "react";
+import { Badge, Skeleton, Table } from "@mantine/core";
+import { FC } from "react";
 import { useRouter } from "next/navigation";
 import dayjs from "dayjs";
 import { addCommasToNumber } from "@/app/lib/addCommas";
@@ -27,9 +27,11 @@ const InvoiceList: FC<Props> = ({ invoices, loading }) => {
       </Table.Td>
       <Table.Td pl="0">{dayjs(invoice.dueDate).format("DD MMM YYYY")}</Table.Td>
       <Table.Td pl="0" pr="md" ta="right">
-        {addCommasToNumber(Number(invoice.totalAmount))}
+        ${addCommasToNumber(Number(invoice.totalAmount))}
       </Table.Td>
-      <Table.Td pl="0">{invoice.status}</Table.Td>
+      <Table.Td pl="0">
+        <Badge>{invoice.status}</Badge>
+      </Table.Td>
     </Table.Tr>
   ));
 

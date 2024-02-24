@@ -133,6 +133,10 @@ export const generateHtml = (payload: any) => {
           <td>$${Number(payload.totalTax).toFixed(2)}</td>
         </tr>
         <tr>
+          <td>Special Discount:</td>
+          <td>- $${Number(payload.discount).toFixed(2)}</td>
+        </tr>
+        <tr>
           <td>Total:</td>
           <td>$${Number(payload.totalAmount).toFixed(2)}</td>
         </tr>
@@ -205,6 +209,7 @@ th {
 td {
   /* border: 1px solid #ddd; */
   padding: 8px;
+  text-align: right;
 }
 
 th {

@@ -17,7 +17,6 @@ export async function POST(request: Request) {
   try {
     const req = await request.json();
     const payload = req.payload;
-
     // ORM
     const createRes = await prisma.invoice.create({
       data: {
@@ -49,7 +48,7 @@ export async function POST(request: Request) {
           }),
         },
         subtotal: payload.subtotal,
-        discount: payload.specialDiscount,
+        discount: payload.discount,
         totalTax: payload.totalTax,
         totalAmount: payload.total,
         user: {
@@ -74,7 +73,16 @@ export async function POST(request: Request) {
         contact: true,
       },
     });
-    console.log(createRes);
+
+    if (payload.requestType === "draft") {
+      console.log(createRes);
+      return NextResponse.json(
+        {
+          data: createRes,
+        },
+        { status: 200 }
+      );
+    }
 
     // PDFを生成
     const html = generateHtml(createRes);
@@ -95,6 +103,7 @@ export async function POST(request: Request) {
       },
       data: {
         invoiceUrl: fileUrl,
+        status: "Issued",
       },
       include: {
         items: true,
@@ -131,6 +140,7 @@ export async function GET(request: NextRequest) {
 
   const searchParams = request.nextUrl.searchParams;
   const customerParam = searchParams.get("customer");
+  const statusParam = searchParams.get("status");
   const issueDateStartParam = searchParams.get("issueDateStart");
   const issueDateEndParam = searchParams.get("issueDateEnd");
   const dueDateStartParam = searchParams.get("dueDateStart");
@@ -139,6 +149,9 @@ export async function GET(request: NextRequest) {
   try {
     const whereCondition = {
       company_id: usersCompany,
+      ...(statusParam && {
+        status: statusParam as "Draft" | "Sent" | "Paid" | "Issued",
+      }),
       ...(customerParam && { customer_id: parseInt(customerParam) }),
       ...(issueDateStartParam && {
         issueDate: { gte: new Date(issueDateStartParam) },

@@ -76,8 +76,7 @@ model Invoice {
 
 enum Status {
  Draft
- Submitted
- Approved
+ Issued
  Sent
  Paid
 }

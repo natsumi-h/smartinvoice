@@ -43,32 +43,10 @@ const CreateInvoice: FC<Props> = ({ customers }) => {
       customer: null,
       contact: null,
     },
-    // validate: (values) => {
-    //   const errors: any = {};
-    //   // 既存のバリデーション
-    //   if (!values.customer) errors.customer = "Customer is required";
-    //   if (!values.issueDate) errors.issueDate = "Issue date is required";
-    //   if (!values.dueDate) errors.dueDate = "Due date is required";
-    //   // 動的フィールドのバリデーション
-    //   for (let i = 0; i < itemLength; i++) {
-    //     if (!values[`description-${i}`]) {
-    //       errors[`description-${i}`] = "Description is required";
-    //     }
-    //     if (!values[`qty-${i}`]) {
-    //       errors[`qty-${i}`] = "Quantity is required";
-    //     }
-    //     if (!values[`unitPrice-${i}`]) {
-    //       errors[`unitPrice-${i}`] = "Unit price is required";
-    //     }
-    //     if (!values[`taxRate-${i}`]) {
-    //       errors[`taxRate-${i}`] = "Tax rate is required";
-    //     }
-    //   }
-    //   return errors;
-    // },
   });
 
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loadingDraft, setLoadingDraft] = useState<boolean>(false);
+  const [loadingIssue, setLoadingIssue] = useState<boolean>(false);
   const { successToast, errorToast } = useToast();
   const [itemLength, setItemLength] = useState<number>(1);
   const [subtotal, setSubtotal] = useState<number>(0.0);
@@ -97,9 +75,10 @@ const CreateInvoice: FC<Props> = ({ customers }) => {
     setTotal(Number(newTotal.toFixed(2)));
   }, [form.values, itemLength]);
 
-  const handleSubmit = async (values: any) => {
+  const handleSubmit = async (type: "issue" | "draft") => {
+    const values: any = form.values;
     try {
-      setLoading(true);
+      type == "issue" ? setLoadingIssue(true) : setLoadingDraft(true);
       const itemValues = [];
       for (let i = 0; i < itemLength; i++) {
         itemValues.push({
@@ -116,6 +95,7 @@ const CreateInvoice: FC<Props> = ({ customers }) => {
       }
 
       const payload = {
+        requestType: type,
         issueDate: values.issueDate,
         dueDate: values.dueDate,
         items: itemValues,
@@ -123,13 +103,9 @@ const CreateInvoice: FC<Props> = ({ customers }) => {
         discount: values.specialDiscount,
         totalTax: totaltax,
         total: total,
-        // customer: customers.find(
-        //   (customer) => customer.name === values.customer
-        // )?.id,
         customer: values.customer,
         contact: values.contact,
       };
-
       console.log(payload);
 
       const response = await fetch("/api/invoice", {
@@ -145,10 +121,10 @@ const CreateInvoice: FC<Props> = ({ customers }) => {
         title: "Invoice created",
         message: "Invoice has been created successfully",
       });
-      setLoading(false);
+      type === "issue" ? setLoadingIssue(false) : setLoadingDraft(false);
     } catch (error) {
       console.log(error);
-      setLoading(false);
+      type === "issue" ? setLoadingIssue(false) : setLoadingDraft(false);
     }
   };
 
@@ -248,7 +224,9 @@ const CreateInvoice: FC<Props> = ({ customers }) => {
 
   return (
     <Box maw={1200}>
-      <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
+      <form
+      // onSubmit={form.onSubmit((values) => handleSubmit(values))}
+      >
         <Flex gap="md" mt="lg" justify={"space-between"}>
           <Stack w={"50%"} gap="md">
             <Select
@@ -360,19 +338,26 @@ const CreateInvoice: FC<Props> = ({ customers }) => {
             </Table.Tr>
           </Table.Tbody>
         </Table>
-
-        <Flex justify="center" mt="xl" gap={"lg"}>
-          <Button fullWidth type="submit" variant="outline" loading={loading}>
-            Save Draft
-          </Button>
-          <Button fullWidth type="submit" loading={loading}>
-            Issue Invoice
-          </Button>
-          {/* <Button fullWidth type="submit">
-            Create
-          </Button> */}
-        </Flex>
       </form>
+      <Flex justify="center" mt="xl" gap={"lg"}>
+        <Button
+          fullWidth
+          variant="outline"
+          loading={loadingDraft}
+          disabled={loadingIssue}
+          onClick={() => handleSubmit("draft")}
+        >
+          Save Draft
+        </Button>
+        <Button
+          fullWidth
+          loading={loadingIssue}
+          disabled={loadingDraft}
+          onClick={() => handleSubmit("issue")}
+        >
+          Issue Invoice
+        </Button>
+      </Flex>
     </Box>
   );
 };

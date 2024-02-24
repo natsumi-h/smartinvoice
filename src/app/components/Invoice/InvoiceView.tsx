@@ -5,7 +5,6 @@ import StatusCards from "./StatusCards";
 import { DatePickerInput } from "@mantine/dates";
 import { useEffect, useState } from "react";
 import { useForm } from "@mantine/form";
-import { set } from "zod";
 
 const InvoiceView = () => {
   const [filterLoading, setFilterLoading] = useState(false);
@@ -19,6 +18,7 @@ const InvoiceView = () => {
       customer: null,
       issueDate: [null, null],
       dueDate: [null, null],
+      status: null,
     },
   });
 
@@ -34,6 +34,7 @@ const InvoiceView = () => {
       customer: null,
       issueDate: [null, null],
       dueDate: [null, null],
+      status: null,
     });
 
     fetchCustomers();
@@ -46,17 +47,19 @@ const InvoiceView = () => {
       customer: null,
       issueDate: [null, null],
       dueDate: [null, null],
+      status: null,
     });
     setLoading(false);
-  }, [form.values]);
+  }, []);
 
   const fetchInvoices = async (values: any) => {
     try {
       const queryParams = [];
 
-      const { customer, issueDate, dueDate } = values;
+      const { customer, issueDate, dueDate, status } = values;
 
       if (customer) queryParams.push(`customer=${customer}`);
+      if (status) queryParams.push(`status=${status}`);
       if (issueDate[0] && issueDate[1]) {
         queryParams.push(
           `issueDateStart=${(issueDate[0] as Date).toISOString()}`
@@ -94,6 +97,7 @@ const InvoiceView = () => {
       customer: null,
       issueDate: [null, null],
       dueDate: [null, null],
+      status: null,
     });
     setClearLoading(false);
   };
@@ -114,6 +118,12 @@ const InvoiceView = () => {
             label="Customer"
             searchable
             {...form.getInputProps("customer")}
+          />
+          <Select
+            data={["Draft", "Issued", "Sent", "Paid"]}
+            placeholder="Pick status"
+            label="Status"
+            {...form.getInputProps("status")}
           />
           <DatePickerInput
             type="range"

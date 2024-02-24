@@ -16,24 +16,7 @@ export async function POST(request: Request) {
       );
     }
     const userId = session.payload.id;
-
-    const userCompany = await prisma.company.findFirst({
-      where: {
-        user: {
-          some: {
-            id: userId,
-          },
-        },
-      },
-    });
-    if (!userCompany) {
-      return NextResponse.json(
-        {
-          message: "Company not found",
-        },
-        { status: 404 }
-      );
-    }
+    const userCompany = session.payload.company;
 
     const req = await request.json();
     // ORM
@@ -48,7 +31,7 @@ export async function POST(request: Request) {
         contact: {
           create: {
             email: req.email,
-            title: req.Title,
+            title: req.title,
             name: req.contactName,
             isPrimary: true,
           },
@@ -60,7 +43,7 @@ export async function POST(request: Request) {
         },
         company: {
           connect: {
-            id: userCompany.id,
+            id: userCompany,
           },
         },
       },
