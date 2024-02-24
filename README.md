@@ -25,9 +25,19 @@ Smartinvoice is an intuitive application designed for generating professional in
 ### PaaS
 * [Vercel](https://vercel.com/)
 
+## Documentations
+* [Page Structure](https://docs.google.com/spreadsheets/d/1fEhIKWBwyQ6nHCPvhyeVGnzgMv6qiBL49Tq5Oz7gI-s/edit#gid=0)
+* [API Endpoints](https://docs.google.com/spreadsheets/d/1fEhIKWBwyQ6nHCPvhyeVGnzgMv6qiBL49Tq5Oz7gI-s/edit#gid=1534939420)
+* [Database ERD](https://drawsql.app/teams/natsumi-horis-team/diagrams/project4)
+
 ## Key Challenges/takeaways
 
 ## Next Steps
+* UI Enhancement (Pagination, Next.js loading/cache optimization)
+* Multiple cases consideration
+  * Users belonging to multiple organizations
+  * Invoice status handling
+  * User profile update
 
 ## References and Inspirations
 * [Xero Online Invoicing Software](https://www.xero.com/sg/accounting-software/send-invoices/)
