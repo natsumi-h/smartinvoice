@@ -6,21 +6,21 @@ Smartinvoice is an intuitive application designed for generating professional in
 
 ## Technologies Used
 ### Core technologies
-* Next.js 14 App Router
-* Prisma -ORM
-* PlanetScale -MySQL DB
-* Typescript
+* [Next.js](https://nextjs.org/) Ver.14 App Router
+* [Prisma](https://www.prisma.io/) -ORM
+* [PlanetScale](https://planetscale.com/) -MySQL DB
+* [Typescript](https://www.typescriptlang.org/)
 * [Mantine](https://mantine.dev/) -UI Library
 * [Mantine form](https://mantine.dev/form/use-form/) -Form validation
-* Zod -Form Schema Validation
+* [Zod](https://zod.dev/) -Form Schema Validation
 
 ### Other packeges used
-* [dayjs](https://www.npmjs.com/package/dayjs) - Date formatting
+* [dayjs](https://www.npmjs.com/package/dayjs) - Date value formatting
 * [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken)
 * [bcrypt](https://www.npmjs.com/package/bcrypt)
 * [Nodemailer](https://nodemailer.com/)
-* AmazonS3 -PDF/Image storage
-* Puppeteer -Headless browser to convert html to PDF
+* [AmazonS3](https://aws.amazon.com/s3/) -PDF/Org logo image storage
+* [Puppeteer](https://pptr.dev/) -Headless browser to convert html to PDF
 
 ### PaaS
 * [Vercel](https://vercel.com/)
