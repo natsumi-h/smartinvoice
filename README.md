@@ -35,7 +35,7 @@ Smartinvoice is an intuitive application designed for generating professional in
 ## Next Steps
 * UI Enhancement (Pagination, Next.js loading/cache optimization)
 * Multiple cases consideration
-  * Users belonging to multiple organizations
+  * In case of users belonging to multiple organizations
   * Invoice status handling
   * User profile update
 * Security enhancement
