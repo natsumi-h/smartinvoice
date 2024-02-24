@@ -3,15 +3,16 @@ import { Button, Flex, Select } from "@mantine/core";
 import InvoiceList from "./InvoiceList";
 import StatusCards from "./StatusCards";
 import { DatePickerInput } from "@mantine/dates";
-import { Suspense, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "@mantine/form";
-import Loading from "@/app/(authenticated)/invoice/loading";
+import { set } from "zod";
 
 const InvoiceView = () => {
   const [filterLoading, setFilterLoading] = useState(false);
   const [clearLoading, setClearLoading] = useState(false);
   const [invoices, setInvoices] = useState([]);
   const [customers, setCustomers] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const form = useForm({
     initialValues: {
@@ -29,7 +30,14 @@ const InvoiceView = () => {
       setCustomers(data);
     };
 
+    fetchInvoices({
+      customer: null,
+      issueDate: [null, null],
+      dueDate: [null, null],
+    });
+
     fetchCustomers();
+    setLoading(false);
   }, []);
 
   // Fetch invoices
@@ -39,8 +47,8 @@ const InvoiceView = () => {
       issueDate: [null, null],
       dueDate: [null, null],
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    setLoading(false);
+  }, [form.values]);
 
   const fetchInvoices = async (values: any) => {
     try {
@@ -90,6 +98,8 @@ const InvoiceView = () => {
     setClearLoading(false);
   };
 
+  console.log(loading);
+
   return (
     <>
       {/* Filter */}
@@ -135,11 +145,15 @@ const InvoiceView = () => {
       </form>
 
       {/* Cards */}
-      <StatusCards invoices={invoices} />
+      <StatusCards
+        invoices={invoices}
+        loading={filterLoading || clearLoading || loading}
+      />
 
-      <Suspense fallback={<Loading />}>
-        <InvoiceList invoices={invoices} />
-      </Suspense>
+      <InvoiceList
+        invoices={invoices}
+        loading={filterLoading || clearLoading || loading}
+      />
     </>
   );
 };

@@ -1,5 +1,5 @@
 "use client";
-import { Table } from "@mantine/core";
+import { Skeleton, Table } from "@mantine/core";
 import { FC, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import dayjs from "dayjs";
@@ -7,9 +7,10 @@ import { addCommasToNumber } from "@/app/lib/addCommas";
 
 type Props = {
   invoices: any;
+  loading: boolean;
 };
 
-const InvoiceList:FC<Props> = ({invoices}) => {
+const InvoiceList: FC<Props> = ({ invoices, loading }) => {
   const router = useRouter();
 
   const rows = invoices.map((invoice: any) => (
@@ -28,27 +29,31 @@ const InvoiceList:FC<Props> = ({invoices}) => {
       <Table.Td pl="0" pr="md" ta="right">
         {addCommasToNumber(Number(invoice.totalAmount))}
       </Table.Td>
-      <Table.Td pl="0">
-        {invoice.status}
-      </Table.Td>
+      <Table.Td pl="0">{invoice.status}</Table.Td>
     </Table.Tr>
   ));
 
   return (
-    <Table.ScrollContainer minWidth={500}>
-      <Table mt={"xl"} fz="md" verticalSpacing="sm" highlightOnHover={true}>
-        <Table.Thead>
-          <Table.Tr>
-            <Table.Th pl="0">Customer</Table.Th>
-            <Table.Th pl="0">Date</Table.Th>
-            <Table.Th pl="0">Due Date</Table.Th>
-            <Table.Th pl="0">Total Amount</Table.Th>
-            <Table.Th pl="0">Status</Table.Th>
-          </Table.Tr>
-        </Table.Thead>
-        <Table.Tbody>{rows}</Table.Tbody>
-      </Table>
-    </Table.ScrollContainer>
+    <>
+      <Table.ScrollContainer minWidth={500}>
+        <Table mt={"xl"} fz="md" verticalSpacing="sm" highlightOnHover={true}>
+          <Table.Thead>
+            <Table.Tr>
+              <Table.Th pl="0">Customer</Table.Th>
+              <Table.Th pl="0">Date</Table.Th>
+              <Table.Th pl="0">Due Date</Table.Th>
+              <Table.Th pl="0">Total Amount</Table.Th>
+              <Table.Th pl="0">Status</Table.Th>
+            </Table.Tr>
+          </Table.Thead>
+          <Table.Tbody>{rows}</Table.Tbody>
+        </Table>
+      </Table.ScrollContainer>
+
+      <Skeleton height={15} mt={20} radius="xl" visible={loading} />
+      <Skeleton height={15} mt={20} radius="xl" visible={loading} />
+      <Skeleton height={15} mt={20} radius="xl" visible={loading} />
+    </>
   );
 };
 
