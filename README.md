@@ -3,6 +3,24 @@ Smartinvoice is an intuitive application designed for generating professional in
 ## Live URL
 
 ## Screenshots
+### Home(Marketing)
+<img width="1362" alt="Screenshot 2024-02-25 at 11 36 20 PM" src="https://github.com/natsumi-h/smartinvoice/assets/88537845/e8743c4c-12c2-40f8-8952-60fec76bf9d2">
+
+### Dashboard
+<img width="1362" alt="Screenshot 2024-02-25 at 11 36 31 PM" src="https://github.com/natsumi-h/smartinvoice/assets/88537845/348f1252-293f-43a3-88d1-2cc31b0d48cb">
+
+### Invoice Detail
+<img width="1362" alt="Screenshot 2024-02-25 at 11 36 39 PM" src="https://github.com/natsumi-h/smartinvoice/assets/88537845/0c14cff5-218d-4d07-a46d-415ebade21e5">
+
+### Create Invoice
+<img width="1362" alt="Screenshot 2024-02-25 at 11 36 59 PM" src="https://github.com/natsumi-h/smartinvoice/assets/88537845/5e30c82d-a651-4614-9a48-9bdf5e0b418d">
+
+### Customers
+<img width="1362" alt="Screenshot 2024-02-25 at 11 37 08 PM" src="https://github.com/natsumi-h/smartinvoice/assets/88537845/93b700e6-229a-4f28-bf4a-d161b4bdfee1">
+
+### Customer's Contacts
+<img width="1362" alt="Screenshot 2024-02-25 at 11 37 18 PM" src="https://github.com/natsumi-h/smartinvoice/assets/88537845/9277c79c-d8df-4a67-b94c-7a78eccaf13f">
+
 
 ## Technologies Used
 ### Core technologies
