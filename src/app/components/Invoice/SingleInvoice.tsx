@@ -90,7 +90,7 @@ const SingleInvoice: FC<Props> = ({ invoice }) => {
             </Table.Td>
             <Table.Td>
               <Text ta="right">
-                {addCommasToNumber(Number(invoice.subtotal))}
+                ${addCommasToNumber(Number(invoice.subtotal))}
               </Text>
             </Table.Td>
           </Table.Tr>
@@ -101,7 +101,7 @@ const SingleInvoice: FC<Props> = ({ invoice }) => {
             </Table.Td>
             <Table.Td>
               <Text ta="right">
-                {addCommasToNumber(Number(invoice.discount))}
+                ${addCommasToNumber(Number(invoice.discount))}
               </Text>
             </Table.Td>
           </Table.Tr>
@@ -112,7 +112,7 @@ const SingleInvoice: FC<Props> = ({ invoice }) => {
             </Table.Td>
             <Table.Td>
               <Text ta="right">
-                {addCommasToNumber(Number(invoice.totalTax))}
+                ${addCommasToNumber(Number(invoice.totalTax))}
               </Text>
             </Table.Td>
           </Table.Tr>
@@ -123,7 +123,7 @@ const SingleInvoice: FC<Props> = ({ invoice }) => {
             </Table.Td>
             <Table.Td>
               <Text ta="right">
-                {addCommasToNumber(Number(invoice.totalAmount))}
+                ${addCommasToNumber(Number(invoice.totalAmount))}
               </Text>
             </Table.Td>
           </Table.Tr>

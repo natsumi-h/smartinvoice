@@ -15,7 +15,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import useToast from "@/app/hooks/useToast";
 
-const CreateForm = () => {
+const CreateNewCustomer = () => {
   const [opened, { close, open }] = useDisclosure(false);
   const [loading, setLoading] = useState(false);
   const { successToast, errorToast } = useToast();
@@ -54,7 +54,7 @@ const CreateForm = () => {
       setLoading(false);
       router.push("/customer");
       router.refresh();
-      
+
     } catch (error) {
       console.log(error);
     }
@@ -157,4 +157,4 @@ const CreateForm = () => {
   );
 };
 
-export default CreateForm;
+export default CreateNewCustomer;

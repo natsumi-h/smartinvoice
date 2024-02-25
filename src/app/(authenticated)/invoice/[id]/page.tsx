@@ -3,6 +3,7 @@ import SingleInvoice from "@/app/components/Invoice/SingleInvoice";
 import { getInvoice } from "@/app/lib/data";
 import Link from "next/link";
 import UpdateStatus from "@/app/components/Invoice/UpdateStatus";
+import DeleteInvoice from "@/app/components/Invoice/DeleteInvoice";
 
 const page = async ({
   params,
@@ -21,15 +22,6 @@ const page = async ({
           <Flex gap="md" align="center">
             <Title order={2}>Invoice</Title>
             <Badge>{invoice.status}</Badge>
-            {/* <Button
-              variant="outline"
-              color="red"
-              onClick={() => {
-                console.log("delete");
-              }}
-            >
-              Delete
-            </Button> */}
             {(invoice.status === "Issued" || invoice.status === "Sent") && (
               <UpdateStatus invoice={invoice} />
             )}
@@ -53,6 +45,9 @@ const page = async ({
               >
                 Update
               </Button>
+            )}
+            {(invoice.status === "Draft" || invoice.status === "Issued") && (
+              <DeleteInvoice id={id} />
             )}
           </Flex>
         </Flex>
