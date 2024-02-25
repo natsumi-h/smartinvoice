@@ -1,3 +1,4 @@
+import DeleteCustomer from "@/app/components/Customer/DeleteCustomer";
 import SingleCustomer from "@/app/components/Customer/SingleCustomer";
 import { getContacts, getCustomer } from "@/app/lib/data";
 import { Box, Button, Flex, Text, Title, rem } from "@mantine/core";
@@ -14,7 +15,6 @@ const Layout = async ({
   const { id } = params;
   const customer = await getCustomer(id);
   const address = `${customer?.street}, ${customer?.city}, ${customer?.state}, ${customer?.postcode}`;
-  // const contacts = customer?.contact;
   const contacts = await getContacts(id);
   return (
     <Box>
@@ -27,14 +27,7 @@ const Layout = async ({
         >
           Update
         </Button>
-        <Button
-          variant="outline"
-          color="red"
-          component={Link}
-          href={`/customer/${customer?.id}/update`}
-        >
-          Delete
-        </Button>
+        {customer?.invoices.length === 0 && <DeleteCustomer id={id} />}
       </Flex>
 
       <Flex align={"center"} gap="sm" mt="xs">

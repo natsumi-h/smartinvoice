@@ -4,14 +4,16 @@ import { getSession } from "./action";
 
 export const getCustomers = async () => {
   noStore();
+  const session: any = await getSession();
   try {
     const res = await prisma.customer.findMany({
+      where: {
+        deleted: false,
+        company_id: session.payload.company,
+      },
       include: {
         contact: {
-          orderBy: [
-            { isPrimary: "desc" },
-            { name: "asc" },
-          ],
+          orderBy: [{ isPrimary: "desc" }, { name: "asc" }],
         },
       },
       orderBy: {
@@ -38,6 +40,11 @@ export const getCustomer = async (id: string) => {
         contact: {
           orderBy: [{ isPrimary: "desc" }, { name: "asc" }],
         },
+        invoices: {
+          orderBy: {
+            issueDate: "desc",
+          },
+        },
       },
     });
     console.log(res);
@@ -55,7 +62,7 @@ export const getContacts = async (id: string) => {
     const res = await prisma.contact.findMany({
       where: {
         customer_id: parseInt(id),
-        deleted : false,
+        deleted: false,
       },
     });
     console.log(res);

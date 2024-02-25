@@ -23,7 +23,7 @@ const DeleteContact: FC<Props> = ({ opened, close, contact }) => {
   const handleSubmit = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`/api/contact/${contact.id}/`, {
+      const response = await fetch(`/api/contact/${contact.id}`, {
         method: "POST",
         body: JSON.stringify({
           deleted: true,

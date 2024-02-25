@@ -81,7 +81,7 @@ export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const query = searchParams.get("query");
   console.log(query);
-  
+
 
   try {
     const whereCondition = {
@@ -90,6 +90,7 @@ export async function GET(request: NextRequest) {
           company: {
             id: usersCompany,
           },
+          deleted: false,
         },
         {
           OR: [

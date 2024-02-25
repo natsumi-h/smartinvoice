@@ -16,8 +16,8 @@ export async function GET(
       include: {
         contact: {
           orderBy: [
-            { isPrimary: "desc" }, // まず isPrimary で降順に並べる
-            { name: "asc" }, // 次に name で昇順に並べる
+            { isPrimary: "desc" },
+            { name: "asc" },
           ],
         },
       },
@@ -32,16 +32,20 @@ export async function GET(
 
 // POST /api/customer/:id
 // @desc: Update a single customer
-export async function POST(request: Request) {
+export async function POST(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
   try {
     const body = await request.json();
-    const id = body.id;
+    const id = params.id;
     const res = await prisma.customer.update({
       where: {
         id: parseInt(id),
       },
       data: {
         ...body,
+        deletedAt: body.deleted ? new Date() : null,
       },
       include: {
         contact: true,
