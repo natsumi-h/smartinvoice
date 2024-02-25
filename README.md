@@ -15,14 +15,13 @@ Smartinvoice is an intuitive application designed for generating professional in
 * [Zod](https://zod.dev/) -Form Schema Validation
 
 ### Other packeges used
-* [dayjs](https://www.npmjs.com/package/dayjs) - Date value formatting
-* [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken)
-* [bcrypt](https://www.npmjs.com/package/bcrypt)
-* [Nodemailer](https://nodemailer.com/)
+* [jose](https://www.npmjs.com/package/jose) -JWT signing and encryption
+* [Nodemailer](https://nodemailer.com/) -For Email sending
 * [AmazonS3](https://aws.amazon.com/s3/) -PDF/Org logo image storage
 * [Puppeteer](https://pptr.dev/) -Headless browser to convert html to PDF
+* [dayjs](https://www.npmjs.com/package/dayjs) - Date value formatting
 
-### PaaS
+### Hosting
 * [Vercel](https://vercel.com/)
 
 ## Documentations
