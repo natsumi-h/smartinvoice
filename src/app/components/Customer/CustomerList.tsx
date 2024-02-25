@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import {
   Anchor,
   Divider,
@@ -12,6 +12,7 @@ import { IconMail, IconMapPin, IconSearch } from "@tabler/icons-react";
 import styles from "./CustomerList.module.css";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useForm } from "@mantine/form";
 
 type Customer = {
   id: string;
@@ -26,23 +27,60 @@ type Customer = {
 };
 
 const CustomerList = () => {
-  useEffect(() => {
-    getCustomers();
-  }, []);
   const [customers, setCustomers] = useState([]);
-  const getCustomers = async () => {
-    const res = await fetch("/api/customer");
-    const data = await res.json();
-    setCustomers(data);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchCustomers();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const form = useForm({
+    initialValues: {
+      queryParam: null,
+    },
+    validate: {
+      queryParam: (value: string) =>
+        value.length > 2 || value.length === 0
+          ? null
+          : "Search query must be at least 3 characters",
+    },
+  });
+
+  const fetchCustomers = async () => {
+    try {
+      setLoading(true);
+      const { queryParam } = form.values;
+      const query = queryParam
+        ? `?query=${encodeURIComponent(queryParam)}`
+        : "";
+      const res = await fetch(`/api/customer${query}`);
+      const data = await res.json();
+      setCustomers(data);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching data: ", error);
+      setLoading(false);
+    }
+  };
+
+  const handleSubmit = async () => {
+    await fetchCustomers();
   };
 
   return (
     <>
-      <TextInput
-        mt="lg"
-        placeholder="Search customers..."
-        leftSection={<IconSearch style={{ width: rem(18), height: rem(18) }} />}
-      />
+      <form onSubmit={form.onSubmit((values) => handleSubmit())}>
+        <TextInput
+          mt="lg"
+          placeholder="Search customers..."
+          leftSection={
+            <IconSearch style={{ width: rem(18), height: rem(18) }} />
+          }
+          disabled={loading}
+          {...form.getInputProps("queryParam")}
+        />
+      </form>
       <ul className={styles.ul}>
         {customers.map((customer: Customer) => (
           <li key={customer.id} className={styles.li}>
@@ -50,7 +88,6 @@ const CustomerList = () => {
               component={Link}
               href={`/customer/${customer.id}/`}
               underline="never"
-              // c="black"
               inherit
               style={{ color: "inherit" }}
             >

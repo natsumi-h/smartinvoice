@@ -145,9 +145,7 @@ export async function GET(request: NextRequest) {
   const issueDateEndParam = searchParams.get("issueDateEnd");
   const dueDateStartParam = searchParams.get("dueDateStart");
   const dueDateEndParam = searchParams.get("dueDateEnd");
-  console.log(issueDateStartParam);
-  console.log(issueDateEndParam);
-
+  
   try {
     const whereCondition = {
       company_id: usersCompany,

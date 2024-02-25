@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/app/db";
 import { getSession } from "@/app/lib/action";
 
@@ -67,7 +67,7 @@ export async function POST(request: Request) {
 
 // GET /api/customer
 // @desc: Get all customers
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   const session: any = await getSession();
   if (!session) {
     return NextResponse.json(
@@ -78,13 +78,84 @@ export async function GET(request: Request) {
     );
   }
   const usersCompany = session.payload.company;
+  const searchParams = request.nextUrl.searchParams;
+  const query = searchParams.get("query");
+  console.log(query);
+  
+
   try {
-    const res = await prisma.customer.findMany({
-      where: {
-        company: {
-          id: usersCompany,
+    const whereCondition = {
+      AND: [
+        {
+          company: {
+            id: usersCompany,
+          },
         },
-      },
+        {
+          OR: [
+            {
+              name: query
+                ? {
+                    contains: query,
+                  }
+                : undefined,
+            },
+            {
+              phone: query
+                ? {
+                    contains: query,
+                  }
+                : undefined,
+            },
+            {
+              postcode: query
+                ? {
+                    contains: query,
+                  }
+                : undefined,
+            },
+            {
+              street: query
+                ? {
+                    contains: query,
+                  }
+                : undefined,
+            },
+            {
+              city: query
+                ? {
+                    contains: query,
+                  }
+                : undefined,
+            },
+            {
+              state: query
+                ? {
+                    contains: query,
+                  }
+                : undefined,
+            },
+            {
+              contact: query
+                ? {
+                    some: {
+                      name: {
+                        contains: query,
+                      },
+                      email: {
+                        contains: query,
+                      },
+                    },
+                  }
+                : undefined,
+            },
+          ].filter(Boolean),
+        },
+      ],
+    };
+
+    const res = await prisma.customer.findMany({
+      where: whereCondition,
       include: {
         contact: {
           orderBy: [{ isPrimary: "desc" }, { name: "asc" }],

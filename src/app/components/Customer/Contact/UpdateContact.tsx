@@ -28,11 +28,7 @@ const UpdateContact: FC<Props> = ({ opened, close, contact }) => {
   const [loadiing, setLoading] = useState(false);
   const { successToast, errorToast } = useToast();
   const router = useRouter();
-
   const title = `${contact.title}.`;
-
-  console.log(contact);
-  
 
   const form = useForm({
     initialValues: {

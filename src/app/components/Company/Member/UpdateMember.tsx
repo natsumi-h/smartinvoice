@@ -33,8 +33,6 @@ const UpdateMember: FC<Props> = ({ opened, close, member }) => {
     },
   });
 
-  console.log(member);
-
   useEffect(() => {
     form.setValues({
       email: member.email,
