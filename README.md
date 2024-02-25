@@ -1,4 +1,4 @@
-# SmartInvoice
+# 📝SmartInvoice
 Smartinvoice is an intuitive application designed for generating professional invoices. It allows users to save their company information, register customer details, and create custom invoices using form inputs. The application features an efficient status management system, viewable through a comprehensive dashboard. Additionally, it supports team collaboration, enabling multiple users to work seamlessly together.
 ## Live URL
 
@@ -30,7 +30,8 @@ Smartinvoice is an intuitive application designed for generating professional in
 * [API Endpoints](https://docs.google.com/spreadsheets/d/1fEhIKWBwyQ6nHCPvhyeVGnzgMv6qiBL49Tq5Oz7gI-s/edit#gid=1534939420)
 * [Database ERD](https://drawsql.app/teams/natsumi-horis-team/diagrams/project4)
   
-![Screenshot 2024-02-25 at 2 46 01 PM](https://github.com/natsumi-h/smartinvoice/assets/88537845/f0d0154b-1823-4ddf-a36d-fc32ddb74e4f)
+![Screenshot 2024-02-25 at 11 20 27 PM](https://github.com/natsumi-h/smartinvoice/assets/88537845/92a2c4e4-d27c-445c-8720-db148a5eb8a7)
+
 
 
 ## Key Challenges/takeaways
