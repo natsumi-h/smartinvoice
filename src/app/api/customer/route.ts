@@ -6,7 +6,7 @@ import { getSession } from "@/app/lib/action";
 // @desc: Create a new customer
 export async function POST(request: Request) {
   try {
-    const session: any = getSession();
+    const session: any = await getSession();
     if (!session) {
       return NextResponse.json(
         {
@@ -68,7 +68,7 @@ export async function POST(request: Request) {
 // GET /api/customer
 // @desc: Get all customers
 export async function GET(request: Request) {
-  const session: any = getSession();
+  const session: any = await getSession();
   if (!session) {
     return NextResponse.json(
       {

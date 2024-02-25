@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 const page = async () => {
   const data: any = await getCompany();
 
-  const session: any = getSession();
+  const session: any = await getSession();
   if (!session || session.payload.role !== "Admin") {
     return redirect("/signin");
   }

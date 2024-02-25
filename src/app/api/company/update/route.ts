@@ -7,7 +7,7 @@ import { uploadFileToS3 } from "@/app/lib/s3";
 // @desc: Update a company
 export async function POST(request: Request) {
   try {
-    const session: any = getSession();
+    const session: any = await getSession();
     if (!session || session.payload.role !== "Admin") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 400 });
     }

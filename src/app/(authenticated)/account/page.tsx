@@ -7,7 +7,7 @@ import { Suspense } from "react";
 import AccountLoading from "./loading";
 
 const page = async () => {
-  const session = getSession();
+  const session = await getSession();
   const user = await getUser();
 
   return (

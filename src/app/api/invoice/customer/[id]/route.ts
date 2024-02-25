@@ -11,12 +11,11 @@ export async function GET(
   try {
     const customerId = params.id; //6
 
-    const session: any = getSession();
+    const session: any = await getSession();
     if (!session) {
       throw new Error("Unauthorized");
     }
     const usersCompany = session.payload.company; //5
-
 
     const res = await prisma.invoice.findMany({
       where: {
@@ -28,7 +27,6 @@ export async function GET(
       },
     });
     console.log(res);
-
 
     return NextResponse.json(res, { status: 200 });
   } catch (e) {

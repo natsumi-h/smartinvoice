@@ -26,7 +26,7 @@
     "@types/nodemailer": "^6.4.14",
     "crypto-js": "^4.2.0",
     "dayjs": "^1.11.10",
-    "jsonwebtoken": "^9.0.2",
+    "jose": "^5.2.2",
     "mantine-form-zod-resolver": "^1.1.0",
     "next": "14.1.0",
     "nodemailer": "^6.9.9",

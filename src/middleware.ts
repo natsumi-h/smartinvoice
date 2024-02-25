@@ -1,23 +1,31 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { getSession } from "./app/lib/action";
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   console.log("middleware");
   const url = new URL(request.url);
-  const user: any = request.cookies.get("token");
-
-  if (!user && url.pathname !== "/signin") {
-    return NextResponse.redirect(new URL("/signin", request.url));
-  }
+  const session = await getSession();
+  console.log(session);
 
   if (
-    user &&
+    session &&
     (url.pathname === "/signin" ||
       url.pathname === "/signup" ||
       url.pathname === "/confirmsignup" ||
       url.pathname === "/confirminvite")
   ) {
     return NextResponse.redirect(new URL("/invoice", request.url));
+  }
+
+  if (
+    !session &&
+    (url.pathname.includes("/invoice") ||
+      url.pathname.includes("/account") ||
+      url.pathname.includes("/company") ||
+      url.pathname.includes("/customer"))
+  ) {
+    return NextResponse.redirect(new URL("/signin", request.url));
   }
 
   return NextResponse.next();
@@ -38,5 +46,9 @@ export const config = {
     "/account/:path*",
     "/company/:path*",
     "/customer/:path*",
+    "/signin",
+    "/signup",
+    "/confirmsignup",
+    "/confirminvite",
   ],
 };

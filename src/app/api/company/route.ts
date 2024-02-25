@@ -6,7 +6,7 @@ import { uploadFileToS3 } from "@/app/lib/s3";
 // POST /api/company
 // @desc: Create a new company
 export async function POST(request: Request) {
-  const session: any = getSession();
+  const session: any = await getSession();
   if (!session || session.payload.role !== "Admin") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 400 });
   }
@@ -107,7 +107,7 @@ export async function POST(request: Request) {
 export async function GET(request: Request) {
   try {
     // TODO:ユーザーのCompany情報を取得する
-    const session: any = getSession();
+    const session: any = await getSession();
     if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 400 });
     }

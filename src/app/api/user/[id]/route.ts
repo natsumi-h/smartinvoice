@@ -8,7 +8,7 @@ export async function POST(
   request: Request,
   { params }: { params: { id: string } }
 ) {
-  const session: any = getSession();
+  const session: any = await getSession();
   if (!session || !session.payload.role) {
     return NextResponse.json(new Error("Unauthorized"), { status: 401 });
   }
@@ -38,7 +38,7 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    const session: any = getSession();
+    const session: any = await getSession();
     if (!session || !session.payload.role) {
       return NextResponse.json(new Error("Unauthorized"), { status: 401 });
     }

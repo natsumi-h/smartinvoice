@@ -7,7 +7,7 @@ import { uploadFileToS3 } from "@/app/lib/s3";
 // POST /api/invoice
 // @desc: Create a new invoice
 export async function POST(request: Request) {
-  const session: any = getSession();
+  const session: any = await getSession();
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 400 });
   }
@@ -132,7 +132,7 @@ export async function POST(request: Request) {
 // GET /api/invoice
 // @desc: Get all invoices
 export async function GET(request: NextRequest) {
-  const session: any = getSession();
+  const session: any = await getSession();
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 400 });
   }
@@ -145,6 +145,8 @@ export async function GET(request: NextRequest) {
   const issueDateEndParam = searchParams.get("issueDateEnd");
   const dueDateStartParam = searchParams.get("dueDateStart");
   const dueDateEndParam = searchParams.get("dueDateEnd");
+  console.log(issueDateStartParam);
+  console.log(issueDateEndParam);
 
   try {
     const whereCondition = {
@@ -153,18 +155,20 @@ export async function GET(request: NextRequest) {
         status: statusParam as "Draft" | "Sent" | "Paid" | "Issued",
       }),
       ...(customerParam && { customer_id: parseInt(customerParam) }),
-      ...(issueDateStartParam && {
-        issueDate: { gte: new Date(issueDateStartParam) },
-      }),
-      ...(issueDateEndParam && {
-        issueDate: { lte: new Date(issueDateEndParam) },
-      }),
-      ...(dueDateStartParam && {
-        dueDate: { gte: new Date(dueDateStartParam) },
-      }),
-      ...(dueDateEndParam && {
-        dueDate: { lte: new Date(dueDateEndParam) },
-      }),
+      ...(issueDateStartParam &&
+        issueDateEndParam && {
+          issueDate: {
+            gte: new Date(issueDateStartParam),
+            lte: new Date(issueDateEndParam),
+          },
+        }),
+      ...(dueDateStartParam &&
+        dueDateEndParam && {
+          dueDate: {
+            gte: new Date(dueDateStartParam),
+            lte: new Date(dueDateEndParam),
+          },
+        }),
     };
     const res = await prisma.invoice.findMany({
       where: whereCondition,

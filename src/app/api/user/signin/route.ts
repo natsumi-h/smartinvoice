@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
       id: user.id,
       company: user.company_id,
     };
-    const jwt = createJWT(jwtPayload);
+    const jwt = await createJWT(jwtPayload);
     const expiry = getExpiry(jwt);
     const expiryDate = new Date(expiry);
 

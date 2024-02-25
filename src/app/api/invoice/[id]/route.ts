@@ -11,7 +11,7 @@ export async function POST(
   { params }: { params: { id: string } }
 ) {
   const id = params.id;
-  const session: any = getSession();
+  const session: any = await getSession();
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 400 });
   }

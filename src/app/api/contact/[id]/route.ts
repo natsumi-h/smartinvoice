@@ -8,7 +8,7 @@ export async function POST(
   request: Request,
   { params }: { params: { id: string } }
 ) {
-  const session = getSession();
+  const session = await getSession();
   if (!session) {
     return NextResponse.json(new Error("Unauthorized"), { status: 401 });
   }

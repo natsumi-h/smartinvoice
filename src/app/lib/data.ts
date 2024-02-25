@@ -51,7 +51,7 @@ export const getCustomer = async (id: string) => {
 export const getCompany = async () => {
   noStore();
   try {
-    const session: any = getSession();
+    const session: any = await getSession();
     if (!session || session.payload.role !== "Admin") {
       throw new Error("Unauthorized");
     }
@@ -87,7 +87,7 @@ export const getCompany = async () => {
 export const getInvoice = async (id: string) => {
   noStore();
   try {
-    const session: any = getSession();
+    const session: any = await getSession();
     if (!session) {
       throw new Error("Unauthorized");
     }
@@ -119,7 +119,7 @@ export const getInvoice = async (id: string) => {
 export const getUser = async () => {
   noStore();
   try {
-    const session: any = getSession();
+    const session: any = await getSession();
     if (!session) {
       throw new Error("Unauthorized");
     }

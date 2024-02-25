@@ -8,20 +8,7 @@ type Props = {
   loading: boolean;
 };
 
-// const StatusCardsSkeleton = () => {
-//   return (
-//     <Flex gap={"lg"} justify={"flex-start"} mt={"xl"} wrap={"wrap"}>
-//       <Skeleton radius="md" className={styles.skeletoncard} h={"lg"}></Skeleton>
-//       <Skeleton radius="md" className={styles.skeletoncard} h={"lg"}></Skeleton>
-//       <Skeleton radius="md" className={styles.skeletoncard} h={"lg"}></Skeleton>
-//       <Skeleton radius="md" className={styles.skeletoncard} h={"lg"}></Skeleton>
-//     </Flex>
-//   );
-// };
-
 const StatusCards: FC<Props> = ({ invoices, loading }) => {
-  console.log(loading);
-
   const draftAmt = addCommasToNumber(
     invoices
       .filter((invoice: any) => invoice.status === "Draft")
@@ -53,6 +40,12 @@ const StatusCards: FC<Props> = ({ invoices, loading }) => {
         (acc: number, invoice: any) => acc + parseFloat(invoice.totalAmount),
         0
       )
+  );
+  const totalAmt = addCommasToNumber(
+    invoices.reduce(
+      (acc: number, invoice: any) => acc + parseFloat(invoice.totalAmount),
+      0
+    )
   );
 
   return (
@@ -94,6 +87,16 @@ const StatusCards: FC<Props> = ({ invoices, loading }) => {
           </Text>
           <Text fw={"bold"} fz={"xl"}>
             ${paidAmt}
+          </Text>
+        </Card>
+      </Skeleton>
+      <Skeleton visible={loading} className={styles.card}>
+        <Card padding="lg" radius="md" withBorder>
+          <Text fw={"bold"} c={"blue"} fz={"sm"}>
+            Total
+          </Text>
+          <Text fw={"bold"} fz={"xl"}>
+            ${totalAmt}
           </Text>
         </Card>
       </Skeleton>

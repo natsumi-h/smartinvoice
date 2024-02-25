@@ -11,7 +11,7 @@ function generateRandomToken(length: number) {
 // POST /api/user/invite
 // @desc: Invite a new user
 export async function POST(request: NextRequest) {
-  const session: any = getSession();
+  const session: any = await getSession();
   if (!session || session.payload.role !== "Admin") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
