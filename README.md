@@ -26,6 +26,7 @@ Smartinvoice is an intuitive application designed for generating professional in
 * [Vercel](https://vercel.com/)
 
 ## Documentations
+* [Wireframe](https://www.figma.com/file/g9r1hUNXwvmQWFXePhVFPS/GA-Capstone-Mantine?type=design&node-id=1102-384&mode=design&t=LyXQIdN01dmU1Xsf-0)(Figma)
 * [Page Structure](https://docs.google.com/spreadsheets/d/1fEhIKWBwyQ6nHCPvhyeVGnzgMv6qiBL49Tq5Oz7gI-s/edit#gid=0)
 * [API Endpoints](https://docs.google.com/spreadsheets/d/1fEhIKWBwyQ6nHCPvhyeVGnzgMv6qiBL49Tq5Oz7gI-s/edit#gid=1534939420)
 * [Database ERD](https://drawsql.app/teams/natsumi-horis-team/diagrams/project4)
