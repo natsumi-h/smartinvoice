@@ -31,7 +31,8 @@ Smartinvoice is an intuitive application designed for generating professional in
 * [API Endpoints](https://docs.google.com/spreadsheets/d/1fEhIKWBwyQ6nHCPvhyeVGnzgMv6qiBL49Tq5Oz7gI-s/edit#gid=1534939420)
 * [Database ERD](https://drawsql.app/teams/natsumi-horis-team/diagrams/project4)
   
-![Screenshot 2024-02-24 at 7 47 26 PM](https://github.com/natsumi-h/smartinvoice/assets/88537845/d9047872-665f-45ce-97d9-cc22de8fc323)
+![Screenshot 2024-02-25 at 2 46 01 PM](https://github.com/natsumi-h/smartinvoice/assets/88537845/f0d0154b-1823-4ddf-a36d-fc32ddb74e4f)
+
 
 ## Key Challenges/takeaways
 
