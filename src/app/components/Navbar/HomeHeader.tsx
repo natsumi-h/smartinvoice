@@ -3,6 +3,7 @@ import {
   ActionIcon,
   Button,
   Flex,
+  Image,
   Title,
   useComputedColorScheme,
   useMantineColorScheme,
@@ -11,6 +12,8 @@ import { IconMoon, IconSun } from "@tabler/icons-react";
 import cx from "clsx";
 import toggleStyles from "./Navbar.module.css";
 import Link from "next/link";
+import logo from "../../assets/images/logo.png";
+import NextImage from "next/image";
 
 const HomeHeader = () => {
   const { setColorScheme } = useMantineColorScheme();
@@ -20,7 +23,19 @@ const HomeHeader = () => {
   return (
     <header>
       <Flex justify={"space-between"} align={"center"} py={"md"}>
-        <Title order={1} size={"h2"}>SmartInvoice</Title>
+        <Flex gap="xs" align={"center"}>
+          <Image
+            src={logo}
+            component={NextImage}
+            alt="smartinvoice"
+            w={30}
+            h={30}
+          />
+          <Title order={1} size={"h2"}>
+            SmartInvoice
+          </Title>
+        </Flex>
+
         <Flex gap={"md"}>
           <Button component={Link} href="/signin">
             Signin

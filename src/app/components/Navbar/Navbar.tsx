@@ -2,7 +2,9 @@
 import {
   ActionIcon,
   Anchor,
+  Flex,
   Group,
+  Image,
   ScrollArea,
   Title,
   useComputedColorScheme,
@@ -20,6 +22,8 @@ import classes from "./Navbar.module.css";
 import { UserButton } from "./UserButton/UserButton";
 import cx from "clsx";
 import Link from "next/link";
+import logo from "../../assets/images/logo.png";
+import NextImage from "next/image";
 
 export function Navbar({ session }: any) {
   const { setColorScheme } = useMantineColorScheme();
@@ -84,20 +88,29 @@ export function Navbar({ session }: any) {
     <nav className={classes.navbar}>
       <div className={classes.header}>
         <Group justify="space-between">
-          <Title order={1} size="h3">
-            <Anchor
-              href="/invoice"
-              component={Link}
-              underline="never"
-              style={{
-                color: "inherit",
-                fontSize: "inherit",
-                fontWeight: "inherit",
-              }}
-            >
-              SmartInvoice
-            </Anchor>
-          </Title>
+          <Anchor
+            href="/invoice"
+            component={Link}
+            underline="never"
+            style={{
+              color: "inherit",
+              fontSize: "inherit",
+              fontWeight: "inherit",
+            }}
+          >
+            <Flex align={"center"}>
+              <Image
+                src={logo}
+                component={NextImage}
+                alt="smartinvoice"
+                w={25}
+                h={25}
+              />
+              <Title order={1} size="h3" ml={5}>
+                SmartInvoice
+              </Title>
+            </Flex>
+          </Anchor>
 
           <ActionIcon
             onClick={() =>
