@@ -33,9 +33,16 @@ type Props = {
       role: "Admin" | "User";
     }[];
   };
+  members?: {
+    id: number;
+    name: string;
+    email: string;
+    role: "Admin" | "User";
+    deleted: boolean;
+  }[];
 };
 
-const CompanyView: FC<Props> = ({ company }) => {
+const CompanyView: FC<Props> = ({ company, members }) => {
   const iconStyle = { width: rem(15), height: rem(15) };
   const router = useRouter();
   const pathname = usePathname();
@@ -70,7 +77,7 @@ const CompanyView: FC<Props> = ({ company }) => {
       </Tabs.Panel>
 
       <Tabs.Panel value="member" py="lg">
-        <Members company={company} />
+        <Members company={company} members={members}/>
       </Tabs.Panel>
     </Tabs>
   );

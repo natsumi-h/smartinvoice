@@ -1,5 +1,5 @@
 import SingleCustomer from "@/app/components/Customer/SingleCustomer";
-import { getCustomer } from "@/app/lib/data";
+import { getContacts, getCustomer } from "@/app/lib/data";
 import { Box, Button, Flex, Text, Title, rem } from "@mantine/core";
 import { IconMail, IconMapPin, IconPhone } from "@tabler/icons-react";
 import Link from "next/link";
@@ -14,7 +14,8 @@ const Layout = async ({
   const { id } = params;
   const customer = await getCustomer(id);
   const address = `${customer?.street}, ${customer?.city}, ${customer?.state}, ${customer?.postcode}`;
-  const contacts = customer?.contact;
+  // const contacts = customer?.contact;
+  const contacts = await getContacts(id);
   return (
     <Box>
       <Flex gap="md">

@@ -1,9 +1,10 @@
 import CompanyView from "@/app/components/Company/CompanyView";
-import { getCompany } from "@/app/lib/data";
+import { getCompany, getMembers } from "@/app/lib/data";
 
 const page = async () => {
-  const data: any = await getCompany();
-  return <CompanyView company={data} />;
+  const company: any = await getCompany();
+  const members: any = await getMembers();
+  return <CompanyView company={company} members={members}/>;
 };
 
 export default page;

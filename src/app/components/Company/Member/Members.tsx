@@ -8,7 +8,7 @@ import {
   Title,
   rem,
 } from "@mantine/core";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { IconMail } from "@tabler/icons-react";
 import { useDisclosure } from "@mantine/hooks";
 import Link from "next/link";
@@ -43,11 +43,19 @@ type Props = {
       role: "Admin" | "User";
     }[];
   };
+  members?: {
+    id: number;
+    name: string;
+    email: string;
+    role: "Admin" | "User";
+    deleted: boolean;
+  }[];
 };
 
-const Members: FC<Props> = ({ company }) => {
+const Members: FC<Props> = ({ company, members }) => {
   const [updateOpened, updateOpenedHandlers] = useDisclosure(false);
   const [deleteOpened, deleteOpenedHandlers] = useDisclosure(false);
+
   const [member, setMember] = useState<{
     id: number;
     name: string;
@@ -68,58 +76,59 @@ const Members: FC<Props> = ({ company }) => {
         Invite New User
       </Button>
       <ul className={styles.ul}>
-        {company.user.map((user) => (
-          <li className={styles.li} key={user.id}>
-            <Flex align={"center"} justify={"space-between"}>
-              <Box>
+        {members &&
+          members.map((user: any) => (
+            <li className={styles.li} key={user.id}>
+              <Flex align={"center"} justify={"space-between"}>
+                <Box>
+                  <Flex align={"center"} gap="md">
+                    <Title order={4}>{user.name}</Title>
+                    <Badge variant="filled">{user.role}</Badge>
+                    {!user.signupDone && (
+                      <Badge variant="filled">Invitation sent</Badge>
+                    )}
+                  </Flex>
+
+                  <Flex align={"center"} gap="sm" mt="sm">
+                    <IconMail
+                      style={{ width: rem(20), height: rem(20) }}
+                      stroke={1}
+                      color="var(--mantine-color-blue-5)"
+                    />
+                    <Text>{user.email}</Text>
+                  </Flex>
+                </Box>
+
                 <Flex align={"center"} gap="md">
-                  <Title order={4}>{user.name}</Title>
-                  <Badge variant="filled">{user.role}</Badge>
-                  {!user.signupDone && (
-                    <Badge variant="filled">Invitation sent</Badge>
-                  )}
-                </Flex>
-
-                <Flex align={"center"} gap="sm" mt="sm">
-                  <IconMail
-                    style={{ width: rem(20), height: rem(20) }}
-                    stroke={1}
-                    color="var(--mantine-color-blue-5)"
-                  />
-                  <Text>{user.email}</Text>
-                </Flex>
-              </Box>
-
-              <Flex align={"center"} gap="md">
-                <Button
-                  variant={"outline"}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setMember(user);
-                    updateOpenedHandlers.open();
-                  }}
-                >
-                  Update
-                </Button>
-                {user.role !== "Admin" && (
                   <Button
                     variant={"outline"}
-                    color="red"
                     onClick={(e) => {
                       e.preventDefault();
                       setMember(user);
-                      deleteOpenedHandlers.open();
+                      updateOpenedHandlers.open();
                     }}
                   >
-                    Delete
+                    Update
                   </Button>
-                )}
+                  {user.role !== "Admin" && (
+                    <Button
+                      variant={"outline"}
+                      color="red"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setMember(user);
+                        deleteOpenedHandlers.open();
+                      }}
+                    >
+                      Delete
+                    </Button>
+                  )}
+                </Flex>
               </Flex>
-            </Flex>
 
-            <Divider mt="md" />
-          </li>
-        ))}
+              <Divider mt="md" />
+            </li>
+          ))}
       </ul>
 
       {/* Update */}

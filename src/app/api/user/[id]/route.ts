@@ -22,6 +22,7 @@ export async function POST(
       },
       data: {
         ...body,
+        deletedAt: body.deleted ? new Date() : null,
       },
     });
     return NextResponse.json(res, { status: 200 });
@@ -33,24 +34,24 @@ export async function POST(
 
 // DELETE /api/user/:id
 // @desc: Delete a single contact
-export async function DELETE(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
-  try {
-    const session: any = await getSession();
-    if (!session || !session.payload.role) {
-      return NextResponse.json(new Error("Unauthorized"), { status: 401 });
-    }
-    const id = params.id;
-    const res = await prisma.user.delete({
-      where: {
-        id: parseInt(id),
-      },
-    });
-    return NextResponse.json(res, { status: 200 });
-  } catch (e) {
-    console.error(e);
-    throw e;
-  }
-}
+// export async function DELETE(
+//   request: Request,
+//   { params }: { params: { id: string } }
+// ) {
+//   try {
+//     const session: any = await getSession();
+//     if (!session || !session.payload.role) {
+//       return NextResponse.json(new Error("Unauthorized"), { status: 401 });
+//     }
+//     const id = params.id;
+//     const res = await prisma.user.delete({
+//       where: {
+//         id: parseInt(id),
+//       },
+//     });
+//     return NextResponse.json(res, { status: 200 });
+//   } catch (e) {
+//     console.error(e);
+//     throw e;
+//   }
+// }

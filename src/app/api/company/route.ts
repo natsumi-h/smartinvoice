@@ -103,31 +103,3 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Error" }, { status: 400 });
   }
 }
-
-export async function GET(request: Request) {
-  try {
-    // TODO:ユーザーのCompany情報を取得する
-    const session: any = await getSession();
-    if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 400 });
-    }
-    const userId = session.payload.id;
-    const res = await prisma.company.findFirst({
-      where: {
-        user: {
-          some: {
-            id: userId,
-          },
-        },
-      },
-      include: {
-        user: true,
-      },
-    });
-    console.log(res);
-    return NextResponse.json({ data: res }, { status: 200 });
-  } catch (e) {
-    console.log(e);
-    return NextResponse.json({ error: "Error" }, { status: 400 });
-  }
-}

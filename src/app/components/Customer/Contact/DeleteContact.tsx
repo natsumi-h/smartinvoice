@@ -24,11 +24,12 @@ const DeleteContact: FC<Props> = ({ opened, close, contact }) => {
     try {
       setLoading(true);
       const response = await fetch(`/api/contact/${contact.id}/`, {
-        method: "DELETE",
+        method: "POST",
+        body: JSON.stringify({
+          deleted: true,
+        }),
       });
-
       const data = await response.json();
-
       setLoading(false);
       close();
       router.refresh();

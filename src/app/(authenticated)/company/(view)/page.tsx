@@ -4,14 +4,14 @@ import { getCompany } from "@/app/lib/data";
 import { redirect } from "next/navigation";
 
 const page = async () => {
-  const data: any = await getCompany();
+  const company: any = await getCompany();
 
   const session: any = await getSession();
   if (!session || session.payload.role !== "Admin") {
     return redirect("/signin");
   }
 
-  return <CompanyView company={data} />;
+  return <CompanyView company={company} />;
 };
 
 export default page;

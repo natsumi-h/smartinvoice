@@ -3,10 +3,8 @@ import type { NextRequest } from "next/server";
 import { getSession } from "./app/lib/action";
 
 export async function middleware(request: NextRequest) {
-  console.log("middleware");
   const url = new URL(request.url);
   const session = await getSession();
-  console.log(session);
 
   if (
     session &&

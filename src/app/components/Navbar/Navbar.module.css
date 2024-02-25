@@ -8,7 +8,7 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: rem(300px);
+  width: rem(280px);
   padding: var(--mantine-spacing-md);
   padding-bottom: 0;
   display: flex;
@@ -23,7 +23,7 @@
 
 .content {
   padding: var(--mantine-spacing-xl) 100px;
-  margin-left: rem(300px);
+  margin-left: rem(280px);
   min-height: 100vh;
   @media (max-width: $mantine-breakpoint-md) {
     padding: var(--mantine-spacing-lg);

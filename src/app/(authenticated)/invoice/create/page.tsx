@@ -4,6 +4,7 @@ import { Box, Title } from "@mantine/core";
 
 const page = async () => {
   const customers: any = await getCustomers();
+  
   return (
     <Box>
       <Title order={2}>New Invoice</Title>

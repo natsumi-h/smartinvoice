@@ -9,8 +9,8 @@ export const getCustomers = async () => {
       include: {
         contact: {
           orderBy: [
-            { isPrimary: "desc" }, // まず isPrimary で降順に並べる
-            { name: "asc" }, // 次に name で昇順に並べる
+            { isPrimary: "desc" },
+            { name: "asc" },
           ],
         },
       },
@@ -48,6 +48,24 @@ export const getCustomer = async (id: string) => {
   }
 };
 
+export const getContacts = async (id: string) => {
+  noStore();
+  console.log(id);
+  try {
+    const res = await prisma.contact.findMany({
+      where: {
+        customer_id: parseInt(id),
+        deleted : false,
+      },
+    });
+    console.log(res);
+    return res;
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+};
+
 export const getCompany = async () => {
   noStore();
   try {
@@ -64,19 +82,37 @@ export const getCompany = async () => {
           },
         },
       },
-      include: {
-        user: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-            signupDone: true,
-            role: true,
-          },
-        },
-      },
     });
     console.log(res);
+    return res;
+  } catch (e) {
+    console.log(e);
+    throw e;
+  }
+};
+
+export const getMembers = async () => {
+  noStore();
+  try {
+    const session: any = await getSession();
+    if (!session || session.payload.role !== "Admin") {
+      throw new Error("Unauthorized");
+    }
+    const userCompany = session.payload.company;
+    const res = await prisma.user.findMany({
+      where: {
+        company: {
+          id: userCompany,
+        },
+        deleted: false,
+      },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+      },
+    });
     return res;
   } catch (e) {
     console.log(e);
