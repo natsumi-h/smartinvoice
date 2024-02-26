@@ -118,6 +118,7 @@ export const getMembers = async () => {
         email: true,
         name: true,
         role: true,
+        signupDone: true,
       },
     });
     return res;

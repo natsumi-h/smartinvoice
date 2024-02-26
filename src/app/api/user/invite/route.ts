@@ -20,8 +20,8 @@ export async function POST(request: NextRequest) {
   const token = generateRandomToken(16);
   const company = session.payload.company;
 
-  //TODO:もし同じメールアドレスがあったら
-  // TODO：もし違う組織で登録されていたら
+  //TODO:Duplicate email check among all orgs?
+  // TODO：Duplicate email check within same org
 
   try {
     const res = await prisma.user.create({
