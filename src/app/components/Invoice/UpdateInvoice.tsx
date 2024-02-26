@@ -20,17 +20,27 @@ import { DateInput } from "@mantine/dates";
 import { useRouter } from "next/navigation";
 import useToast from "@/app/hooks/useToast";
 import { addCommasToNumber } from "@/app/lib/addCommas";
-import { Customer } from "@prisma/client";
+import {
+  Contact,
+  Customer,
+  InvoiceItem,
+  Invoice as PrismaInvoice,
+} from "@prisma/client";
 
 type Props = {
-  customers : Customer[];
-  invoice: any;
+  customers: Customer[];
+  invoice: PrismaInvoice & {
+    customer: Customer;
+    items: InvoiceItem[];
+    contact: Contact;
+  };
 };
+
 const UpdateInvoice: FC<Props> = ({ invoice }) => {
   const router = useRouter();
 
   const itemInitialValues = invoice.items.reduce(
-    (acc: any, item: any, index: number) => {
+    (acc: any, item: InvoiceItem, index: number) => {
       acc[`description${index}`] = item.description;
       acc[`qty${index}`] = item.qty;
       acc[`unitPrice${index}`] = item.unitPrice;
@@ -60,23 +70,28 @@ const UpdateInvoice: FC<Props> = ({ invoice }) => {
   useEffect(() => {
     let newSubtotal = 0.0;
     let newTotaltax = 0.0;
-    for (let i = 0; i < itemLength; i++) {
-      newSubtotal +=
-        (form.values as { [key: string]: any })[`qty${i}`] *
-        Number((form.values as { [key: string]: any })[`unitPrice${i}`]);
 
-      newTotaltax +=
-        (form.values as { [key: string]: any })[`qty${i}`] *
-        Number((form.values as { [key: string]: any })[`unitPrice${i}`]) *
-        ((form.values as { [key: string]: any })[`taxRate${i}`] === "9"
+    for (let i = 0; i < itemLength; i++) {
+      const qty = Number((form.values as Record<string, unknown>)[`qty${i}`]);
+      const unitPrice = Number(
+        (form.values as Record<string, unknown>)[`unitPrice${i}`]
+      );
+      const taxRate =
+        (form.values as Record<string, unknown>)[`taxRate${i}`] === "9"
           ? 0.09
-          : 0);
+          : 0;
+
+      newSubtotal += qty * unitPrice;
+      newTotaltax += qty * unitPrice * taxRate;
     }
+
     setSubtotal(Number(newSubtotal));
     setTotaltax(Number(newTotaltax));
-    let newTotal =
+
+    const newTotal =
       newSubtotal + newTotaltax - Number(form.values.specialDiscount);
     setTotal(Number(newTotal.toFixed(2)));
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form.values, itemLength]);
 
@@ -184,18 +199,18 @@ const UpdateInvoice: FC<Props> = ({ invoice }) => {
       <Table.Td pl="0">
         <Text fw={500} size="sm" ta={"right"}>
           {addCommasToNumber(
-            (form.values as { [key: string]: any })[`qty${index}`] &&
-              (form.values as { [key: string]: any })[`unitPrice${index}`] &&
-              (form.values as { [key: string]: any })[`taxRate${index}`]
-              ? ((
-                  form.values as {
-                    [key: string]: any;
-                  }
-                )[`qty${index}`] as number) *
+            (form.values as Record<string, unknown>)[`qty${index}`] &&
+              (form.values as Record<string, unknown>)[`unitPrice${index}`] &&
+              (form.values as Record<string, unknown>)[`taxRate${index}`]
+              ? ((form.values as Record<string, unknown>)[
+                  `qty${index}`
+                ] as number) *
                   Number(
-                    (form.values as { [key: string]: any })[`unitPrice${index}`]
+                    (form.values as Record<string, unknown>)[
+                      `unitPrice${index}`
+                    ]
                   ) *
-                  ((form.values as { [key: string]: any })[
+                  ((form.values as Record<string, unknown>)[
                     `taxRate${index}`
                   ] === "9"
                     ? 1.09
@@ -282,7 +297,7 @@ const UpdateInvoice: FC<Props> = ({ invoice }) => {
           </UnstyledButton>
         </Box>
 
-        {/* 合計のテーブル */}
+        {/* Total Table */}
         <Table withRowBorders={false} maw="60%" mt="xl" ml={"auto"}>
           <Table.Tbody>
             <Table.Tr>

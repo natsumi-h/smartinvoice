@@ -1,6 +1,7 @@
 import UpdateInvoice from "@/app/components/Invoice/UpdateInvoice";
 import { getCustomers, getInvoice } from "@/app/lib/data";
 import { Box, Title } from "@mantine/core";
+import { Contact, Customer, Invoice, InvoiceItem } from "@prisma/client";
 
 const page = async ({
   params,
@@ -15,7 +16,16 @@ const page = async ({
   return (
     <Box>
       <Title order={2}>Update Invoice</Title>
-      <UpdateInvoice customers={customers} invoice={invoice} />
+      <UpdateInvoice
+        customers={customers}
+        invoice={
+          invoice as Invoice & {
+            customer: Customer;
+            items: InvoiceItem[];
+            contact: Contact;
+          }
+        }
+      />
     </Box>
   );
 };
