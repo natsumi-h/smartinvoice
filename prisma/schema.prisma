@@ -14,22 +14,22 @@ datasource db {
 
 model Company {
   id Int       @id @default(autoincrement())
-  name String?
-  uen String?
-  street String?
-  city String?
-  state String?
-  postcode String?
-  phone String?
+  name String
+  uen String
+  street String
+  city String
+  state String
+  postcode String
+  phone String
   logoUrl String
-  bankname String?
-  branchname String?
-  accountname String?
-  accounttype AccountType? @default(Savings)
-  accountnumber String?
-  bankcode String?
-  swiftcode String?
-  branchnumber String?
+  bankname String
+  branchname String
+  accountname String
+  accounttype AccountType @default(Savings)
+  accountnumber String
+  bankcode String
+  swiftcode String
+  branchnumber String
 
   invoiceRemark String?
   user User[]
@@ -40,30 +40,25 @@ model Company {
   updatedAt DateTime? @updatedAt
 }
 
-enum AccountType {
-  Savings
-  Current
-}
-
 model Invoice {
   id Int       @id @default(autoincrement())
   deleted Boolean @default(false)
   status Status @default(Draft)
-  subtotal Decimal? @db.Decimal(10, 2)
+  subtotal Decimal @db.Decimal(10, 2)
   discount Decimal? @db.Decimal(10, 2)
   totalTax Decimal? @db.Decimal(10, 2)
-  totalAmount Decimal? @db.Decimal(10, 2)
+  totalAmount Decimal @db.Decimal(10, 2)
   invoiceUrl String?
-  issueDate DateTime?
-  dueDate DateTime?
-  user User? @relation(fields: [user_id], references: [id])
-  user_id Int?
-  customer Customer? @relation(fields: [customer_id], references: [id])
-  customer_id Int?
-  contact Contact? @relation(fields: [contact_id], references: [id])
-  contact_id Int?
-  company Company? @relation(fields: [company_id], references: [id])
-  company_id Int?
+  issueDate DateTime
+  dueDate DateTime
+  user User @relation(fields: [user_id], references: [id])
+  user_id Int
+  customer Customer @relation(fields: [customer_id], references: [id])
+  customer_id Int
+  contact Contact @relation(fields: [contact_id], references: [id])
+  contact_id Int
+  company Company @relation(fields: [company_id], references: [id])
+  company_id Int
   items InvoiceItem[]
 
   createdAt DateTime @default(now())
@@ -76,23 +71,16 @@ model Invoice {
   @@index([contact_id])
 }
 
-enum Status {
- Draft
- Issued
- Sent
- Paid
-}
-
 model InvoiceItem {
   id Int       @id @default(autoincrement())
-  description String?
-  qty Int?
-  unitPrice Decimal? @db.Decimal(10, 2)
-  amount Decimal? @db.Decimal(10, 2)
+  description String
+  qty Int
+  unitPrice Decimal @db.Decimal(10, 2)
+  amount Decimal @db.Decimal(10, 2)
   // "0" or "9"
-  taxRate Int?
-  invoice Invoice? @relation(fields: [invoice_id], references: [id])
-  invoice_id Int?
+  taxRate Int
+  invoice Invoice @relation(fields: [invoice_id], references: [id])
+  invoice_id Int
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -103,8 +91,8 @@ model InvoiceItem {
 model User{
   id Int       @id @default(autoincrement())
   deleted Boolean @default(false)
-  name String?
-  email String? @unique
+  name String
+  email String @unique
   password String?
   role Role @default(User)
   phone String?
@@ -129,26 +117,21 @@ model User{
  @@index([company_id])
 }
 
-enum Role {
-  User
-  Admin
-}
-
 model Customer {
   id Int       @id @default(autoincrement())
   deleted Boolean @default(false)
-  name String?
-  street String?
-  city String?
-  state String?
-  postcode String?
-  phone String?
+  name String
+  street String
+  city String
+  state String
+  postcode String
+  phone String
   invoices Invoice[]
   contact Contact[]
-  user User? @relation(fields: [user_id], references: [id])
-  user_id Int?
-  company Company? @relation(fields: [company_id], references: [id])
-  company_id Int?
+  user User @relation(fields: [user_id], references: [id])
+  user_id Int
+  company Company @relation(fields: [company_id], references: [id])
+  company_id Int
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -161,12 +144,12 @@ model Customer {
 model Contact {
   id Int       @id @default(autoincrement())
   deleted Boolean @default(false)
-  name String?
-  email String?
+  name String
+  email String
   isPrimary Boolean @default(false)
-  title Title?
-  customer Customer? @relation(fields: [customer_id], references: [id])
-  customer_id Int?
+  title Title
+  customer Customer @relation(fields: [customer_id], references: [id])
+  customer_id Int
   invoices Invoice[]
 
   createdAt DateTime @default(now())
@@ -182,4 +165,21 @@ enum Title {
   Ms
   Dr
   Prof
+}
+
+enum Role {
+  User
+  Admin
+}
+
+enum Status {
+ Draft
+ Issued
+ Sent
+ Paid
+}
+
+enum AccountType {
+  Savings
+  Current
 }

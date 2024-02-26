@@ -21,7 +21,7 @@ const CreateNewUser = () => {
     },
   });
 
-  const handleSubmit = async (values: any) => {
+  const handleSubmit = async (values: Record<string, unknown>) => {
     setLoading(true);
     try {
       const response = await fetch("/api/user/invite", {

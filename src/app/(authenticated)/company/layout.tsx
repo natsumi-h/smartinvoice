@@ -1,9 +1,10 @@
 import { getSession } from "@/app/lib/action";
+import { JWTPayload, JWTVerifyResult } from "jose";
 import { redirect } from "next/navigation";
 
 const layout = async ({ children }: { children: React.ReactNode }) => {
-  const session: any = await getSession();
-  if (session.payload.role !== "Admin") {
+  const session: JWTVerifyResult<JWTPayload> | null = await getSession();
+  if (session?.payload.role !== "Admin") {
     redirect("/signin");
   }
 

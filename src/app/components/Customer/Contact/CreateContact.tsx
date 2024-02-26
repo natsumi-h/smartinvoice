@@ -8,9 +8,10 @@ import {
   Select,
   TextInput,
 } from "@mantine/core";
-import { useForm } from "@mantine/form";
+import { useForm, zodResolver } from "@mantine/form";
 import useToast from "@/app/hooks/useToast";
 import { useRouter } from "next/navigation";
+import { createContactSchema } from "@/app/schema/Customer/Contact/schema";
 
 type Props = {
   opened: boolean;
@@ -25,43 +26,39 @@ const CreateContact: FC<Props> = ({ opened, close, customerId }) => {
 
   const form = useForm({
     initialValues: {
-      email: "",
-      name: "",
+      email: null,
+      name: null,
       isPrimary: false,
-      title: "Mr.",
+      title: null,
     },
-
-    validate: {
-      email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
-    },
+    validate: zodResolver(createContactSchema),
   });
 
-  const handleCreate = async () => {
+  const handleSubmit = async (values: Record<string, unknown>) => {
     try {
       setLoading(true);
-      const title = form.values.title.replace(/\.$/, "");
+      const valuesTitle = values.title as string;
+      const title = valuesTitle.replace(/\.$/, "") ;
       const response = await fetch(`/api/customer/${customerId}/contact`, {
         method: "POST",
         body: JSON.stringify({
-          ...form.values,
+          ...values,
           title,
         }),
       });
-
       const data = await response.json();
       form.reset();
       setLoading(false);
       close();
-      router.push(`/customer/${customerId}/contact`);
       router.refresh();
       successToast({
         title: "Contact created",
         message: "Contact has been created successfully",
       });
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
       setLoading(false);
-      errorToast(error as string);
+      errorToast(error.message);
     }
   };
 
@@ -69,40 +66,42 @@ const CreateContact: FC<Props> = ({ opened, close, customerId }) => {
     <>
       {/* Create */}
       <Modal opened={opened} onClose={close} title="Create Contact">
-        <TextInput
-          label="Name"
-          placeholder="John Doe"
-          mt="lg"
-          {...form.getInputProps("name")}
-        />
-        <Select
-          label="Title"
-          placeholder="Select title"
-          mt="lg"
-          data={["Mr.", "Mrs.", "Ms.", "Dr.", "Prof."]}
-          defaultValue="Mr."
-          allowDeselect={false}
-          {...form.getInputProps("title")}
-        />
-        <TextInput
-          label="Email"
-          placeholder="email@email.com"
-          mt="lg"
-          {...form.getInputProps("email")}
-        />
-        <Checkbox
-          mt="lg"
-          label="Primary contact"
-          {...form.getInputProps("isPrimary")}
-        />
-        <Group mt="xl" justify="center">
-          <Button variant="outline" onClick={close}>
-            Cancel
-          </Button>
-          <Button onClick={handleCreate} loading={loadiing}>
-            Create
-          </Button>
-        </Group>
+        <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
+          <TextInput
+            label="Name"
+            placeholder="John Doe"
+            mt="lg"
+            {...form.getInputProps("name")}
+          />
+          <Select
+            label="Title"
+            placeholder="Select title"
+            mt="lg"
+            data={["Mr.", "Mrs.", "Ms.", "Dr.", "Prof."]}
+            // defaultValue="Mr."
+            allowDeselect={false}
+            {...form.getInputProps("title")}
+          />
+          <TextInput
+            label="Email"
+            placeholder="email@email.com"
+            mt="lg"
+            {...form.getInputProps("email")}
+          />
+          <Checkbox
+            mt="lg"
+            label="Primary contact"
+            {...form.getInputProps("isPrimary")}
+          />
+          <Group mt="xl" justify="center">
+            <Button variant="outline" onClick={close}>
+              Cancel
+            </Button>
+            <Button type="submit" loading={loadiing}>
+              Create
+            </Button>
+          </Group>
+        </form>
       </Modal>
     </>
   );

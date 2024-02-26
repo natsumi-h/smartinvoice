@@ -8,9 +8,10 @@ import {
   Select,
   TextInput,
 } from "@mantine/core";
-import { useForm } from "@mantine/form";
+import { useForm, zodResolver } from "@mantine/form";
 import useToast from "@/app/hooks/useToast";
 import { useRouter } from "next/navigation";
+import { createContactSchema } from "@/app/schema/Customer/Contact/schema";
 
 type Props = {
   opened: boolean;
@@ -37,10 +38,7 @@ const UpdateContact: FC<Props> = ({ opened, close, contact }) => {
       isPrimary: contact.isPrimary,
       title: title,
     },
-
-    validate: {
-      email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
-    },
+    validate: zodResolver(createContactSchema),
   });
 
   useEffect(() => {
@@ -53,20 +51,18 @@ const UpdateContact: FC<Props> = ({ opened, close, contact }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [opened]);
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (values: any) => {
     try {
       setLoading(true);
-      const title = form.values.title.replace(/\.$/, "");
+      const title = values.title.replace(/\.$/, "");
       const response = await fetch(`/api/contact/${contact.id}/`, {
         method: "POST",
         body: JSON.stringify({
-          ...form.values,
+          ...values,
           title,
         }),
       });
-
       const data = await response.json();
-      console.log(data);
       form.reset();
       setLoading(false);
       close();
@@ -75,10 +71,10 @@ const UpdateContact: FC<Props> = ({ opened, close, contact }) => {
         title: "Contact updated",
         message: "Contact has been updated successfully",
       });
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
       setLoading(false);
-      errorToast(error as string);
+      errorToast(error.message);
     }
   };
 
@@ -93,48 +89,50 @@ const UpdateContact: FC<Props> = ({ opened, close, contact }) => {
         }}
         title="Update Contact"
       >
-        <TextInput
-          label="Name"
-          placeholder="John Doe"
-          mt="lg"
-          {...form.getInputProps("name")}
-        />
-        <Select
-          label="Title"
-          placeholder="Select title"
-          mt="lg"
-          data={["Mr.", "Mrs.", "Ms.", "Dr.", "Prof."]}
-          defaultValue="Mr."
-          allowDeselect={false}
-          {...form.getInputProps("title")}
-        />
-        <TextInput
-          label="Email"
-          placeholder="email@email.com"
-          mt="lg"
-          {...form.getInputProps("email")}
-        />
-        {!contact.isPrimary && (
-          <Checkbox
+        <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
+          <TextInput
+            label="Name"
+            placeholder="John Doe"
             mt="lg"
-            label="Primary contact"
-            {...form.getInputProps("isPrimary")}
+            {...form.getInputProps("name")}
           />
-        )}
-        <Group mt="xl" justify="center">
-          <Button
-            variant="outline"
-            onClick={() => {
-              close();
-              form.reset();
-            }}
-          >
-            Cancel
-          </Button>
-          <Button onClick={handleSubmit} loading={loadiing}>
-            Update
-          </Button>
-        </Group>
+          <Select
+            label="Title"
+            placeholder="Select title"
+            mt="lg"
+            data={["Mr.", "Mrs.", "Ms.", "Dr.", "Prof."]}
+            defaultValue="Mr."
+            allowDeselect={false}
+            {...form.getInputProps("title")}
+          />
+          <TextInput
+            label="Email"
+            placeholder="email@email.com"
+            mt="lg"
+            {...form.getInputProps("email")}
+          />
+          {!contact.isPrimary && (
+            <Checkbox
+              mt="lg"
+              label="Primary contact"
+              {...form.getInputProps("isPrimary")}
+            />
+          )}
+          <Group mt="xl" justify="center">
+            <Button
+              variant="outline"
+              onClick={() => {
+                close();
+                form.reset();
+              }}
+            >
+              Cancel
+            </Button>
+            <Button type="submit" loading={loadiing}>
+              Update
+            </Button>
+          </Group>
+        </form>
       </Modal>
     </>
   );

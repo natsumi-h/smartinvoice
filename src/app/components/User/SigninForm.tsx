@@ -16,26 +16,15 @@ import { useRouter } from "next/navigation";
 import useToast from "@/app/hooks/useToast";
 import { hashDataWithSaltRounds } from "@/app/lib/security";
 import { zodResolver } from "mantine-form-zod-resolver";
-import { z } from "zod";
+import { signinSchema } from "@/app/schema/User/schema";
 
 const SigninForm = () => {
   const [loading, setLoading] = useState(false);
   const { successToast, errorToast } = useToast();
   const router = useRouter();
 
-  const schema = z.object({
-    email: z
-      .string({
-        required_error: "Email is required",
-      })
-      .email({ message: "Invalid email" }),
-    password: z.string({
-      required_error: "Password is required",
-    }),
-  });
-
   const form = useForm({
-    validate: zodResolver(schema),
+    validate: zodResolver(signinSchema),
     initialValues: {
       name: "",
       password: "",

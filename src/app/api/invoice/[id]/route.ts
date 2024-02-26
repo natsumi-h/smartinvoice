@@ -3,6 +3,7 @@ import { prisma } from "@/app/db";
 import { getSession } from "@/app/lib/action";
 import { generateHtml, generatePdf } from "@/app/lib/pdf";
 import { uploadFileToS3 } from "@/app/lib/s3";
+import { JWTPayload, JWTVerifyResult } from "jose";
 
 // POST /api/invoice/:id
 // @desc: Update a invoice
@@ -11,7 +12,7 @@ export async function POST(
   { params }: { params: { id: string } }
 ) {
   const id = params.id;
-  const session: any = await getSession();
+  const session: JWTVerifyResult<JWTPayload> | null = await getSession();
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 400 });
   }

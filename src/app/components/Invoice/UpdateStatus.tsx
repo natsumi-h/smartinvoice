@@ -26,7 +26,7 @@ const UpdateStatus: FC<Props> = ({ invoice }) => {
     },
   });
 
-  const handleSubmit = async (values: any) => {
+  const handleSubmit = async (values: Record<string, unknown>) => {
     try {
       setLoading(true);
       const response = await fetch(`/api/invoice/${invoice.id}/updatestatus`, {

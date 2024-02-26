@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/app/db";
 import { sendEmail } from "@/app/lib/sendEmail";
 import crypto from "crypto";
+import Error from "next/error";
 
 function generateRandomToken(length: number) {
   return crypto.randomBytes(length).toString("hex");
@@ -21,7 +22,6 @@ export async function POST(request: NextRequest) {
         role: "Admin",
       },
     });
-    console.log(res);
 
     await sendEmail({
       type: "signup",
@@ -33,8 +33,8 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json({ data: res }, { status: 200 });
-  } catch (e) {
+  } catch (e: any) {
     console.log(e);
-    return NextResponse.json({ error: "Error" }, { status: 400 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

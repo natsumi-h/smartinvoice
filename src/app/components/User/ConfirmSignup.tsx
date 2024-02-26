@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import useToast from "@/app/hooks/useToast";
 import { hashData } from "@/app/lib/security";
 import { useSearchParams } from "next/navigation";
+import { confirmSignupSchema } from "@/app/schema/User/schema";
+import { zodResolver } from "mantine-form-zod-resolver";
 
 const ConfirmSignup = () => {
   const [loading, setLoading] = useState(false);
@@ -19,10 +21,7 @@ const ConfirmSignup = () => {
       password: "",
       confirmPassword: "",
     },
-    validate: {
-      confirmPassword: (value, values) =>
-        value === values.password ? null : "Passwords do not match.",
-    },
+    validate: zodResolver(confirmSignupSchema),
   });
 
   const handleSubmit = async () => {
@@ -41,16 +40,16 @@ const ConfirmSignup = () => {
         body: JSON.stringify(payload),
       });
       const data = await response.json();
-      console.log(data);
       setLoading(false);
       router.push("/signin");
       successToast({
         title: "Signup success",
         message: "You have successfully signed up. Please signin to continue.",
       });
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
       setLoading(false);
+      errorToast(error.message);
     }
   };
 
@@ -66,13 +65,11 @@ const ConfirmSignup = () => {
             <PasswordInput
               label="Password"
               placeholder="Your password"
-              required
               {...form.getInputProps("password")}
             />
             <PasswordInput
               label="Confirm Password"
               placeholder="Your password"
-              required
               mt="md"
               {...form.getInputProps("confirmPassword")}
             />

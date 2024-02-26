@@ -3,16 +3,17 @@ import { prisma } from "@/app/db";
 import { getSession } from "@/app/lib/action";
 import { generateHtml, generatePdf } from "@/app/lib/pdf";
 import { uploadFileToS3 } from "@/app/lib/s3";
+import { JWTPayload, JWTVerifyResult } from "jose";
 
 // POST /api/invoice
 // @desc: Create a new invoice
 export async function POST(request: Request) {
-  const session: any = await getSession();
+  const session: JWTVerifyResult<JWTPayload> | null = await getSession();
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 400 });
   }
-  const userId = session.payload.id;
-  const usersCompany = session.payload.company;
+  const userId = session.payload.id as number;
+  const usersCompany = session.payload.company as number;
 
   try {
     const req = await request.json();
@@ -132,11 +133,11 @@ export async function POST(request: Request) {
 // GET /api/invoice
 // @desc: Get all invoices
 export async function GET(request: NextRequest) {
-  const session: any = await getSession();
+  const session: JWTVerifyResult<JWTPayload> | null = await getSession();
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 400 });
   }
-  const usersCompany = session.payload.company;
+  const usersCompany = session.payload.company as number;
 
   const searchParams = request.nextUrl.searchParams;
   const customerParam = searchParams.get("customer");

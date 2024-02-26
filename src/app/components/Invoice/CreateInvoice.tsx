@@ -76,7 +76,7 @@ const CreateInvoice: FC<Props> = ({ customers }) => {
   }, [form.values, itemLength]);
 
   const handleSubmit = async (type: "issue" | "draft") => {
-    const values: any = form.values;
+    const values: Record<string, unknown> = form.values;
     try {
       type == "issue" ? setLoadingIssue(true) : setLoadingDraft(true);
       const itemValues = [];

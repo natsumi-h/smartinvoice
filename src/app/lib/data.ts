@@ -1,15 +1,16 @@
 import { prisma } from "@/app/db";
 import { unstable_noStore as noStore } from "next/cache";
 import { getSession } from "./action";
+import { JWTPayload, JWTVerifyResult } from "jose";
 
 export const getCustomers = async () => {
   noStore();
-  const session: any = await getSession();
+  const session: JWTVerifyResult<JWTPayload> | null = await getSession();
   try {
     const res = await prisma.customer.findMany({
       where: {
         deleted: false,
-        company_id: session.payload.company,
+        company_id: session?.payload.company as number,
       },
       include: {
         contact: {
@@ -20,7 +21,6 @@ export const getCustomers = async () => {
         name: "asc",
       },
     });
-    console.log(res);
     return res;
   } catch (e) {
     console.error(e);
@@ -30,7 +30,6 @@ export const getCustomers = async () => {
 
 export const getCustomer = async (id: string) => {
   noStore();
-  console.log(id);
   try {
     const res = await prisma.customer.findUnique({
       where: {
@@ -47,7 +46,6 @@ export const getCustomer = async (id: string) => {
         },
       },
     });
-    console.log(res);
     return res;
   } catch (e) {
     console.error(e);
@@ -57,7 +55,6 @@ export const getCustomer = async (id: string) => {
 
 export const getContacts = async (id: string) => {
   noStore();
-  console.log(id);
   try {
     const res = await prisma.contact.findMany({
       where: {
@@ -65,7 +62,6 @@ export const getContacts = async (id: string) => {
         deleted: false,
       },
     });
-    console.log(res);
     return res;
   } catch (e) {
     console.error(e);
@@ -76,11 +72,11 @@ export const getContacts = async (id: string) => {
 export const getCompany = async () => {
   noStore();
   try {
-    const session: any = await getSession();
+    const session: JWTVerifyResult<JWTPayload> | null = await getSession();
     if (!session || session.payload.role !== "Admin") {
       throw new Error("Unauthorized");
     }
-    const userId = session.payload.id;
+    const userId = session.payload.id as number;
     const res = await prisma.company.findFirst({
       where: {
         user: {
@@ -90,7 +86,6 @@ export const getCompany = async () => {
         },
       },
     });
-    console.log(res);
     return res;
   } catch (e) {
     console.log(e);
@@ -101,11 +96,11 @@ export const getCompany = async () => {
 export const getMembers = async () => {
   noStore();
   try {
-    const session: any = await getSession();
+    const session: JWTVerifyResult<JWTPayload> | null = await getSession();
     if (!session || session.payload.role !== "Admin") {
       throw new Error("Unauthorized");
     }
-    const userCompany = session.payload.company;
+    const userCompany = session.payload.company as number;
     const res = await prisma.user.findMany({
       where: {
         company: {
@@ -131,11 +126,11 @@ export const getMembers = async () => {
 export const getInvoice = async (id: string) => {
   noStore();
   try {
-    const session: any = await getSession();
+    const session: JWTVerifyResult<JWTPayload> | null = await getSession();
     if (!session) {
       throw new Error("Unauthorized");
     }
-    const usersCompany = session.payload.company;
+    const usersCompany = session.payload.company as number;
 
     const res = await prisma.invoice.findUnique({
       where: {
@@ -151,8 +146,6 @@ export const getInvoice = async (id: string) => {
     if (res?.company_id !== usersCompany) {
       throw new Error("Unauthorized");
     }
-
-    console.log(res);
     return res;
   } catch (e) {
     console.log(e);
@@ -163,13 +156,13 @@ export const getInvoice = async (id: string) => {
 export const getUser = async () => {
   noStore();
   try {
-    const session: any = await getSession();
+    const session: JWTVerifyResult<JWTPayload> | null = await getSession();
     if (!session) {
       throw new Error("Unauthorized");
     }
     const res = await prisma.user.findUnique({
       where: {
-        id: session.payload.id,
+        id: session.payload.id as number,
       },
       select: {
         id: true,
@@ -184,7 +177,6 @@ export const getUser = async () => {
         },
       },
     });
-    console.log(res);
     return res;
   } catch (e) {
     console.log(e);

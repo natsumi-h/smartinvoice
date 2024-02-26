@@ -16,16 +16,18 @@ import NextImage from "next/image";
 import noimage from "../../../../public/images/companylogo-noimage.svg";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { zodResolver } from "mantine-form-zod-resolver";
+import { updateCompanySchema } from "@/app/schema/Company/schema";
+import useToast from "@/app/hooks/useToast";
 
 const Onboarding = () => {
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const { successToast, errorToast } = useToast();
   const form = useForm({
-    // validate: {
-    //   file: (value) => (value ? null : "File is required"),
-    // },
+    validate: zodResolver(updateCompanySchema),
   });
 
   const handleSubmit = async (values: any) => {
@@ -34,7 +36,6 @@ const Onboarding = () => {
     if (file) {
       formData.append("file", file);
     }
-    // テキストフィールドの値を追加
     Object.keys(values).forEach((key) => {
       if (key !== "file") {
         formData.append(key, values[key]);
@@ -54,9 +55,14 @@ const Onboarding = () => {
       router.push("/company");
       router.refresh();
       setLoading(false);
-    } catch (error) {
+      successToast({
+        title: "Company detail created",
+        message: "Your company detail has been created successfully.",
+      });
+    } catch (error: any) {
       console.log(error);
       setLoading(false);
+      errorToast(error.message);
     }
   };
 

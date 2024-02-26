@@ -34,11 +34,19 @@ export async function POST(request: NextRequest) {
         tokenExpiry: null,
         signupDone: true,
       },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        company_id: true,
+      },
     });
-    console.log(res);
     return NextResponse.json({ data: res }, { status: 200 });
-  } catch (e) {
+  } catch (e: any) {
     console.log(e);
-    return NextResponse.json({ error: "Error" }, { status: 400 });
+    const message =
+      e.message === "User not found or token expired" ? e.message : "Error";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import chromium from "@sparticuz/chromium";
-import puppeteercore from "puppeteer-core";
+import puppeteercore, { Browser } from "puppeteer-core";
 import puppeteer from "puppeteer";
 
 export const generatePdf = async (html: string) => {

@@ -22,7 +22,6 @@
     "@sparticuz/chromium-min": "^121.0.0",
     "@tabler/icons-react": "^2.47.0",
     "@types/crypto-js": "^4.2.2",
-    "@types/jsonwebtoken": "^9.0.5",
     "@types/nodemailer": "^6.4.14",
     "crypto-js": "^4.2.0",
     "dayjs": "^1.11.10",
