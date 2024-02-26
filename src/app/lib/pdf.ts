@@ -50,7 +50,7 @@ export const generateHtml = (payload: any) => {
     .map((item: InvoiceItem) => {
       return `
       <tr>
-        <td>${item.description}</td>
+        <td style="text-align:left;">${item.description}</td>
         <td>${item.qty}</td>
         <td>${Number(item.unitPrice).toFixed(2)}</td>
         <td>${item.taxRate}%</td>
