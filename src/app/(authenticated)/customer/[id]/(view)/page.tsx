@@ -1,7 +1,3 @@
-import SinleCustomer from "@/app/components/Customer/SingleCustomer";
-
-const page = () => {
+export default function Page() {
   return <></>;
-};
-
-export default page;
+}

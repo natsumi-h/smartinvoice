@@ -1,4 +1,4 @@
-import useToast from "@/app/hooks/useToast";
+
 import {
   Box,
   Button,
@@ -13,10 +13,11 @@ import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import useToast from "@/app/hooks/useToast";
 
-const CreateForm = () => {
+const CreateNewCustomer = () => {
   const [opened, { close, open }] = useDisclosure(false);
-  const [loadiing, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const { successToast, errorToast } = useToast();
   const router = useRouter();
   const form = useForm({
@@ -43,7 +44,6 @@ const CreateForm = () => {
           title: form.values.title.replace(/\.$/, ""),
         }),
       });
-
       const data = await response.json();
       console.log(data);
       successToast({
@@ -54,6 +54,7 @@ const CreateForm = () => {
       setLoading(false);
       router.push("/customer");
       router.refresh();
+
     } catch (error) {
       console.log(error);
     }
@@ -147,7 +148,7 @@ const CreateForm = () => {
           <Button variant="outline" onClick={close}>
             Cancel
           </Button>
-          <Button onClick={handleSubmit} loading={loadiing}>
+          <Button onClick={handleSubmit} loading={loading}>
             Proceed
           </Button>
         </Group>
@@ -156,4 +157,4 @@ const CreateForm = () => {
   );
 };
 
-export default CreateForm;
+export default CreateNewCustomer;

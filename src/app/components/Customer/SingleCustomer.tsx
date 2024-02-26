@@ -1,10 +1,10 @@
 "use client";
-
 import { Tabs, rem } from "@mantine/core";
 import { IconMessageCircle, IconNotes } from "@tabler/icons-react";
 import { FC } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Contact from "./Contact/Contact";
+import CustomerInvoice from "./Invoice/CustomerInvoice";
 
 type Props = {
   id: string;
@@ -18,13 +18,12 @@ type Props = {
 };
 
 const SingleCustomer: FC<Props> = ({ contacts, id }) => {
-  const iconStyle = { width: rem(12), height: rem(12) };
+  const iconStyle = { width: rem(15), height: rem(15) };
   const router = useRouter();
   const pathname = usePathname();
 
   return (
     <Tabs
-      // defaultValue="invoice"
       defaultValue={pathname === `/customer/${id}` ? "invoice" : "contact"}
       mt="lg"
       onChange={(value) =>
@@ -34,19 +33,24 @@ const SingleCustomer: FC<Props> = ({ contacts, id }) => {
       }
     >
       <Tabs.List>
-        <Tabs.Tab value="invoice" leftSection={<IconNotes style={iconStyle} />}>
+        <Tabs.Tab
+          value="invoice"
+          leftSection={<IconNotes style={iconStyle} />}
+          fz="md"
+        >
           Invoices
         </Tabs.Tab>
         <Tabs.Tab
           value="contact"
           leftSection={<IconMessageCircle style={iconStyle} />}
+          fz="md"
         >
           Contact
         </Tabs.Tab>
       </Tabs.List>
 
       <Tabs.Panel value="invoice" py="lg">
-        Invoice tab component
+        <CustomerInvoice />
       </Tabs.Panel>
 
       <Tabs.Panel value="contact" py="lg">

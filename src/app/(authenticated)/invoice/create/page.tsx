@@ -1,14 +1,14 @@
-"use client";
-
-import CreateForm from "@/app/components/Invoice/CreateForm";
+import CreateInvoice from "@/app/components/Invoice/CreateInvoice";
+import { getCustomers } from "@/app/lib/data";
 import { Box, Title } from "@mantine/core";
-import React from "react";
 
-const page = () => {
+const page = async () => {
+  const customers: any = await getCustomers();
+  
   return (
     <Box>
       <Title order={2}>New Invoice</Title>
-      <CreateForm />
+      <CreateInvoice customers={customers} />
     </Box>
   );
 };

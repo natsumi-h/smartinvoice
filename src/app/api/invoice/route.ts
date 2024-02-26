@@ -1,99 +1,183 @@
-import { NextResponse } from "next/server";
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/app/db";
-import puppeteer from "puppeteer";
-
-const s3Client = new S3Client({
-  region: "ap-southeast-2",
-  credentials: {
-    accessKeyId: "AKIA47CRYBUVGJPXG6FH",
-    secretAccessKey: "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",
-  },
-});
-
-const uploadFileToS3 = async (
-  file: Buffer,
-  fileName: string,
-  contentType: string
-) => {
-  const fileBuffer = file;
-  try {
-    const params = {
-      Bucket: "smartinvoice-gacapstone",
-      Key: fileName,
-      Body: fileBuffer,
-      ContentType: contentType,
-    };
-    const command = new PutObjectCommand(params);
-    await s3Client.send(command);
-
-    const fileUrl = `https://smartinvoice-gacapstone.s3.ap-southeast-2.amazonaws.com/${encodeURIComponent(
-      fileName
-    )}`;
-    return fileUrl;
-  } catch (e) {
-    console.error(e);
-    throw e;
-  }
-};
-
-const generatePdf = async (html: string) => {
-  const browser = await puppeteer.launch();
-  const page = await browser.newPage();
-  await page.setContent(html);
-  const pdfBuffer = await page.pdf(); // PDFのBufferを取得
-  await browser.close();
-  return pdfBuffer;
-};
+import { getSession } from "@/app/lib/action";
+import { generateHtml, generatePdf } from "@/app/lib/pdf";
+import { uploadFileToS3 } from "@/app/lib/s3";
 
 // POST /api/invoice
 // @desc: Create a new invoice
 export async function POST(request: Request) {
-  try {
-    // req.bodyの処理
-    // const formData = await request.formData();
-    // console.log(formData);
-    // const html = formData.get("html") as string;
-    // console.log(html);
-    const req = await request.json();
-    const html = req.html;
-    const payload = req.payload;
-    // PDFを生成
-    const pdfBuffer = await generatePdf(html);
-    const contentType = "application/pdf";
-    // S3へのアップロード処理
-    // TODO:Invoice name
-    const fileUrl = await uploadFileToS3(pdfBuffer, "invoice.pdf", contentType);
-    console.log(fileUrl);
+  const session: any = await getSession();
+  if (!session) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 400 });
+  }
+  const userId = session.payload.id;
+  const usersCompany = session.payload.company;
 
+  try {
+    const req = await request.json();
+    const payload = req.payload;
     // ORM
-    const res = await prisma.invoice.create({
+    const createRes = await prisma.invoice.create({
       data: {
-        invoiceUrl: fileUrl,
-        // customer: payload.customer,
+        customer: {
+          connect: {
+            id: parseInt(payload.customer),
+          },
+        },
+        contact: {
+          connect: {
+            id: parseInt(payload.contact),
+          },
+        },
         issueDate: payload.issueDate,
         dueDate: payload.dueDate,
         items: {
-          create: payload.items,
+          create: payload.items.map((item: any) => {
+            return {
+              description: item.description,
+              qty: item.qty,
+              unitPrice: item.unitPrice,
+              taxRate: parseInt(item.taxRate),
+              amount: (
+                item.qty *
+                Number(item.unitPrice) *
+                (item.taxRate === "9" ? 1.09 : 1)
+              ).toFixed(2),
+            };
+          }),
         },
         subtotal: payload.subtotal,
-        discount: payload.specialDiscount,
+        discount: payload.discount,
         totalTax: payload.totalTax,
         totalAmount: payload.total,
+        user: {
+          connect: {
+            id: userId,
+          },
+        },
+        company: {
+          connect: {
+            id: usersCompany,
+          },
+        },
       },
       include: {
+        items: true,
+        customer: {
+          include: {
+            contact: true,
+          },
+        },
+        company: true,
+        contact: true,
+      },
+    });
+
+    if (payload.requestType === "draft") {
+      console.log(createRes);
+      return NextResponse.json(
+        {
+          data: createRes,
+        },
+        { status: 200 }
+      );
+    }
+
+    // PDFを生成
+    const html = generateHtml(createRes);
+    const pdfBuffer = await generatePdf(html);
+    const contentType = "application/pdf";
+    // S3へのアップロード処理
+    const uniqueInvoiceName = `invoice-${createRes.id}.pdf`;
+    const fileUrl = await uploadFileToS3(
+      pdfBuffer,
+      uniqueInvoiceName,
+      contentType
+    );
+    console.log(fileUrl);
+    // ORM update
+    const updateRes = await prisma.invoice.update({
+      where: {
+        id: createRes.id,
+      },
+      data: {
+        invoiceUrl: fileUrl,
+        status: "Issued",
+      },
+      include: {
+        items: true,
+        customer: {
+          include: {
+            contact: true,
+          },
+        },
+        company: true,
+        contact: true,
+      },
+    });
+
+    return NextResponse.json(
+      {
+        data: updateRes,
+      },
+      { status: 200 }
+    );
+  } catch (e) {
+    console.log(e);
+    return NextResponse.json({ error: "Error" }, { status: 400 });
+  }
+}
+
+// GET /api/invoice
+// @desc: Get all invoices
+export async function GET(request: NextRequest) {
+  const session: any = await getSession();
+  if (!session) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 400 });
+  }
+  const usersCompany = session.payload.company;
+
+  const searchParams = request.nextUrl.searchParams;
+  const customerParam = searchParams.get("customer");
+  const statusParam = searchParams.get("status");
+  const issueDateStartParam = searchParams.get("issueDateStart");
+  const issueDateEndParam = searchParams.get("issueDateEnd");
+  const dueDateStartParam = searchParams.get("dueDateStart");
+  const dueDateEndParam = searchParams.get("dueDateEnd");
+
+  try {
+    const whereCondition = {
+      company_id: usersCompany,
+      deleted: false,
+      ...(statusParam && {
+        status: statusParam as "Draft" | "Sent" | "Paid" | "Issued",
+      }),
+      ...(customerParam && { customer_id: parseInt(customerParam) }),
+      ...(issueDateStartParam &&
+        issueDateEndParam && {
+          issueDate: {
+            gte: new Date(issueDateStartParam),
+            lte: new Date(issueDateEndParam),
+          },
+        }),
+      ...(dueDateStartParam &&
+        dueDateEndParam && {
+          dueDate: {
+            gte: new Date(dueDateStartParam),
+            lte: new Date(dueDateEndParam),
+          },
+        }),
+    };
+    const res = await prisma.invoice.findMany({
+      where: whereCondition,
+      include: {
+        customer: true,
         items: true,
       },
     });
     console.log(res);
-
-    return NextResponse.json(
-      {
-        message: "File upload Success",
-        data: res,
-      },
-      { status: 200 }
-    );
+    return NextResponse.json({ data: res }, { status: 200 });
   } catch (e) {
     console.log(e);
     return NextResponse.json({ error: "Error" }, { status: 400 });

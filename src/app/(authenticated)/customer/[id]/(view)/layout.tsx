@@ -1,48 +1,33 @@
+import DeleteCustomer from "@/app/components/Customer/DeleteCustomer";
 import SingleCustomer from "@/app/components/Customer/SingleCustomer";
+import { getContacts, getCustomer } from "@/app/lib/data";
 import { Box, Button, Flex, Text, Title, rem } from "@mantine/core";
 import { IconMail, IconMapPin, IconPhone } from "@tabler/icons-react";
 import Link from "next/link";
 
-const getCustomer = async (id: string) => {
-  const res = await fetch(`http://localhost:3000//api/customer/${id}`);
-  const data = await res.json();
-
-  return data;
-};
-
-const layout = async ({
+const Layout = async ({
   params,
-}: //   children,
-{
+}: {
   params: {
     id: string;
   };
-  //   children?: React.ReactNode;
 }) => {
   const { id } = params;
   const customer = await getCustomer(id);
-  const address = `${customer.street}, ${customer.city}, ${customer.state}, ${customer.postcode}`;
-  const contacts = customer.contact;
-
+  const address = `${customer?.street}, ${customer?.city}, ${customer?.state}, ${customer?.postcode}`;
+  const contacts = await getContacts(id);
   return (
     <Box>
       <Flex gap="md">
-        <Title order={2}>{customer.name}</Title>
+        <Title order={2}>{customer?.name}</Title>
         <Button
           variant="outline"
           component={Link}
-          href={`/customer/${customer.id}/update`}
+          href={`/customer/${customer?.id}/update`}
         >
           Update
         </Button>
-        <Button
-          variant="outline"
-          color="red"
-          component={Link}
-          href={`/customer/${customer.id}/update`}
-        >
-          Delete
-        </Button>
+        {customer?.invoices.length === 0 && <DeleteCustomer id={id} />}
       </Flex>
 
       <Flex align={"center"} gap="sm" mt="xs">
@@ -51,7 +36,7 @@ const layout = async ({
           stroke={1}
           color="var(--mantine-color-blue-5)"
         />
-        <Text c="gray.7">{address}</Text>
+        <Text>{address}</Text>
       </Flex>
       <Flex align={"center"} gap="sm">
         <IconMail
@@ -59,8 +44,8 @@ const layout = async ({
           stroke={1}
           color="var(--mantine-color-blue-5)"
         />
-        <Text c="gray.7">
-          {customer.contact.map((contact: any) =>
+        <Text>
+          {customer?.contact.map((contact: any) =>
             contact.isPrimary ? contact.email : ""
           )}
         </Text>
@@ -71,12 +56,12 @@ const layout = async ({
           stroke={1}
           color="var(--mantine-color-blue-5)"
         />
-        <Text c="gray.7">{customer.phone}</Text>
+        <Text>{customer?.phone}</Text>
       </Flex>
       {/* {children} */}
-      <SingleCustomer contacts={contacts} id={customer.id} />
+      <SingleCustomer contacts={contacts as any} id={customer?.id as any} />
     </Box>
   );
 };
 
-export default layout;
+export default Layout;

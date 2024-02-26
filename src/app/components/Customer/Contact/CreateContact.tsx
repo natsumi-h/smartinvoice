@@ -52,6 +52,7 @@ const CreateContact: FC<Props> = ({ opened, close, customerId }) => {
       form.reset();
       setLoading(false);
       close();
+      router.push(`/customer/${customerId}/contact`);
       router.refresh();
       successToast({
         title: "Contact created",

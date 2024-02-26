@@ -1,5 +1,5 @@
-const page = () => {
-  return <></>;
+export default function Page ()  {
+  return (
+ <></>
+  );
 };
-
-export default page;

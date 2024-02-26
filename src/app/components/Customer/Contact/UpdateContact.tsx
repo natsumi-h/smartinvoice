@@ -11,7 +11,6 @@ import {
 import { useForm } from "@mantine/form";
 import useToast from "@/app/hooks/useToast";
 import { useRouter } from "next/navigation";
-import { on } from "events";
 
 type Props = {
   opened: boolean;
@@ -29,7 +28,6 @@ const UpdateContact: FC<Props> = ({ opened, close, contact }) => {
   const [loadiing, setLoading] = useState(false);
   const { successToast, errorToast } = useToast();
   const router = useRouter();
-
   const title = `${contact.title}.`;
 
   const form = useForm({
@@ -52,7 +50,7 @@ const UpdateContact: FC<Props> = ({ opened, close, contact }) => {
       isPrimary: contact.isPrimary,
       title: title,
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [opened]);
 
   const handleSubmit = async () => {
@@ -68,6 +66,7 @@ const UpdateContact: FC<Props> = ({ opened, close, contact }) => {
       });
 
       const data = await response.json();
+      console.log(data);
       form.reset();
       setLoading(false);
       close();

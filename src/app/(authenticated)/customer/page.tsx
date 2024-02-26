@@ -1,4 +1,4 @@
-"use client";
+// "use client";
 import CustomerList from "@/app/components/Customer/CustomerList";
 import { Box, Button, Flex, Title } from "@mantine/core";
 import Link from "next/link";

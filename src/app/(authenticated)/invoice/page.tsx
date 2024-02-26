@@ -1,12 +1,25 @@
-import React from 'react'
+import InvoiceView from "@/app/components/Invoice/InvoiceView";
+import { Box, Button, Flex, Title } from "@mantine/core";
+import Link from "next/link";
 
 const page = () => {
   return (
-    <div>
-      invoice
-    
-    </div>
-  )
-}
+    <Box>
+      <Flex justify={"space-between"} align="center">
+        <Title order={2}>Invoice</Title>
+        <Button
+          color="blue"
+          variant="outline"
+          component={Link}
+          href="/invoice/create"
+        >
+          Create New
+        </Button>
+      </Flex>
 
-export default page
+      <InvoiceView />
+    </Box>
+  );
+};
+
+export default page;

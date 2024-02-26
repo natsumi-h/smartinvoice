@@ -8,20 +8,29 @@ generator client {
 
 datasource db {
   provider = "mysql"
-  url      = env("DATABASE_URL")
+  url = env("DATABASE_URL")
   relationMode = "prisma"
 }
 
 model Company {
   id Int       @id @default(autoincrement())
   name String?
+  uen String?
   street String?
   city String?
   state String?
   postcode String?
   phone String?
   logoUrl String
-  bankDetails String?
+  bankname String?
+  branchname String?
+  accountname String?
+  accounttype AccountType? @default(Savings)
+  accountnumber String?
+  bankcode String?
+  swiftcode String?
+  branchnumber String?
+
   invoiceRemark String?
   user User[]
   invoice Invoice[]
@@ -31,10 +40,15 @@ model Company {
   updatedAt DateTime? @updatedAt
 }
 
+enum AccountType {
+  Savings
+  Current
+}
 
 model Invoice {
   id Int       @id @default(autoincrement())
-  status Status @default(draft)
+  deleted Boolean @default(false)
+  status Status @default(Draft)
   subtotal Decimal? @db.Decimal(10, 2)
   discount Decimal? @db.Decimal(10, 2)
   totalTax Decimal? @db.Decimal(10, 2)
@@ -46,24 +60,27 @@ model Invoice {
   user_id Int?
   customer Customer? @relation(fields: [customer_id], references: [id])
   customer_id Int?
+  contact Contact? @relation(fields: [contact_id], references: [id])
+  contact_id Int?
   company Company? @relation(fields: [company_id], references: [id])
   company_id Int?
   items InvoiceItem[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime? @updatedAt
+  deletedAt DateTime?
 
   @@index([user_id])
   @@index([customer_id])
   @@index([company_id])
+  @@index([contact_id])
 }
 
 enum Status {
- draft
- submitted
- approved
- sent
- paid
+ Draft
+ Issued
+ Sent
+ Paid
 }
 
 model InvoiceItem {
@@ -72,6 +89,7 @@ model InvoiceItem {
   qty Int?
   unitPrice Decimal? @db.Decimal(10, 2)
   amount Decimal? @db.Decimal(10, 2)
+  // "0" or "9"
   taxRate Int?
   invoice Invoice? @relation(fields: [invoice_id], references: [id])
   invoice_id Int?
@@ -82,33 +100,43 @@ model InvoiceItem {
   @@index([invoice_id])
 }
 
-
 model User{
   id Int       @id @default(autoincrement())
+  deleted Boolean @default(false)
   name String?
   email String? @unique
   password String?
-  role Role @default(user)
+  role Role @default(User)
   phone String?
-  signupDone Boolean @default(false)
+
   company Company? @relation(fields: [company_id], references: [id])
   company_id Int?
   invoice Invoice[]
   customer Customer[]
 
+  token String?
+  tokenExpiry DateTime?
+  salt String?
+  iterations Int?
+  jwt String? @db.VarChar(2048)
+  jwtExpiry DateTime?
+  signupDone Boolean @default(false)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  deletedAt DateTime?
 
  @@index([company_id])
 }
 
 enum Role {
-  user
-  admin
+  User
+  Admin
 }
 
 model Customer {
   id Int       @id @default(autoincrement())
+  deleted Boolean @default(false)
   name String?
   street String?
   city String?
@@ -124,6 +152,7 @@ model Customer {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  deletedAt DateTime?
 
   @@index([company_id])
   @@index([user_id])
@@ -131,15 +160,18 @@ model Customer {
 
 model Contact {
   id Int       @id @default(autoincrement())
+  deleted Boolean @default(false)
   name String?
   email String?
   isPrimary Boolean @default(false)
   title Title?
   customer Customer? @relation(fields: [customer_id], references: [id])
   customer_id Int?
+  invoices Invoice[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  deletedAt DateTime?
 
   @@index([customer_id])
 }
@@ -151,23 +183,3 @@ enum Title {
   Dr
   Prof
 }
-
-///////////////////////// Product and Category //////////////////////////
-// model Product {
-//     id          Int       @id @default(autoincrement())
-//     name        String
-//     description String
-//     price       Decimal
-//     image       String
-//     category    Category? @relation(fields: [category_id], references: [id])
-//     category_id Int
-
-//     @@index([category_id])
-// }
-
-// model Category {
-//     id          Int       @id @default(autoincrement())
-//     name        String
-//     description String
-//     products    Product[]
-// }

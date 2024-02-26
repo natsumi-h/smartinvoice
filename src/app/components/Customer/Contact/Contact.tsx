@@ -61,64 +61,55 @@ const Contact: FC<Props> = ({ contacts, id }) => {
       </Button>
       <ul className={styles.ul}>
         {contacts.map((contact) => (
-          <>
-            <li className={styles.li} key={contact.id}>
-              <Anchor
-                component={Link}
-                href={`customer/1}`}
-                underline="never"
-                c="black"
-              >
-                <Flex align={"center"} justify={"space-between"}>
-                  <Box>
-                    <Flex align={"center"} gap="md">
-                      <Title order={4}>{contact.name}</Title>
-                      {contact.isPrimary && (
-                        <Badge variant="filled">Primary Contact</Badge>
-                      )}
-                    </Flex>
-
-                    <Flex align={"center"} gap="sm" mt="sm">
-                      <IconMail
-                        style={{ width: rem(20), height: rem(20) }}
-                        stroke={1}
-                        color="var(--mantine-color-blue-5)"
-                      />
-                      <Text c="gray.7">{contact.email}</Text>
-                    </Flex>
-                  </Box>
-
+          <li className={styles.li} key={contact.id}>
+              <Flex align={"center"} justify={"space-between"}>
+                <Box>
                   <Flex align={"center"} gap="md">
+                    <Title order={4}>{contact.name}</Title>
+                    {contact.isPrimary && (
+                      <Badge variant="filled">Primary Contact</Badge>
+                    )}
+                  </Flex>
+
+                  <Flex align={"center"} gap="sm" mt="sm">
+                    <IconMail
+                      style={{ width: rem(20), height: rem(20) }}
+                      stroke={1}
+                      color="var(--mantine-color-blue-5)"
+                    />
+                    <Text>{contact.email}</Text>
+                  </Flex>
+                </Box>
+
+                <Flex align={"center"} gap="md">
+                  <Button
+                    variant={"outline"}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setContact(contact);
+                      updateOpenedHandlers.open();
+                    }}
+                  >
+                    Update
+                  </Button>
+                  {!contact.isPrimary && (
                     <Button
                       variant={"outline"}
+                      color="red"
                       onClick={(e) => {
                         e.preventDefault();
                         setContact(contact);
-                        updateOpenedHandlers.open();
+                        deleteOpenedHandlers.open();
                       }}
                     >
-                      Update
+                      Delete
                     </Button>
-                    {!contact.isPrimary && (
-                      <Button
-                        variant={"outline"}
-                        color="red"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          setContact(contact);
-                          deleteOpenedHandlers.open();
-                        }}
-                      >
-                        Delete
-                      </Button>
-                    )}
-                  </Flex>
+                  )}
                 </Flex>
+              </Flex>
 
-                <Divider mt="md" />
-              </Anchor>
-            </li>
-          </>
+              <Divider mt="md" />
+          </li>
         ))}
       </ul>
 
