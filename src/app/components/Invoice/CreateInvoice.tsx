@@ -53,22 +53,25 @@ const CreateInvoice: FC<Props> = ({ customers }) => {
   useEffect(() => {
     let newSubtotal = 0.0;
     let newTotaltax = 0.0;
-    for (let i = 0; i < itemLength; i++) {
-      newSubtotal +=
-        (form.values as { [key: string]: any })[`qty${i}`] *
-        Number((form.values as { [key: string]: any })[`unitPrice${i}`]);
 
-      newTotaltax +=
-        (form.values as { [key: string]: any })[`qty${i}`] *
-        Number((form.values as { [key: string]: any })[`unitPrice${i}`]) *
-        ((form.values as { [key: string]: any })[`taxRate${i}`] === "9"
+    for (let i = 0; i < itemLength; i++) {
+      const qty = Number((form.values as Record<string, unknown>)[`qty${i}`]);
+      const unitPrice = Number(
+        (form.values as Record<string, unknown>)[`unitPrice${i}`]
+      );
+      const taxRate =
+        (form.values as Record<string, unknown>)[`taxRate${i}`] === "9"
           ? 0.09
-          : 0);
+          : 0;
+
+      newSubtotal += qty * unitPrice;
+      newTotaltax += qty * unitPrice * taxRate;
     }
+
     setSubtotal(Number(newSubtotal));
     setTotaltax(Number(newTotaltax));
 
-    let newTotal =
+    const newTotal =
       newSubtotal + newTotaltax - Number(form.values.specialDiscount);
     setTotal(Number(newTotal.toFixed(2)));
   }, [form.values, itemLength]);
@@ -120,9 +123,10 @@ const CreateInvoice: FC<Props> = ({ customers }) => {
         message: "Invoice has been created successfully",
       });
       type === "issue" ? setLoadingIssue(false) : setLoadingDraft(false);
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
       type === "issue" ? setLoadingIssue(false) : setLoadingDraft(false);
+      errorToast(error.message);
     }
   };
 
@@ -179,18 +183,18 @@ const CreateInvoice: FC<Props> = ({ customers }) => {
       <Table.Td pl="0">
         <Text fw={500} size="sm" ta={"right"}>
           {addCommasToNumber(
-            (form.values as { [key: string]: any })[`qty${index}`] &&
-              (form.values as { [key: string]: any })[`unitPrice${index}`] &&
-              (form.values as { [key: string]: any })[`taxRate${index}`]
-              ? ((
-                  form.values as {
-                    [key: string]: any;
-                  }
-                )[`qty${index}`] as number) *
+            (form.values as Record<string, unknown>)[`qty${index}`] &&
+              (form.values as Record<string, unknown>)[`unitPrice${index}`] &&
+              (form.values as Record<string, unknown>)[`taxRate${index}`]
+              ? ((form.values as Record<string, unknown>)[
+                  `qty${index}`
+                ] as number) *
                   Number(
-                    (form.values as { [key: string]: any })[`unitPrice${index}`]
+                    (form.values as Record<string, unknown>)[
+                      `unitPrice${index}`
+                    ]
                   ) *
-                  ((form.values as { [key: string]: any })[
+                  ((form.values as Record<string, unknown>)[
                     `taxRate${index}`
                   ] === "9"
                     ? 1.09
@@ -229,7 +233,7 @@ const CreateInvoice: FC<Props> = ({ customers }) => {
               placeholder="Choose Customer"
               searchable
               limit={5}
-              data={customers.map((customer: any) => ({
+              data={customers.map((customer) => ({
                 label: customer.name,
                 value: customer.id.toString(),
               }))}
@@ -243,16 +247,10 @@ const CreateInvoice: FC<Props> = ({ customers }) => {
                 .find(
                   (customer) => customer.id === Number(form.values?.customer)
                 )
-                ?.contact.map((contact: any) => ({
+                ?.contact.map((contact) => ({
                   label: contact.name,
                   value: contact.id.toString(),
                 }))}
-              // defaultValue={customers
-              //   .find(
-              //     (customer) => customer.id === Number(form.values?.customer)
-              //   )
-              //   ?.contact.find((contact) => contact.isPrimary)
-              //   ?.id.toString()}
               searchable
               limit={5}
               {...form.getInputProps("contact")}
