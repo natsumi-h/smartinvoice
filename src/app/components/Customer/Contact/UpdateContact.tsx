@@ -12,17 +12,12 @@ import { useForm, zodResolver } from "@mantine/form";
 import useToast from "@/app/hooks/useToast";
 import { useRouter } from "next/navigation";
 import { createContactSchema } from "@/app/schema/Customer/Contact/schema";
+import { Contact } from "@prisma/client";
 
 type Props = {
   opened: boolean;
   close: () => void;
-  contact: {
-    id: string;
-    name: string;
-    email: string;
-    isPrimary: boolean;
-    title: string;
-  };
+  contact:Contact;
 };
 
 const UpdateContact: FC<Props> = ({ opened, close, contact }) => {

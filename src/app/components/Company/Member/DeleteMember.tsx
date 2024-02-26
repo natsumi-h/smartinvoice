@@ -1,17 +1,13 @@
 import useToast from "@/app/hooks/useToast";
 import { Button, Group, Modal, Text } from "@mantine/core";
+import { User } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import React, { FC, useState } from "react";
 
 type Props = {
   opened: boolean;
   close: () => void;
-  member: {
-    id: number;
-    name: string;
-    email: string;
-    role: "Admin" | "User";
-  };
+  member: User;
 };
 
 const DeleteMember: FC<Props> = ({ opened, close, member }) => {

@@ -9,7 +9,6 @@ import {
   Select,
   Text,
   TextInput,
-  Textarea,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import NextImage from "next/image";
