@@ -54,10 +54,10 @@ const CreateCustomer = () => {
         title: "Customer created",
         message: "Customer has been created successfully",
       });
-    } catch (error:any) {
+    } catch (error: any) {
       console.log(error);
       setLoading(false);
-      errorToast(error.message || "Failed to create customer")
+      errorToast(error.message || "Failed to create customer");
     }
   };
 

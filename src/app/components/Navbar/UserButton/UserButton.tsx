@@ -2,8 +2,16 @@ import { Group, Text, rem, Anchor } from "@mantine/core";
 import { IconChevronRight } from "@tabler/icons-react";
 import classes from "./UserButton.module.css";
 import Link from "next/link";
+import { JWTPayload, JWTVerifyResult } from "jose";
+import { FC } from "react";
 
-export function UserButton({ session }: any) {
+type Props = {
+  session: JWTVerifyResult<JWTPayload> | null;
+};
+
+const UserButton: FC<Props> = ({ session }) => {
+  const name = session?.payload.name as string;
+  const email = session?.payload.email as string;
   return (
     <Anchor
       className={classes.user}
@@ -12,18 +20,13 @@ export function UserButton({ session }: any) {
       td={"none"}
     >
       <Group>
-        {/* <Avatar
-          src="https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-8.png"
-          radius="xl"
-        /> */}
-
         <div style={{ flex: 1 }}>
           <Text size="sm" fw={500}>
-            {session?.payload?.name}
+            {name}
           </Text>
 
           <Text c="dimmed" size="xs">
-            {session?.payload?.email}
+            {email}
           </Text>
         </div>
 
@@ -34,4 +37,6 @@ export function UserButton({ session }: any) {
       </Group>
     </Anchor>
   );
-}
+};
+
+export default UserButton;

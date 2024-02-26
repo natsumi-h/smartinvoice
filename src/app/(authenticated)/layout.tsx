@@ -7,7 +7,8 @@ import { JWTPayload, JWTVerifyResult } from "jose";
 import Navbar from "../components/Navbar/Navbar";
 
 const layout = async ({ children }: { children: React.ReactNode }) => {
-  const session: JWTVerifyResult<JWTPayload> | null = await getSession();
+  // const session: JWTVerifyResult<JWTPayload> | null = await getSession();
+  const session = await getSession();
   return (
     <Box style={{ position: "relative" }}>
       <Navbar session={session} />

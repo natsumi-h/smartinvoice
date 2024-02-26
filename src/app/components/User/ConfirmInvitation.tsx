@@ -46,7 +46,7 @@ const ConfirmInvitation = () => {
         title: "Signup success",
         message: "You have successfully signed up. Please signin to continue.",
       });
-    } catch (error:any) {
+    } catch (error: any) {
       console.log(error);
       setLoading(false);
       errorToast(error.message);

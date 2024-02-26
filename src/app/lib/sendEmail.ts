@@ -40,12 +40,12 @@ const mailOptions = (obj: any) => {
 };
 
 export async function sendEmail(obj: any) {
-  const mail: any = mailOptions(obj);
+  const mail = mailOptions(obj);
   const info = await transporter.sendMail({
     from: '"SmartInvoice" <noreply@smartinvoice.com>',
     to: obj.payload.userEmail,
-    subject: mail.subject,
-    text: mail.text,
+    subject: mail?.subject,
+    text: mail?.text,
   });
   console.log(info);
 }

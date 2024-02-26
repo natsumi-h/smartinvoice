@@ -2,6 +2,7 @@ import DeleteCustomer from "@/app/components/Customer/DeleteCustomer";
 import SingleCustomer from "@/app/components/Customer/SingleCustomer";
 import { getContacts, getCustomer } from "@/app/lib/data";
 import { Box, Button, Flex, Text, Title, rem } from "@mantine/core";
+import { Contact } from "@prisma/client";
 import { IconMail, IconMapPin, IconPhone } from "@tabler/icons-react";
 import Link from "next/link";
 
@@ -45,7 +46,7 @@ const Layout = async ({
           color="var(--mantine-color-blue-5)"
         />
         <Text>
-          {customer?.contact.map((contact: any) =>
+          {customer?.contact.map((contact: Contact) =>
             contact.isPrimary ? contact.email : ""
           )}
         </Text>

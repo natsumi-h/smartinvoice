@@ -31,10 +31,10 @@ const SigninForm = () => {
     },
   });
 
-  const handleSubmit = async (values: any) => {
+  const handleSubmit = async (values: Record<string, unknown>) => {
     setLoading(true);
     try {
-      const encodedEmail = encodeURIComponent(values.email);
+      const encodedEmail = encodeURIComponent(values.email as string);
       const response = await fetch(`/api/user/signin?email=${encodedEmail}`, {
         method: "GET",
       });
@@ -43,7 +43,7 @@ const SigninForm = () => {
       }
       const data = await response.json();
       const hashedPassword = hashDataWithSaltRounds(
-        values.password,
+        values.password as string,
         data.salt,
         data.iterations
       );
@@ -63,7 +63,6 @@ const SigninForm = () => {
       if (signinData.company) {
         router.push("/invoice");
       } else {
-        // router.push("/company/onboarding");
         router.push("/onboarding");
       }
       successToast({

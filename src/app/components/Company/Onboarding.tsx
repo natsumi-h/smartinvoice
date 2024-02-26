@@ -30,18 +30,25 @@ const Onboarding = () => {
     validate: zodResolver(updateCompanySchema),
   });
 
-  const handleSubmit = async (values: any) => {
+  const handleSubmit = async (values: Record<string, unknown>) => {
     setLoading(true);
     const formData = new FormData();
     if (file) {
       formData.append("file", file);
     }
     Object.keys(values).forEach((key) => {
+      const value = values[key];
+
       if (key !== "file") {
-        formData.append(key, values[key]);
+        if (typeof value === "string") {
+          formData.append(key, value);
+        }
       }
+
       if (key === "accounttype") {
-        formData.append(key, values[key].toLowerCase());
+        if (typeof value === "string") {
+          formData.append(key, value.toLowerCase());
+        }
       }
     });
 

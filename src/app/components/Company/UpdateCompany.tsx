@@ -9,7 +9,6 @@ import {
   Select,
   Text,
   TextInput,
-  Textarea,
 } from "@mantine/core";
 import { useForm, zodResolver } from "@mantine/form";
 import NextImage from "next/image";
@@ -18,9 +17,10 @@ import { FC, useState } from "react";
 import { useRouter } from "next/navigation";
 import { updateCompanySchema } from "@/app/schema/Company/schema";
 import useToast from "@/app/hooks/useToast";
+import { Company } from "@prisma/client";
 
 type Props = {
-  company: any;
+  company: Company;
 };
 
 const UpdateCompany: FC<Props> = ({ company }) => {
@@ -47,23 +47,29 @@ const UpdateCompany: FC<Props> = ({ company }) => {
       bankcode: company?.bankcode,
       swiftcode: company?.swiftcode,
       branchnumber: company?.branchnumber,
-      remarks: company?.remarks,
     },
     validate: zodResolver(updateCompanySchema),
   });
 
-  const handleSubmit = async (values: any) => {
+  const handleSubmit = async (values: Record<string, unknown>) => {
     setLoading(true);
     const formData = new FormData();
     if (file) {
       formData.append("file", file);
     }
     Object.keys(values).forEach((key) => {
+      const value = values[key];
+
       if (key !== "file") {
-        formData.append(key, values[key]);
+        if (typeof value === "string") {
+          formData.append(key, value);
+        }
       }
+
       if (key === "accounttype") {
-        formData.append(key, values[key].toLowerCase());
+        if (typeof value === "string") {
+          formData.append(key, value.toLowerCase());
+        }
       }
     });
 
@@ -83,7 +89,6 @@ const UpdateCompany: FC<Props> = ({ company }) => {
     } catch (error: any) {
       console.log(error);
       setLoading(false);
-      
     }
   };
 
@@ -220,13 +225,13 @@ const UpdateCompany: FC<Props> = ({ company }) => {
           mt="lg"
           {...form.getInputProps("branchnumber")}
         />
-        <Textarea
+        {/* <Textarea
           label="Invoice Remarks"
           placeholder="Custom layout"
           mt="lg"
           resize="vertical"
           {...form.getInputProps("remarks")}
-        />
+        /> */}
 
         <Group justify="center" mt="xl">
           <Button fullWidth type="submit" loading={loading}>

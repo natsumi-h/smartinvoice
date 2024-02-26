@@ -1,33 +1,15 @@
 import { Box, Button, Table, Image } from "@mantine/core";
+import { Company } from "@prisma/client";
 import NextImage from "next/image";
 import Link from "next/link";
 import { FC } from "react";
 
 type Props = {
-  company: {
-    id: number;
-    name: string;
-    uen: string;
-    street: string;
-    postcode: string;
-    phone: string;
-    logoUrl: string;
-    city: string;
-    state: string;
-    bankname: string;
-    branchname: string;
-    swiftcode: string;
-    accountname: string;
-    accounttype: string;
-    bankcode: string;
-    branchnumber: string;
-    accountnumber: string;
-  };
+  company: Company;
 };
 
 const CompanyDetail: FC<Props> = ({ company }) => {
   const {
-    id,
     name,
     uen,
     street,

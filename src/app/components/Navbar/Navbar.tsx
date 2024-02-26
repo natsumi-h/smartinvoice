@@ -19,13 +19,13 @@ import {
 } from "@tabler/icons-react";
 import { LinksGroup } from "./NavbarLinksGroup/NavbarLinksGroup";
 import classes from "./Navbar.module.css";
-import { UserButton } from "./UserButton/UserButton";
 import cx from "clsx";
 import Link from "next/link";
 import logo from "../../assets/images/logo.png";
 import NextImage from "next/image";
 import { JWTPayload, JWTVerifyResult } from "jose";
 import { FC } from "react";
+import UserButton from "./UserButton/UserButton";
 
 type Props = {
   session: JWTVerifyResult<JWTPayload> | null;

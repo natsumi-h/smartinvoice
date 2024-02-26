@@ -1,7 +1,8 @@
 import dayjs from "dayjs";
 import chromium from "@sparticuz/chromium";
-import puppeteercore, { Browser } from "puppeteer-core";
+import puppeteercore from "puppeteer-core";
 import puppeteer from "puppeteer";
+import { InvoiceItem } from "@prisma/client";
 
 export const generatePdf = async (html: string) => {
   const getBrowser = async () => {
@@ -18,7 +19,7 @@ export const generatePdf = async (html: string) => {
     }
     return browser;
   };
-  const browser: any = await getBrowser();
+  const browser = await getBrowser();
 
   //   const browser = await puppeteer.launch({
   //     args: chromium.args,
@@ -46,7 +47,7 @@ export const generateHtml = (payload: any) => {
   const bankDetails2 = `A/C Type: ${company.accounttype}, A/C #: ${company.accountnumber},`;
   const bankDetails3 = `Bank Code: ${company.bankcode}, SWIFT BIC Code: ${company.swiftcode}, Branch #: ${company.branchnumber}`;
   const items = payload.items
-    .map((item: any) => {
+    .map((item: InvoiceItem) => {
       return `
       <tr>
         <td>${item.description}</td>

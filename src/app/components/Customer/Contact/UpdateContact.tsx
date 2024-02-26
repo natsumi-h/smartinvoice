@@ -51,10 +51,11 @@ const UpdateContact: FC<Props> = ({ opened, close, contact }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [opened]);
 
-  const handleSubmit = async (values: any) => {
+  const handleSubmit = async (values: Record<string, unknown>) => {
     try {
       setLoading(true);
-      const title = values.title.replace(/\.$/, "");
+      const valuesTitle = values.title as string;
+      const title = valuesTitle.replace(/\.$/, "");
       const response = await fetch(`/api/contact/${contact.id}/`, {
         method: "POST",
         body: JSON.stringify({

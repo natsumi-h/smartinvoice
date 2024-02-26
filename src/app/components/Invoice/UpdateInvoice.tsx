@@ -20,9 +20,10 @@ import { DateInput } from "@mantine/dates";
 import { useRouter } from "next/navigation";
 import useToast from "@/app/hooks/useToast";
 import { addCommasToNumber } from "@/app/lib/addCommas";
+import { Customer } from "@prisma/client";
 
 type Props = {
-  customers: { id: number; name: string }[];
+  customers : Customer[];
   invoice: any;
 };
 const UpdateInvoice: FC<Props> = ({ invoice }) => {

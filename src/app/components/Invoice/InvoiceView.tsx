@@ -52,25 +52,32 @@ const InvoiceView = () => {
     setLoading(false);
   }, []);
 
-  const fetchInvoices = async (values: any) => {
+  const fetchInvoices = async (values: Record<string, unknown>) => {
     try {
       const queryParams = [];
-
       const { customer, issueDate, dueDate, status } = values;
 
-      if (customer) queryParams.push(`customer=${customer}`);
-      if (status) queryParams.push(`status=${status}`);
-      if (issueDate[0] && issueDate[1]) {
-        queryParams.push(
-          `issueDateStart=${(issueDate[0] as Date).toISOString()}`
-        );
-        queryParams.push(
-          `issueDateEnd=${(issueDate[1] as Date).toISOString()}`
-        );
+      if (typeof customer === "string") {
+        queryParams.push(`customer=${encodeURIComponent(customer)}`);
       }
-      if (dueDate[0] && dueDate[1]) {
-        queryParams.push(`dueDateStart=${(dueDate[0] as Date).toISOString()}`);
-        queryParams.push(`dueDateEnd=${(dueDate[1] as Date).toISOString()}`);
+      if (typeof status === "string") {
+        queryParams.push(`status=${encodeURIComponent(status)}`);
+      }
+      if (Array.isArray(issueDate) && issueDate.length === 2) {
+        const start = issueDate[0];
+        const end = issueDate[1];
+        if (start instanceof Date && end instanceof Date) {
+          queryParams.push(`issueDateStart=${start.toISOString()}`);
+          queryParams.push(`issueDateEnd=${end.toISOString()}`);
+        }
+      }
+      if (Array.isArray(dueDate) && dueDate.length === 2) {
+        const start = dueDate[0];
+        const end = dueDate[1];
+        if (start instanceof Date && end instanceof Date) {
+          queryParams.push(`dueDateStart=${start.toISOString()}`);
+          queryParams.push(`dueDateEnd=${end.toISOString()}`);
+        }
       }
 
       const query = queryParams.length > 0 ? `?${queryParams.join("&")}` : "";
@@ -84,7 +91,7 @@ const InvoiceView = () => {
     }
   };
 
-  const handleSubmit = async (values: any) => {
+  const handleSubmit = async (values: Record<string, unknown>) => {
     setFilterLoading(true);
     await fetchInvoices(values);
     setFilterLoading(false);

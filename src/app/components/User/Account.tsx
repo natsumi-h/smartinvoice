@@ -27,9 +27,10 @@ const Account = ({ session, user }: any) => {
         title: "Signout successful",
         message: "You are now signed out.",
       });
-    } catch (error) {
+    } catch (error:any) {
       console.log(error);
       setLoading(false);
+      errorToast(error.message || "Logout failed. Please try again.");
     }
   };
 

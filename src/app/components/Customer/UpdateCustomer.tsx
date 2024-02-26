@@ -12,25 +12,12 @@ import {
 } from "@mantine/core";
 import { useForm, zodResolver } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
+import { Customer } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { FC, useState } from "react";
 
 type Props = {
-  customer: {
-    id: string;
-    name: string;
-    street: string;
-    city: string;
-    state: string;
-    postcode: string;
-    phone: string;
-    contact: {
-      id: string;
-      name: string;
-      email: string;
-      isPrimary: boolean;
-    };
-  };
+  customer : Customer;
 };
 
 const UpdateCustomer: FC<Props> = ({ customer }) => {
