@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/app/db";
-import { getSession } from "@/app/lib/action";
+import { createJWT, getExpiry, getSession } from "@/app/lib/action";
 import { uploadFileToS3 } from "@/app/lib/s3";
 import { JWTPayload, JWTVerifyResult } from "jose";
 import { checkIfUserIsAdmin } from "@/app/lib/apiMiddleware";
+import { cookies } from "next/headers";
 
 // POST /api/company
 // @desc: Create a new company
@@ -92,7 +93,28 @@ export async function POST(request: Request) {
         },
       },
     });
-    console.log(res);
+
+    // update JWT
+    const jwtPayload = {
+      email: session?.payload.email as string,
+      role: session?.payload.role as "Admin" | "User",
+      name: session?.payload.name as string,
+      id: session?.payload.id as number,
+      company: res.id,
+    };
+    const jwt = await createJWT(jwtPayload);
+    const expiry = getExpiry(jwt);
+    const expiryDate = new Date(expiry);
+    await prisma.user.update({
+      where: {
+        id: session?.payload.id as number,
+      },
+      data: {
+        jwt,
+        jwtExpiry: expiryDate,
+      },
+    });
+    cookies().set("token", jwt, { expires: expiryDate, httpOnly: true });
 
     return NextResponse.json(
       { message: "File upload Success", data: res },
