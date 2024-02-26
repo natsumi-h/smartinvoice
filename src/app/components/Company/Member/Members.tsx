@@ -104,14 +104,14 @@ const Members: FC<Props> = ({ members }) => {
       <UpdateMember
         opened={updateOpened}
         close={updateOpenedHandlers.close}
-        member={member}
+        member={member as User}
       />
 
       {/* Delete */}
       <DeleteMember
         opened={deleteOpened}
         close={deleteOpenedHandlers.close}
-        member={member}
+        member={member as User}
       />
     </>
   );

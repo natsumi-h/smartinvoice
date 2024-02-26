@@ -5,16 +5,12 @@ import { useForm, zodResolver } from "@mantine/form";
 import useToast from "@/app/hooks/useToast";
 import { useRouter } from "next/navigation";
 import { createNewUserSchema } from "@/app/schema/Company/schema";
+import { User } from "@prisma/client";
 
 type Props = {
   opened: boolean;
   close: () => void;
-  member: {
-    id: number;
-    name: string;
-    email: string;
-    role: "Admin" | "User";
-  };
+  member: User;
 };
 
 const UpdateMember: FC<Props> = ({ opened, close, member }) => {

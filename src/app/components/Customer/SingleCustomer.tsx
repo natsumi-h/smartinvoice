@@ -5,16 +5,11 @@ import { FC } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Contact from "./Contact/Contact";
 import CustomerInvoice from "./Invoice/CustomerInvoice";
+import { Contact as PrismaContact} from "@prisma/client";
 
 type Props = {
   id: string;
-  contacts: {
-    id: string;
-    name: string;
-    email: string;
-    isPrimary: boolean;
-    title: string;
-  }[];
+  contacts: PrismaContact[];
 };
 
 const SingleCustomer: FC<Props> = ({ contacts, id }) => {
