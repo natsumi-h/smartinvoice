@@ -20,19 +20,24 @@ import { DateInput } from "@mantine/dates";
 import { useRouter } from "next/navigation";
 import useToast from "@/app/hooks/useToast";
 import { addCommasToNumber } from "@/app/lib/addCommas";
+import { Contact, Customer as PrismaCustomer } from "@prisma/client";
 
 type Props = {
-  customers: {
-    id: number;
-    name: string;
-    contact: {
-      id: number;
-      name: string;
-    }[];
-  }[];
+  customers: Customer[];
+};
+
+type Customer = PrismaCustomer & {
+  contact: Contact[];
 };
 
 const CreateInvoice: FC<Props> = ({ customers }) => {
+  const [loadingDraft, setLoadingDraft] = useState<boolean>(false);
+  const [loadingIssue, setLoadingIssue] = useState<boolean>(false);
+  const { successToast, errorToast } = useToast();
+  const [itemLength, setItemLength] = useState<number>(1);
+  const [subtotal, setSubtotal] = useState<number>(0.0);
+  const [totaltax, setTotaltax] = useState<number>(0.0);
+  const [total, setTotal] = useState<number>(0.0);
   const router = useRouter();
   const form = useForm({
     initialValues: {
@@ -45,13 +50,6 @@ const CreateInvoice: FC<Props> = ({ customers }) => {
     },
   });
 
-  const [loadingDraft, setLoadingDraft] = useState<boolean>(false);
-  const [loadingIssue, setLoadingIssue] = useState<boolean>(false);
-  const { successToast, errorToast } = useToast();
-  const [itemLength, setItemLength] = useState<number>(1);
-  const [subtotal, setSubtotal] = useState<number>(0.0);
-  const [totaltax, setTotaltax] = useState<number>(0.0);
-  const [total, setTotal] = useState<number>(0.0);
   useEffect(() => {
     let newSubtotal = 0.0;
     let newTotaltax = 0.0;
@@ -132,7 +130,7 @@ const CreateInvoice: FC<Props> = ({ customers }) => {
     setItemLength((prev) => prev + 1);
     form.setValues({
       ...form.values,
-      [`description${itemLength}`]: "", 
+      [`description${itemLength}`]: "",
       [`qty${itemLength}`]: 1,
       [`unitPrice${itemLength}`]: "0.00",
       [`taxRate${itemLength}`]: "9",
@@ -169,7 +167,6 @@ const CreateInvoice: FC<Props> = ({ customers }) => {
       <Table.Td pl="0">
         <Select
           placeholder="Select title"
-          // data={["9%", "No Tax(0%)"]}
           data={[
             { label: "9%", value: "9" },
             { label: "No Tax(0%)", value: "0" },
@@ -250,6 +247,12 @@ const CreateInvoice: FC<Props> = ({ customers }) => {
                   label: contact.name,
                   value: contact.id.toString(),
                 }))}
+              // defaultValue={customers
+              //   .find(
+              //     (customer) => customer.id === Number(form.values?.customer)
+              //   )
+              //   ?.contact.find((contact) => contact.isPrimary)
+              //   ?.id.toString()}
               searchable
               limit={5}
               {...form.getInputProps("contact")}
@@ -292,7 +295,7 @@ const CreateInvoice: FC<Props> = ({ customers }) => {
           </UnstyledButton>
         </Box>
 
-        {/* 合計のテーブル */}
+        {/* Total Table */}
         <Table withRowBorders={false} maw="60%" mt="xl" ml={"auto"}>
           <Table.Tbody>
             <Table.Tr>
@@ -336,26 +339,27 @@ const CreateInvoice: FC<Props> = ({ customers }) => {
             </Table.Tr>
           </Table.Tbody>
         </Table>
+
+        <Flex justify="center" mt="xl" gap={"lg"}>
+          <Button
+            fullWidth
+            variant="outline"
+            loading={loadingDraft}
+            disabled={loadingIssue}
+            onClick={() => handleSubmit("draft")}
+          >
+            Save Draft
+          </Button>
+          <Button
+            fullWidth
+            loading={loadingIssue}
+            disabled={loadingDraft}
+            onClick={() => handleSubmit("issue")}
+          >
+            Issue Invoice
+          </Button>
+        </Flex>
       </form>
-      <Flex justify="center" mt="xl" gap={"lg"}>
-        <Button
-          fullWidth
-          variant="outline"
-          loading={loadingDraft}
-          disabled={loadingIssue}
-          onClick={() => handleSubmit("draft")}
-        >
-          Save Draft
-        </Button>
-        <Button
-          fullWidth
-          loading={loadingIssue}
-          disabled={loadingDraft}
-          onClick={() => handleSubmit("issue")}
-        >
-          Issue Invoice
-        </Button>
-      </Flex>
     </Box>
   );
 };

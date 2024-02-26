@@ -2,11 +2,13 @@ import { prisma } from "@/app/db";
 import { unstable_noStore as noStore } from "next/cache";
 import { getSession } from "./action";
 import { JWTPayload, JWTVerifyResult } from "jose";
+import { checkIfUserIsAdmin, checkIfUserIsLoggedIn } from "./apiMiddleware";
 
 export const getCustomers = async () => {
   noStore();
-  const session: JWTVerifyResult<JWTPayload> | null = await getSession();
   try {
+    await checkIfUserIsLoggedIn();
+    const session: JWTVerifyResult<JWTPayload> | null = await getSession();
     const res = await prisma.customer.findMany({
       where: {
         deleted: false,
@@ -31,9 +33,13 @@ export const getCustomers = async () => {
 export const getCustomer = async (id: string) => {
   noStore();
   try {
+    await checkIfUserIsLoggedIn();
+    const session: JWTVerifyResult<JWTPayload> | null = await getSession();
     const res = await prisma.customer.findUnique({
       where: {
         id: parseInt(id),
+        deleted: false,
+        company_id: session?.payload.company as number,
       },
       include: {
         contact: {
@@ -56,11 +62,13 @@ export const getCustomer = async (id: string) => {
 export const getContacts = async (id: string) => {
   noStore();
   try {
+    await checkIfUserIsLoggedIn();
     const res = await prisma.contact.findMany({
       where: {
         customer_id: parseInt(id),
         deleted: false,
       },
+      orderBy: [{ isPrimary: "desc" }, { name: "asc" }],
     });
     return res;
   } catch (e) {
@@ -72,18 +80,11 @@ export const getContacts = async (id: string) => {
 export const getCompany = async () => {
   noStore();
   try {
+    await checkIfUserIsAdmin();
     const session: JWTVerifyResult<JWTPayload> | null = await getSession();
-    if (!session || session.payload.role !== "Admin") {
-      throw new Error("Unauthorized");
-    }
-    const userId = session.payload.id as number;
-    const res = await prisma.company.findFirst({
+    const res = await prisma.company.findUnique({
       where: {
-        user: {
-          some: {
-            id: userId,
-          },
-        },
+        id: session?.payload.company as number,
       },
     });
     return res;
@@ -96,11 +97,9 @@ export const getCompany = async () => {
 export const getMembers = async () => {
   noStore();
   try {
+    await checkIfUserIsAdmin();
     const session: JWTVerifyResult<JWTPayload> | null = await getSession();
-    if (!session || session.payload.role !== "Admin") {
-      throw new Error("Unauthorized");
-    }
-    const userCompany = session.payload.company as number;
+    const userCompany = session?.payload.company as number;
     const res = await prisma.user.findMany({
       where: {
         company: {
@@ -115,6 +114,11 @@ export const getMembers = async () => {
         role: true,
         signupDone: true,
       },
+      orderBy: [{
+        role: "desc",
+      },{
+        name: "asc",
+      }]
     });
     return res;
   } catch (e) {
@@ -126,15 +130,14 @@ export const getMembers = async () => {
 export const getInvoice = async (id: string) => {
   noStore();
   try {
+    await checkIfUserIsLoggedIn();
     const session: JWTVerifyResult<JWTPayload> | null = await getSession();
-    if (!session) {
-      throw new Error("Unauthorized");
-    }
-    const usersCompany = session.payload.company as number;
+    const usersCompany = session?.payload.company as number;
 
     const res = await prisma.invoice.findUnique({
       where: {
         id: parseInt(id),
+        company_id: usersCompany,
       },
       include: {
         customer: true,
@@ -143,9 +146,6 @@ export const getInvoice = async (id: string) => {
       },
     });
 
-    if (res?.company_id !== usersCompany) {
-      throw new Error("Unauthorized");
-    }
     return res;
   } catch (e) {
     console.log(e);
@@ -156,13 +156,11 @@ export const getInvoice = async (id: string) => {
 export const getUser = async () => {
   noStore();
   try {
+    await checkIfUserIsLoggedIn();
     const session: JWTVerifyResult<JWTPayload> | null = await getSession();
-    if (!session) {
-      throw new Error("Unauthorized");
-    }
     const res = await prisma.user.findUnique({
       where: {
-        id: session.payload.id as number,
+        id: session?.payload.id as number,
       },
       select: {
         id: true,

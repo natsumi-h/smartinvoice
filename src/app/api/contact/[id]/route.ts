@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/app/db";
 import { getSession } from "@/app/lib/action";
+import { checkIfUserIsLoggedIn } from "@/app/lib/apiMiddleware";
 
 // POST /api/contact/:id
 // @desc: Update single contact
@@ -8,12 +9,8 @@ export async function POST(
   request: Request,
   { params }: { params: { id: string } }
 ) {
-  const session = await getSession();
-  if (!session) {
-    return NextResponse.json(new Error("Unauthorized"), { status: 401 });
-  }
-
   try {
+    await checkIfUserIsLoggedIn();
     const body = await request.json();
     const id = params.id;
 

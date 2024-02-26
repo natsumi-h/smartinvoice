@@ -4,6 +4,12 @@ import { getInvoice } from "@/app/lib/data";
 import Link from "next/link";
 import UpdateStatus from "@/app/components/Invoice/UpdateStatus";
 import DeleteInvoice from "@/app/components/Invoice/DeleteInvoice";
+import {
+  Contact,
+  Customer,
+  InvoiceItem,
+  Invoice as PrismaInvoice,
+} from "@prisma/client";
 
 const page = async ({
   params,
@@ -21,13 +27,13 @@ const page = async ({
         <Flex justify={"space-between"}>
           <Flex gap="md" align="center">
             <Title order={2}>Invoice</Title>
-            <Badge>{invoice.status}</Badge>
-            {(invoice.status === "Issued" || invoice.status === "Sent") && (
+            <Badge>{invoice?.status}</Badge>
+            {(invoice?.status === "Issued" || invoice?.status === "Sent") && (
               <UpdateStatus invoice={invoice} />
             )}
           </Flex>
           <Flex gap="md">
-            {invoice.invoiceUrl && (
+            {invoice?.invoiceUrl && (
               <Button
                 component={Link}
                 href={invoice.invoiceUrl}
@@ -37,7 +43,7 @@ const page = async ({
                 PDF
               </Button>
             )}
-            {invoice.status !== "Paid" && (
+            {invoice?.status !== "Paid" && (
               <Button
                 variant="outline"
                 component={Link}
@@ -46,13 +52,21 @@ const page = async ({
                 Update
               </Button>
             )}
-            {(invoice.status === "Draft" || invoice.status === "Issued") && (
+            {(invoice?.status === "Draft" || invoice?.status === "Issued") && (
               <DeleteInvoice id={id} />
             )}
           </Flex>
         </Flex>
 
-        <SingleInvoice invoice={invoice} />
+        <SingleInvoice
+          invoice={
+            invoice as PrismaInvoice & {
+              items: InvoiceItem[];
+              customer: Customer;
+              contact: Contact;
+            }
+          }
+        />
       </Box>
     </>
   );

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/app/db";
 import { getSession } from "@/app/lib/action";
 import { JWTPayload, JWTVerifyResult } from "jose";
+import { checkIfUserIsAdmin } from "@/app/lib/apiMiddleware";
 
 // POST /api/user/:id
 // @desc: Update a single member
@@ -9,12 +10,8 @@ export async function POST(
   request: Request,
   { params }: { params: { id: string } }
 ) {
-  const session: JWTVerifyResult<JWTPayload> | null = await getSession();
-  if (!session || !session.payload.role) {
-    return NextResponse.json(new Error("Unauthorized"), { status: 401 });
-  }
-
   try {
+    await checkIfUserIsAdmin();
     const body = await request.json();
     const id = params.id;
     const res = await prisma.user.update({

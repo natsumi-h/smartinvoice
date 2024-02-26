@@ -2,22 +2,16 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/app/db";
 import { getSession } from "@/app/lib/action";
 import { JWTPayload, JWTVerifyResult } from "jose";
+import { checkIfUserIsLoggedIn } from "@/app/lib/apiMiddleware";
 
 // POST /api/customer
 // @desc: Create a new customer
 export async function POST(request: Request) {
   try {
+    await checkIfUserIsLoggedIn();
     const session: JWTVerifyResult<JWTPayload> | null = await getSession();
-    if (!session) {
-      return NextResponse.json(
-        {
-          message: "Unauthorized",
-        },
-        { status: 401 }
-      );
-    }
-    const userId = session.payload.id as number;
-    const userCompany = session.payload.company as number;
+    const userId = session?.payload.id as number;
+    const userCompany = session?.payload.company as number;
 
     const req = await request.json();
     // ORM
@@ -71,16 +65,9 @@ export async function POST(request: Request) {
 // GET /api/customer
 // @desc: Get all customers
 export async function GET(request: NextRequest) {
+  await checkIfUserIsLoggedIn();
   const session: JWTVerifyResult<JWTPayload> | null = await getSession();
-  if (!session) {
-    return NextResponse.json(
-      {
-        message: "Unauthorized",
-      },
-      { status: 401 }
-    );
-  }
-  const usersCompany = session.payload.company as number;
+  const usersCompany = session?.payload.company as number;
   const searchParams = request.nextUrl.searchParams;
   const query = searchParams.get("query");
   console.log(query);

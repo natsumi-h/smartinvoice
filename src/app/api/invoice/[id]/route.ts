@@ -5,6 +5,7 @@ import { generateHtml, generatePdf } from "@/app/lib/pdf";
 import { uploadFileToS3 } from "@/app/lib/s3";
 import { JWTPayload, JWTVerifyResult } from "jose";
 import { InvoiceItem } from "@prisma/client";
+import { checkIfUserIsLoggedIn } from "@/app/lib/apiMiddleware";
 
 // POST /api/invoice/:id
 // @desc: Update a invoice
@@ -12,13 +13,9 @@ export async function POST(
   request: Request,
   { params }: { params: { id: string } }
 ) {
-  const id = params.id;
-  const session: JWTVerifyResult<JWTPayload> | null = await getSession();
-  if (!session) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 400 });
-  }
-
   try {
+    await checkIfUserIsLoggedIn();
+    const id = params.id;
     const req = await request.json();
     const { items: newItems, ...payload } = req.payload;
     delete payload.requestType;

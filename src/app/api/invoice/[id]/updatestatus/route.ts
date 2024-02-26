@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/app/db";
 import { getSession } from "@/app/lib/action";
 import { JWTPayload, JWTVerifyResult } from "jose";
+import { checkIfUserIsLoggedIn } from "@/app/lib/apiMiddleware";
 
 // POST /api/invoice/:id/updatestatus
 // @desc: Update a invoice status
@@ -9,13 +10,9 @@ export async function POST(
   request: Request,
   { params }: { params: { id: string } }
 ) {
-  const id = params.id;
-  const session: JWTVerifyResult<JWTPayload> | null = await getSession();
-  if (!session) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 400 });
-  }
-
   try {
+    await checkIfUserIsLoggedIn();
+    const id = params.id;
     const req = await request.json();
     const res = await prisma.invoice.update({
       where: {

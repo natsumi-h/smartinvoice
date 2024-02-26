@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/app/db";
 import { sendEmail } from "@/app/lib/sendEmail";
 import crypto from "crypto";
-import Error from "next/error";
 
 function generateRandomToken(length: number) {
   return crypto.randomBytes(length).toString("hex");

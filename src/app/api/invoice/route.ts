@@ -5,16 +5,15 @@ import { generateHtml, generatePdf } from "@/app/lib/pdf";
 import { uploadFileToS3 } from "@/app/lib/s3";
 import { JWTPayload, JWTVerifyResult } from "jose";
 import { InvoiceItem } from "@prisma/client";
+import { checkIfUserIsLoggedIn } from "@/app/lib/apiMiddleware";
 
 // POST /api/invoice
 // @desc: Create a new invoice
 export async function POST(request: Request) {
+  await checkIfUserIsLoggedIn();
   const session: JWTVerifyResult<JWTPayload> | null = await getSession();
-  if (!session) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 400 });
-  }
-  const userId = session.payload.id as number;
-  const usersCompany = session.payload.company as number;
+  const userId = session?.payload.id as number;
+  const usersCompany = session?.payload.company as number;
 
   try {
     const req = await request.json();
@@ -177,6 +176,9 @@ export async function GET(request: NextRequest) {
       include: {
         customer: true,
         items: true,
+      },
+      orderBy: {
+        issueDate: "desc",
       },
     });
     console.log(res);

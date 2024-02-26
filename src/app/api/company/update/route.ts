@@ -3,16 +3,15 @@ import { prisma } from "@/app/db";
 import { getSession } from "@/app/lib/action";
 import { uploadFileToS3 } from "@/app/lib/s3";
 import { JWTPayload, JWTVerifyResult } from "jose";
+import { checkIfUserIsAdmin } from "@/app/lib/apiMiddleware";
 
 // POST /api/company/update
 // @desc: Update a company
 export async function POST(request: Request) {
   try {
-     const session: JWTVerifyResult<JWTPayload> | null = await getSession();
-    if (!session || session.payload.role !== "Admin") {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 400 });
-    }
-    const usersCompany = session.payload.company as number;
+    await checkIfUserIsAdmin();
+    const session: JWTVerifyResult<JWTPayload> | null = await getSession();
+    const usersCompany = session?.payload.company as number;
     const formData = await request.formData();
 
     // Upload to S3

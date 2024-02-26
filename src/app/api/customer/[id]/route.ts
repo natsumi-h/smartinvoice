@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/app/db";
 import { getSession } from "@/app/lib/action";
 import { JWTPayload, JWTVerifyResult } from "jose";
+import { checkIfUserIsLoggedIn } from "@/app/lib/apiMiddleware";
 
 // GET /api/customer/:id
 // @desc: Get a single customer
@@ -10,6 +11,7 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
+    await checkIfUserIsLoggedIn();
     const id = params.id;
     const res = await prisma.customer.findUnique({
       where: {
@@ -35,15 +37,7 @@ export async function POST(
   { params }: { params: { id: string } }
 ) {
   try {
-    const session: JWTVerifyResult<JWTPayload> | null = await getSession();
-    if (!session) {
-      return NextResponse.json(
-        {
-          message: "Unauthorized",
-        },
-        { status: 401 }
-      );
-    }
+    await checkIfUserIsLoggedIn();
     const body = await request.json();
     const id = params.id;
     const res = await prisma.customer.update({
