@@ -47,7 +47,7 @@ Smartinvoice is an intuitive application designed for generating professional in
 * [Page Structure](https://docs.google.com/spreadsheets/d/1fEhIKWBwyQ6nHCPvhyeVGnzgMv6qiBL49Tq5Oz7gI-s/edit#gid=0)
 * [API Endpoints](https://docs.google.com/spreadsheets/d/1fEhIKWBwyQ6nHCPvhyeVGnzgMv6qiBL49Tq5Oz7gI-s/edit#gid=1534939420)
 * [Database ERD](https://drawsql.app/teams/natsumi-horis-team/diagrams/project4)
-  
+
 ![Screenshot 2024-02-25 at 11 20 27 PM](https://github.com/natsumi-h/smartinvoice/assets/88537845/92a2c4e4-d27c-445c-8720-db148a5eb8a7)
 
 
@@ -62,7 +62,7 @@ Smartinvoice is an intuitive application designed for generating professional in
   * User profile update
 * Security enhancement
   * Token handling
-  * S3 data protection  
+  * S3 data protection
 
 ## References and Inspirations
 * [Xero Online Invoicing Software](https://www.xero.com/sg/accounting-software/send-invoices/)
