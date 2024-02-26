@@ -5,6 +5,7 @@ import StatusCards from "./StatusCards";
 import { DatePickerInput } from "@mantine/dates";
 import { useEffect, useState } from "react";
 import { useForm } from "@mantine/form";
+import { Customer } from "@prisma/client";
 
 const InvoiceView = () => {
   const [filterLoading, setFilterLoading] = useState(false);
@@ -109,15 +110,13 @@ const InvoiceView = () => {
     setClearLoading(false);
   };
 
-  console.log(loading);
-
   return (
     <>
       {/* Filter */}
       <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
         <Flex mt="md" gap="md" align={"flex-end"} wrap={"wrap"}>
           <Select
-            data={customers.map((customer: any) => ({
+            data={customers.map((customer: Customer) => ({
               label: customer.name,
               value: customer.id.toString(),
             }))}

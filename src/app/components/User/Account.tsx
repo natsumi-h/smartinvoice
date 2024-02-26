@@ -2,9 +2,18 @@
 import { Box, Button, Table } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import useToast from "@/app/hooks/useToast";
-import { useState } from "react";
+import { FC, useState } from "react";
+import { Company, User } from "@prisma/client";
+import { JWTPayload, JWTVerifyResult } from "jose";
 
-const Account = ({ session, user }: any) => {
+type Props = {
+  session: JWTVerifyResult<JWTPayload> | null;
+  user: User & {
+    company: Company;
+  };
+};
+
+const Account: FC<Props> = ({ session, user }) => {
   const { successToast, errorToast } = useToast();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -12,7 +21,7 @@ const Account = ({ session, user }: any) => {
   const handleLogout = async () => {
     setLoading(true);
     try {
-      const email = session.payload.email;
+      const email = session?.payload.email;
       const res = await fetch("/api/user/signout", {
         method: "POST",
         body: JSON.stringify({ email }),
@@ -27,7 +36,7 @@ const Account = ({ session, user }: any) => {
         title: "Signout successful",
         message: "You are now signed out.",
       });
-    } catch (error:any) {
+    } catch (error: any) {
       console.log(error);
       setLoading(false);
       errorToast(error.message || "Logout failed. Please try again.");
@@ -71,9 +80,7 @@ const Account = ({ session, user }: any) => {
             <Table.Th pl="0">Role</Table.Th>
           </Table.Tr>
           <Table.Tr>
-            <Table.Td pl="0">
-              {user.role}
-            </Table.Td>
+            <Table.Td pl="0">{user.role}</Table.Td>
           </Table.Tr>
           {/* Org */}
           <Table.Tr>

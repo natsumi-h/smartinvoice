@@ -4,6 +4,7 @@ import { getSession } from "@/app/lib/action";
 import { generateHtml, generatePdf } from "@/app/lib/pdf";
 import { uploadFileToS3 } from "@/app/lib/s3";
 import { JWTPayload, JWTVerifyResult } from "jose";
+import { InvoiceItem } from "@prisma/client";
 
 // POST /api/invoice
 // @desc: Create a new invoice
@@ -34,16 +35,17 @@ export async function POST(request: Request) {
         issueDate: payload.issueDate,
         dueDate: payload.dueDate,
         items: {
-          create: payload.items.map((item: any) => {
+          create: payload.items.map((item: InvoiceItem) => {
             return {
               description: item.description,
               qty: item.qty,
               unitPrice: item.unitPrice,
-              taxRate: parseInt(item.taxRate),
+              // taxRate: parseInt(item.taxRate),
+              taxRate : item.taxRate,
               amount: (
                 item.qty *
                 Number(item.unitPrice) *
-                (item.taxRate === "9" ? 1.09 : 1)
+                (item.taxRate === 9 ? 1.09 : 1)
               ).toFixed(2),
             };
           }),

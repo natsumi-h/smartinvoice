@@ -1,13 +1,10 @@
 import { Box } from "@mantine/core";
-// import { redirect } from "next/navigation";
 import { getSession } from "../lib/action";
 import styles from "../components/Navbar/Navbar.module.css";
 import BurgerButton from "../components/Navbar/BurgerButton";
-import { JWTPayload, JWTVerifyResult } from "jose";
 import Navbar from "../components/Navbar/Navbar";
 
 const layout = async ({ children }: { children: React.ReactNode }) => {
-  // const session: JWTVerifyResult<JWTPayload> | null = await getSession();
   const session = await getSession();
   return (
     <Box style={{ position: "relative" }}>

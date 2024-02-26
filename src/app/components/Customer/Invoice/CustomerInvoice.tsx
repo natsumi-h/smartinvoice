@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import dayjs from "dayjs";
 import { useParams } from "next/navigation";
 import { addCommasToNumber } from "@/app/lib/addCommas";
+import { Invoice } from "@prisma/client";
 
 const CustomerInvoice = () => {
   const [invoices, setInvoices] = useState([]);
@@ -21,7 +22,7 @@ const CustomerInvoice = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const rows = invoices.map((invoice: any) => (
+  const rows = invoices.map((invoice: Invoice) => (
     <Table.Tr
       key={invoice.id}
       style={{

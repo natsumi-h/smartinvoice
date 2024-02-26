@@ -4,6 +4,7 @@ import { getSession } from "@/app/lib/action";
 import { generateHtml, generatePdf } from "@/app/lib/pdf";
 import { uploadFileToS3 } from "@/app/lib/s3";
 import { JWTPayload, JWTVerifyResult } from "jose";
+import { InvoiceItem } from "@prisma/client";
 
 // POST /api/invoice/:id
 // @desc: Update a invoice
@@ -27,7 +28,7 @@ export async function POST(
       where: { invoice_id: parseInt(id) },
     });
 
-    const updatePromises = newItems.map((item: any) => {
+    const updatePromises = newItems.map((item: InvoiceItem) => {
       // If item has an id and it exists in the existingItems array, update it
       if (item.id && existingItems.some((ei) => ei.id === item.id)) {
         return prisma.invoiceItem.update({
@@ -44,7 +45,7 @@ export async function POST(
 
     // Delete items that are not in the newItems array
     const deletePromises = existingItems
-      .filter((ei) => !newItems.some((item: any) => item.id === ei.id))
+      .filter((ei) => !newItems.some((item: InvoiceItem) => item.id === ei.id))
       .map((item) => prisma.invoiceItem.delete({ where: { id: item.id } }));
 
     // Wait for all updates and deletes to complete
