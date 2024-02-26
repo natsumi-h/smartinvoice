@@ -55,6 +55,7 @@ const InvoiceView = () => {
 
   const fetchInvoices = async (values: Record<string, unknown>) => {
     try {
+      setInvoices([]);
       const queryParams = [];
       const { customer, issueDate, dueDate, status } = values;
 
