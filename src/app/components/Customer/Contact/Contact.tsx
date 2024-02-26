@@ -1,9 +1,7 @@
 "use client";
-import Link from "next/link";
 import styles from "../CustomerList.module.css";
 import { FC, useState } from "react";
 import {
-  Anchor,
   Badge,
   Box,
   Button,

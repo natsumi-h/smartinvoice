@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
   const company = session.payload.company;
 
   //TODO:Duplicate email check among all orgs?
-  // TODO：Duplicate email check within same org
+  //TODO：Duplicate email check within same org
 
   try {
     const res = await prisma.user.create({

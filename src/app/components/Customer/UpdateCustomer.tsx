@@ -108,31 +108,6 @@ const UpdateCustomer: FC<Props> = ({ customer }) => {
             {...form.getInputProps("phone")}
           />
 
-          {/* Primary Person */}
-          {/* <Text fw={500} size="sm" mt="lg">
-            Primary Contact
-          </Text>
-          <Flex gap="lg">
-            <TextInput
-              placeholder="Name"
-              flex={1}
-              {...form.getInputProps("contactName")}
-            />
-            <Select
-              placeholder="Select title"
-              data={["Mr.", "Mrs.", "Ms.", "Dr.", "Prof."]}
-              defaultValue="Mr."
-              allowDeselect={false}
-              {...form.getInputProps("title")}
-            />
-          </Flex>
-
-          <TextInput
-            placeholder="Email"
-            mt="lg"
-            {...form.getInputProps("email")}
-          /> */}
-
           <Group justify="center" mt="xl">
             <Button fullWidth type="submit">
               Update

@@ -15,7 +15,7 @@ import Link from "next/link";
 import styles from "../../Customer/CustomerList.module.css";
 import UpdateMember from "./UpdateMember";
 import DeleteMember from "./DeleteMember";
-import { Company, User } from "@prisma/client";
+import { User } from "@prisma/client";
 
 type Props = {
   members: User[];

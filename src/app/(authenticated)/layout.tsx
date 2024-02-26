@@ -11,10 +11,6 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
       <Navbar session={session} />
       <BurgerButton />
       <Box
-        // px="100px"
-        // py="xl"
-        // ml={rem(300)}
-        // mih={"100vh"}
         className={styles.content}
       >
         {children}

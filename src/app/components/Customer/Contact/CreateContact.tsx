@@ -78,7 +78,6 @@ const CreateContact: FC<Props> = ({ opened, close, customerId }) => {
             placeholder="Select title"
             mt="lg"
             data={["Mr.", "Mrs.", "Ms.", "Dr.", "Prof."]}
-            // defaultValue="Mr."
             allowDeselect={false}
             {...form.getInputProps("title")}
           />

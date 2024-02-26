@@ -130,11 +130,9 @@ const CreateInvoice: FC<Props> = ({ customers }) => {
 
   const handleAddItem = () => {
     setItemLength((prev) => prev + 1);
-
-    // フォームの状態を更新して新しい項目の初期値をセット
     form.setValues({
       ...form.values,
-      [`description${itemLength}`]: "", // 初期値を設定
+      [`description${itemLength}`]: "", 
       [`qty${itemLength}`]: 1,
       [`unitPrice${itemLength}`]: "0.00",
       [`taxRate${itemLength}`]: "9",

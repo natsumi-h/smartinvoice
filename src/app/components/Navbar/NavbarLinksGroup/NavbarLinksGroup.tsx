@@ -3,7 +3,6 @@ import {
   Group,
   Box,
   Collapse,
-  ThemeIcon,
   Text,
   UnstyledButton,
   rem,
@@ -20,7 +19,6 @@ interface LinksGroupProps {
 }
 
 export function LinksGroup({
-  icon: Icon,
   label,
   initiallyOpened,
   links,
@@ -46,9 +44,6 @@ export function LinksGroup({
       >
         <Group justify="space-between" gap={0}>
           <Box style={{ display: "flex", alignItems: "center" }}>
-            {/* <ThemeIcon variant="light" size={30}>
-              <Icon style={{ width: rem(18), height: rem(18) }} />
-            </ThemeIcon> */}
             <Box ml="md">{label}</Box>
           </Box>
           {hasLinks && (
@@ -68,21 +63,3 @@ export function LinksGroup({
     </>
   );
 }
-
-// const mockdata = {
-//   label: "Releases",
-//   icon: IconCalendarStats,
-//   links: [
-//     { label: "Upcoming releases", link: "/" },
-//     { label: "Previous releases", link: "/" },
-//     { label: "Releases schedule", link: "/" },
-//   ],
-// };
-
-// export function NavbarLinksGroup() {
-//   return (
-//     <Box mih={220} p="md">
-//       <LinksGroup {...mockdata} />
-//     </Box>
-//   );
-// }
