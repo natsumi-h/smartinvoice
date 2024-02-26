@@ -37,23 +37,3 @@ export function hashDataWithSaltRounds(
     })
     .toString(cryptojs.enc.Base64);
 }
-
-// export function storeToken(token: string) {
-//   localStorage.setItem("token", token);
-// }
-
-// ローカルストレージにトークンがある場合は、デコードしてペイロードを返す
-// export function getToken() {
-//   const token = localStorage.getItem("token");
-//   if (!token) return null;
-//   const payload = JSON.parse(atob(token.split(".")[1]));
-//   if (payload.exp < Date.now() / 1000) {
-//     localStorage.removeItem("token");
-//     return null;
-//   }
-//   return token;
-// }
-
-// export function removeToken() {
-//   localStorage.removeItem("token");
-// }

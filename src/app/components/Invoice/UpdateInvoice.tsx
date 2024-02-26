@@ -20,9 +20,10 @@ import { DateInput } from "@mantine/dates";
 import { useRouter } from "next/navigation";
 import useToast from "@/app/hooks/useToast";
 import { addCommasToNumber } from "@/app/lib/addCommas";
+import { Customer } from "@prisma/client";
 
 type Props = {
-  customers: { id: number; name: string }[];
+  customers : Customer[];
   invoice: any;
 };
 const UpdateInvoice: FC<Props> = ({ invoice }) => {
@@ -33,7 +34,7 @@ const UpdateInvoice: FC<Props> = ({ invoice }) => {
       acc[`description${index}`] = item.description;
       acc[`qty${index}`] = item.qty;
       acc[`unitPrice${index}`] = item.unitPrice;
-      acc[`taxRate${index}`] = item.taxRate === 9 ? "9%" : "No Tax(0%)";
+      acc[`taxRate${index}`] = item.taxRate === 9 ? "9" : "0";
       return acc;
     },
     {}
@@ -67,7 +68,7 @@ const UpdateInvoice: FC<Props> = ({ invoice }) => {
       newTotaltax +=
         (form.values as { [key: string]: any })[`qty${i}`] *
         Number((form.values as { [key: string]: any })[`unitPrice${i}`]) *
-        ((form.values as { [key: string]: any })[`taxRate${i}`] === "9%"
+        ((form.values as { [key: string]: any })[`taxRate${i}`] === "9"
           ? 0.09
           : 0);
     }
@@ -80,7 +81,7 @@ const UpdateInvoice: FC<Props> = ({ invoice }) => {
   }, [form.values, itemLength]);
 
   const handleSubmit = async (type: "issue" | "draft" | "update") => {
-    const values: any = form.values;
+    const values: Record<string, unknown> = form.values;
     try {
       type === "draft" ? setLoadingDraft(true) : setLoadingIssue(true);
       const itemValues = [];
@@ -89,11 +90,11 @@ const UpdateInvoice: FC<Props> = ({ invoice }) => {
           description: values[`description${i}`],
           qty: values[`qty${i}`],
           unitPrice: values[`unitPrice${i}`],
-          taxRate: values[`taxRate${i}`] === "9%" ? 9 : 0,
+          taxRate: values[`taxRate${i}`] === "9" ? 9 : 0,
           amount: (
             (values[`qty${i}`] as number) *
             Number(values[`unitPrice${i}`]) *
-            (values[`taxRate${i}`] === "9%" ? 1.09 : 1)
+            (values[`taxRate${i}`] === "9" ? 1.09 : 1)
           ).toFixed(2),
         });
       }
@@ -132,13 +133,12 @@ const UpdateInvoice: FC<Props> = ({ invoice }) => {
 
   const handleAddItem = () => {
     setItemLength((prev) => prev + 1);
-    // フォームの状態を更新して新しい項目の初期値をセット
     form.setValues({
       ...form.values,
-      [`description${itemLength}`]: "", // 初期値を設定
+      [`description${itemLength}`]: "",
       [`qty${itemLength}`]: 1,
       [`unitPrice${itemLength}`]: "0.00",
-      [`taxRate${itemLength}`]: "9%",
+      [`taxRate${itemLength}`]: "9",
     });
   };
 
@@ -172,8 +172,11 @@ const UpdateInvoice: FC<Props> = ({ invoice }) => {
       <Table.Td pl="0">
         <Select
           placeholder="Select title"
-          data={["9%", "No Tax(0%)"]}
-          defaultValue="9%"
+          data={[
+            { label: "9%", value: "9" },
+            { label: "No Tax(0%)", value: "0" },
+          ]}
+          defaultValue="9"
           allowDeselect={false}
           {...form.getInputProps(`taxRate${index}`)}
         />
@@ -194,7 +197,7 @@ const UpdateInvoice: FC<Props> = ({ invoice }) => {
                   ) *
                   ((form.values as { [key: string]: any })[
                     `taxRate${index}`
-                  ] === "9%"
+                  ] === "9"
                     ? 1.09
                     : 1)
               : 0

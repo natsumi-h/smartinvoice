@@ -11,47 +11,50 @@ import {
   Group,
   Button,
   Flex,
-  Box,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import Link from "next/link";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { zodResolver } from "mantine-form-zod-resolver";
+import { signupSchema } from "@/app/schema/User/schema";
 
 const SignupForm = () => {
+  const [loading, setLoading] = useState(false);
+  const { successToast, errorToast } = useToast();
   const form = useForm({
     initialValues: {
       name: "",
       email: "",
       phone: "",
       agreewithtnc: false,
+      newsletter: false,
     },
+    validate: zodResolver(signupSchema),
   });
-  const [loading, setLoading] = useState(false);
-  const { successToast, errorToast } = useToast();
-  const router = useRouter();
 
-  const handleSubmit = async (values: any) => {
+  const handleSubmit = async (values: Record<string, unknown>) => {
     setLoading(true);
-    // valuesからagreewithtncを削除
     delete values.agreewithtnc;
+    delete values.newsletter;
     try {
       const response = await fetch("/api/user/signup", {
         method: "POST",
         body: JSON.stringify(values),
       });
+      if (!response.ok) {
+        throw new Error("Invalid credentials");
+      }
       const data = await response.json();
-      console.log(values);
       setLoading(false);
-      // router.push("/");
       form.reset();
       successToast({
         title: "Signup request sent",
         message: "You will receive an email to verify your account shortly.",
       });
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      console.log(error.message);
       setLoading(false);
+      errorToast(error.message);
     }
   };
 
@@ -88,7 +91,10 @@ const SignupForm = () => {
           />
 
           <Group justify="space-between" mt="lg">
-            <Checkbox label="Subscribe SmartInvoice newsletter" />
+            <Checkbox
+              label="Subscribe SmartInvoice newsletter"
+              {...form.getInputProps("newsletter")}
+            />
             <Flex gap={"sm"} align={"center"}>
               <Checkbox {...form.getInputProps("agreewithtnc")} />
               <Text fz={"sm"}>

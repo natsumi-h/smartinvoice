@@ -4,16 +4,21 @@ import { FC } from "react";
 import { useRouter } from "next/navigation";
 import dayjs from "dayjs";
 import { addCommasToNumber } from "@/app/lib/addCommas";
+import { Invoice as PrismaInvoice, Customer } from "@prisma/client";
+
+type Invoice = PrismaInvoice & {
+  customer: Customer;
+};
 
 type Props = {
-  invoices: any;
+  invoices: Invoice[];
   loading: boolean;
 };
 
 const InvoiceList: FC<Props> = ({ invoices, loading }) => {
   const router = useRouter();
 
-  const rows = invoices.map((invoice: any) => (
+  const rows = invoices.map((invoice) => (
     <Table.Tr
       key={invoice.id}
       style={{

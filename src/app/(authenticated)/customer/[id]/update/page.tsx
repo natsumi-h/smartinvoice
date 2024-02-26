@@ -1,23 +1,7 @@
 import UpdateCustomer from "@/app/components/Customer/UpdateCustomer";
 import { getCustomer } from "@/app/lib/data";
 import { Box, Title } from "@mantine/core";
-
-// const getCustomer = async (id: string) => {
-//   try {
-//     const res = await fetch(
-//       `${process.env.NEXT_PUBLIC_BASE_URL}/api/customer/${id}`
-//     );
-
-//     if (!res.ok) {
-//       // This will activate the closest `error.js` Error Boundary
-//       throw new Error("Failed to fetch data");
-//     }
-//     const data = await res.json();
-//     return data;
-//   } catch (e) {
-//     console.log(e);
-//   }
-// };
+import { Customer } from "@prisma/client";
 
 const page = async ({
   params,
@@ -27,12 +11,12 @@ const page = async ({
   };
 }) => {
   const { id } = params;
-  const customer: any = await getCustomer(id);
+  const customer = await getCustomer(id);
 
   return (
     <Box>
       <Title order={2}>Update Customer</Title>
-      <UpdateCustomer customer={customer} />
+      <UpdateCustomer customer={customer as Customer} />
     </Box>
   );
 };

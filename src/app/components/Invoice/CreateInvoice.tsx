@@ -76,7 +76,7 @@ const CreateInvoice: FC<Props> = ({ customers }) => {
   }, [form.values, itemLength]);
 
   const handleSubmit = async (type: "issue" | "draft") => {
-    const values: any = form.values;
+    const values: Record<string, unknown> = form.values;
     try {
       type == "issue" ? setLoadingIssue(true) : setLoadingDraft(true);
       const itemValues = [];
@@ -85,11 +85,11 @@ const CreateInvoice: FC<Props> = ({ customers }) => {
           description: values[`description${i}`],
           qty: values[`qty${i}`],
           unitPrice: values[`unitPrice${i}`],
-          taxRate: values[`taxRate${i}`] === "9" ? "9" : "0",
+          taxRate: values[`taxRate${i}`] === "9" ? 9 : 0,
           amount: (
             (values[`qty${i}`] as number) *
             Number(values[`unitPrice${i}`]) *
-            (values[`taxRate${i}`] === "9%" ? 1.09 : 1)
+            (values[`taxRate${i}`] === "9" ? 1.09 : 1)
           ).toFixed(2),
         });
       }
@@ -130,14 +130,12 @@ const CreateInvoice: FC<Props> = ({ customers }) => {
 
   const handleAddItem = () => {
     setItemLength((prev) => prev + 1);
-
-    // フォームの状態を更新して新しい項目の初期値をセット
     form.setValues({
       ...form.values,
-      [`description${itemLength}`]: "", // 初期値を設定
+      [`description${itemLength}`]: "", 
       [`qty${itemLength}`]: 1,
       [`unitPrice${itemLength}`]: "0.00",
-      [`taxRate${itemLength}`]: "9%",
+      [`taxRate${itemLength}`]: "9",
     });
   };
 
@@ -176,7 +174,7 @@ const CreateInvoice: FC<Props> = ({ customers }) => {
             { label: "9%", value: "9" },
             { label: "No Tax(0%)", value: "0" },
           ]}
-          defaultValue={"9%"}
+          defaultValue={"9"}
           allowDeselect={false}
           {...form.getInputProps(`taxRate${index}`)}
         />

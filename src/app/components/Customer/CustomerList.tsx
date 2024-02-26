@@ -13,13 +13,9 @@ import styles from "./CustomerList.module.css";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useForm } from "@mantine/form";
+import { Customer as PrismaCustomer } from "@prisma/client";
 
-type Customer = {
-  id: string;
-  name: string;
-  street: string;
-  city: string;
-  postcode: string;
+type Customer = PrismaCustomer & {
   contact: {
     email: string;
     isPrimary: boolean;
@@ -111,8 +107,8 @@ const CustomerList = () => {
                 <Text>
                   {
                     (
-                      customer?.contact?.find(
-                        (contact: any) => contact.isPrimary === true
+                      customer.contact.find(
+                        (contact) => contact.isPrimary === true
                       ) || {}
                     ).email
                   }

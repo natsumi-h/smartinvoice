@@ -26,9 +26,6 @@ const DeleteMember: FC<Props> = ({ opened, close, member }) => {
         method: "POST",
         body: JSON.stringify({ deleted: true }),
       });
-      // const response = await fetch(`/api/user/${member.id}/`, {
-      //   method: "DELETE",
-      // });
       const data = await response.json();
 
       setLoading(false);

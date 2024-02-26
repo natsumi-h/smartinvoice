@@ -16,36 +16,25 @@ import { useRouter } from "next/navigation";
 import useToast from "@/app/hooks/useToast";
 import { hashDataWithSaltRounds } from "@/app/lib/security";
 import { zodResolver } from "mantine-form-zod-resolver";
-import { z } from "zod";
+import { signinSchema } from "@/app/schema/User/schema";
 
 const SigninForm = () => {
   const [loading, setLoading] = useState(false);
   const { successToast, errorToast } = useToast();
   const router = useRouter();
 
-  const schema = z.object({
-    email: z
-      .string({
-        required_error: "Email is required",
-      })
-      .email({ message: "Invalid email" }),
-    password: z.string({
-      required_error: "Password is required",
-    }),
-  });
-
   const form = useForm({
-    validate: zodResolver(schema),
+    validate: zodResolver(signinSchema),
     initialValues: {
       name: "",
       password: "",
     },
   });
 
-  const handleSubmit = async (values: any) => {
+  const handleSubmit = async (values: Record<string, unknown>) => {
     setLoading(true);
     try {
-      const encodedEmail = encodeURIComponent(values.email);
+      const encodedEmail = encodeURIComponent(values.email as string);
       const response = await fetch(`/api/user/signin?email=${encodedEmail}`, {
         method: "GET",
       });
@@ -54,7 +43,7 @@ const SigninForm = () => {
       }
       const data = await response.json();
       const hashedPassword = hashDataWithSaltRounds(
-        values.password,
+        values.password as string,
         data.salt,
         data.iterations
       );
@@ -74,7 +63,6 @@ const SigninForm = () => {
       if (signinData.company) {
         router.push("/invoice");
       } else {
-        // router.push("/company/onboarding");
         router.push("/onboarding");
       }
       successToast({

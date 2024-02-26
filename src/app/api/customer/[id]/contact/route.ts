@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/app/db";
+import { getSession } from "@/app/lib/action";
 
 // POST /api/customer/:id/contact
 // @desc: Create a new contact for a customer
@@ -7,6 +8,11 @@ export async function POST(
   request: Request,
   { params }: { params: { id: string } }
 ) {
+  const session = await getSession();
+  if (!session) {
+    return NextResponse.json(new Error("Unauthorized"), { status: 401 });
+  }
+
   try {
     const body = await request.json();
     const id = params.id;
@@ -18,13 +24,14 @@ export async function POST(
       },
     });
 
-    // もしbody.isPrimaryがtrueで、プライマリコンタクトが存在する場合、primary.isPrimaryをfalseにする
     if (body.isPrimary) {
-      // 同じカスタマーのコンタクトから、プライマリコンタクトを取得
       const primary = await prisma.contact.findFirst({
         where: {
           customer_id: parseInt(id),
           isPrimary: true,
+          id: {
+            not: res.id,
+          },
         },
       });
       if (primary) {
@@ -40,8 +47,11 @@ export async function POST(
     }
 
     return NextResponse.json(res, { status: 201 });
-  } catch (e) {
+  } catch (e: any) {
     console.error(e);
-    throw e;
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
   }
 }

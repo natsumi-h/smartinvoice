@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/app/db";
 import { getSession } from "@/app/lib/action";
+import { JWTPayload, JWTVerifyResult } from "jose";
 
 // GET /api/invoice/customer/:id
 // @desc: Get all invoices for a single customer
@@ -11,11 +12,11 @@ export async function GET(
   try {
     const customerId = params.id; //6
 
-    const session: any = await getSession();
+    const session: JWTVerifyResult<JWTPayload> | null = await getSession();
     if (!session) {
       throw new Error("Unauthorized");
     }
-    const usersCompany = session.payload.company; //5
+    const usersCompany = session.payload.company as number;
 
     const res = await prisma.invoice.findMany({
       where: {

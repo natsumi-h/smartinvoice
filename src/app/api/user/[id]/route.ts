@@ -1,14 +1,15 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/app/db";
 import { getSession } from "@/app/lib/action";
+import { JWTPayload, JWTVerifyResult } from "jose";
 
 // POST /api/user/:id
-// @desc: Update a single contact
+// @desc: Update a single member
 export async function POST(
   request: Request,
   { params }: { params: { id: string } }
 ) {
-  const session: any = await getSession();
+  const session: JWTVerifyResult<JWTPayload> | null = await getSession();
   if (!session || !session.payload.role) {
     return NextResponse.json(new Error("Unauthorized"), { status: 401 });
   }
@@ -26,32 +27,10 @@ export async function POST(
       },
     });
     return NextResponse.json(res, { status: 200 });
-  } catch (e) {
+  } catch (e: any) {
     console.error(e);
-    throw e;
+    const message = e.message || "Internal Server Error";
+    const status = e.status || 500;
+    return NextResponse.json({ error: message }, { status });
   }
 }
-
-// DELETE /api/user/:id
-// @desc: Delete a single contact
-// export async function DELETE(
-//   request: Request,
-//   { params }: { params: { id: string } }
-// ) {
-//   try {
-//     const session: any = await getSession();
-//     if (!session || !session.payload.role) {
-//       return NextResponse.json(new Error("Unauthorized"), { status: 401 });
-//     }
-//     const id = params.id;
-//     const res = await prisma.user.delete({
-//       where: {
-//         id: parseInt(id),
-//       },
-//     });
-//     return NextResponse.json(res, { status: 200 });
-//   } catch (e) {
-//     console.error(e);
-//     throw e;
-//   }
-// }

@@ -13,7 +13,7 @@ const page = async ({
   };
 }) => {
   const { id } = params;
-  const invoice: any = await getInvoice(id);
+  const invoice = await getInvoice(id);
 
   return (
     <>

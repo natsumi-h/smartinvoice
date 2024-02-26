@@ -1,5 +1,3 @@
-/* style={{ width: "calc(25% - 16px * 3 / 4)" }} */
-
 .card {
   width: calc(20% - 1.25rem * 4 / 5);
   @media (max-width: $mantine-breakpoint-md) {

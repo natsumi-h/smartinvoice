@@ -1,6 +1,7 @@
 "use server";
 import { cookies } from "next/headers";
-import { jwtVerify, SignJWT, decodeJwt } from "jose";
+import { jwtVerify, SignJWT, decodeJwt, JWTPayload } from "jose";
+import { User } from "@prisma/client";
 
 export const getSession = async () => {
   const session = cookies().get("token")?.value;
@@ -19,7 +20,15 @@ export const getSession = async () => {
   return decoded;
 };
 
-export const createJWT = async (payload: any) => {
+type Payload = {
+  email: User["email"];
+  role: User["role"];
+  name: User["name"];
+  id: User["id"];
+  company: User["company_id"];
+};
+
+export const createJWT = async (payload: Payload) => {
   const secret = process.env.SECRET;
   if (!secret) {
     throw new Error("SECRET is not set");
@@ -36,6 +45,7 @@ export const createJWT = async (payload: any) => {
 };
 
 export const getExpiry = (token: string) => {
-  const decoded: any = decodeJwt(token);
+  const decoded: JWTPayload = decodeJwt(token);
+  if(!decoded.exp) throw new Error("Token has no expiry");
   return decoded.exp * 1000;
 };

@@ -19,20 +19,26 @@ import {
 } from "@tabler/icons-react";
 import { LinksGroup } from "./NavbarLinksGroup/NavbarLinksGroup";
 import classes from "./Navbar.module.css";
-import { UserButton } from "./UserButton/UserButton";
 import cx from "clsx";
 import Link from "next/link";
 import logo from "../../assets/images/logo.png";
 import NextImage from "next/image";
+import { JWTPayload, JWTVerifyResult } from "jose";
+import { FC } from "react";
+import UserButton from "./UserButton/UserButton";
 
-export function Navbar({ session }: any) {
+type Props = {
+  session: JWTVerifyResult<JWTPayload> | null;
+};
+
+ const Navbar: FC<Props> = ({ session }) => {
   const { setColorScheme } = useMantineColorScheme();
   const computedColorScheme = useComputedColorScheme("light", {
     getInitialValueInEffect: true,
   });
 
   const mockdata =
-    session.payload.role === "Admin"
+    session?.payload.role === "Admin"
       ? [
           {
             label: "Invoice",
@@ -135,4 +141,6 @@ export function Navbar({ session }: any) {
       </div>
     </nav>
   );
-}
+};
+
+export default Navbar;

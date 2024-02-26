@@ -3,9 +3,19 @@ import { Box, Flex, Table, Text } from "@mantine/core";
 import { FC } from "react";
 import dayjs from "dayjs";
 import { addCommasToNumber } from "@/app/lib/addCommas";
+import {
+  Invoice as PrismaInvoice,
+  InvoiceItem,
+  Customer,
+  Contact,
+} from "@prisma/client";
 
 type Props = {
-  invoice: any;
+  invoice: PrismaInvoice & {
+    items: InvoiceItem[];
+    customer: Customer;
+    contact: Contact;
+  };
 };
 
 const SingleInvoice: FC<Props> = ({ invoice }) => {
@@ -15,7 +25,7 @@ const SingleInvoice: FC<Props> = ({ invoice }) => {
   const address = `${customer?.street}, ${customer?.city}, ${customer?.state}, ${customer?.postcode}`;
 
   // Item
-  const rows = items.map((item: any) => (
+  const rows = items.map((item: InvoiceItem) => (
     <Table.Tr key={item.id}>
       <Table.Td pl="0">
         <Text>{item.description}</Text>
@@ -58,11 +68,11 @@ const SingleInvoice: FC<Props> = ({ invoice }) => {
         <Flex gap="md">
           <Box>
             <Text fw={"bold"}>Issue Date</Text>
-            <Text>{dayjs(invoice.issudate).format("DD MMM YYYY")}</Text>
+            <Text>{dayjs(invoice.issueDate).format("DD MMM YYYY")}</Text>
           </Box>
           <Box>
             <Text fw={"bold"}>Due Date</Text>
-            <Text>{dayjs(invoice.duedate).format("DD MMM YYYY")}</Text>
+            <Text>{dayjs(invoice.dueDate).format("DD MMM YYYY")}</Text>
           </Box>
         </Flex>
       </Flex>

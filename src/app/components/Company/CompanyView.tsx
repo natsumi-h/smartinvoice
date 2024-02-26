@@ -5,41 +5,11 @@ import { usePathname, useRouter } from "next/navigation";
 import { FC } from "react";
 import CompanyDetail from "./CompanyDetail";
 import Members from "./Member/Members";
+import { Company, User } from "@prisma/client";
 
 type Props = {
-  company: {
-    id: number;
-    name: string;
-    uen: string;
-    street: string;
-    postcode: string;
-    phone: string;
-    logoUrl: string;
-    city: string;
-    state: string;
-    bankname: string;
-    branchname: string;
-    swiftcode: string;
-    accountname: string;
-    accounttype: string;
-    bankcode: string;
-    branchnumber: string;
-    accountnumber: string;
-    user: {
-      id: number;
-      name: string;
-      email: string;
-      signupDone: boolean;
-      role: "Admin" | "User";
-    }[];
-  };
-  members?: {
-    id: number;
-    name: string;
-    email: string;
-    role: "Admin" | "User";
-    deleted: boolean;
-  }[];
+  company: Company;
+  members? : User[];
 };
 
 const CompanyView: FC<Props> = ({ company, members }) => {
@@ -77,7 +47,7 @@ const CompanyView: FC<Props> = ({ company, members }) => {
       </Tabs.Panel>
 
       <Tabs.Panel value="member" py="lg">
-        <Members company={company} members={members}/>
+        <Members members={members as User[]} />
       </Tabs.Panel>
     </Tabs>
   );

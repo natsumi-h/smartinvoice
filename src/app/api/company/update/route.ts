@@ -2,20 +2,21 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/app/db";
 import { getSession } from "@/app/lib/action";
 import { uploadFileToS3 } from "@/app/lib/s3";
+import { JWTPayload, JWTVerifyResult } from "jose";
 
 // POST /api/company/update
 // @desc: Update a company
 export async function POST(request: Request) {
   try {
-    const session: any = await getSession();
+     const session: JWTVerifyResult<JWTPayload> | null = await getSession();
     if (!session || session.payload.role !== "Admin") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 400 });
     }
-    const usersCompany = session.payload.company;
-
+    const usersCompany = session.payload.company as number;
     const formData = await request.formData();
-    const file = formData.get("file") as File;
 
+    // Upload to S3
+    const file = formData.get("file") as File;
     let fileUrl;
     if (file) {
       const buffer = Buffer.from(await file.arrayBuffer());
@@ -27,8 +28,6 @@ export async function POST(request: Request) {
         return `file_${timestamp}_${randomString}.${fileExtension}`;
       };
       const uniqueFileName = generateUniqueFileName(file.name);
-
-      // S3へのアップロード処理
       fileUrl = await uploadFileToS3(buffer, uniqueFileName, contentType);
       console.log(fileUrl);
     }
@@ -90,7 +89,7 @@ export async function POST(request: Request) {
       logoUrl: fileUrl,
     };
 
-    //ORM処理
+    //ORM
     const res = await prisma.company.update({
       where: { id: usersCompany },
       data: file ? dataWithFile : dataWithoutFile,
@@ -101,8 +100,10 @@ export async function POST(request: Request) {
       { message: "File upload Success", data: res },
       { status: 200 }
     );
-  } catch (e) {
+  } catch (e: any) {
     console.log(e);
-    return NextResponse.json({ error: "Error" }, { status: 400 });
+    const message = e.message || "An error occurred";
+    const status = e.status || 500;
+    return NextResponse.json({ error: message }, { status });
   }
 }

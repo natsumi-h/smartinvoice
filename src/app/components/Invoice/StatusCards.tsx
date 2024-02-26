@@ -2,48 +2,53 @@ import { Card, Flex, Skeleton, Text } from "@mantine/core";
 import styles from "./StatusCards.module.css";
 import { FC } from "react";
 import { addCommasToNumber } from "@/app/lib/addCommas";
+import { Invoice } from "@prisma/client";
 
 type Props = {
-  invoices: any;
+  invoices: Invoice[];
   loading: boolean;
 };
 
 const StatusCards: FC<Props> = ({ invoices, loading }) => {
   const draftAmt = addCommasToNumber(
     invoices
-      .filter((invoice: any) => invoice.status === "Draft")
+      .filter((invoice) => invoice.status === "Draft")
       .reduce(
-        (acc: number, invoice: any) => acc + parseFloat(invoice.totalAmount),
+        (acc: number, invoice) => acc + parseFloat(invoice.totalAmount.toString()),
         0
       )
   );
   const issuedAmt = addCommasToNumber(
     invoices
-      .filter((invoice: any) => invoice.status === "Issued")
+      .filter((invoice) => invoice.status === "Issued")
       .reduce(
-        (acc: number, invoice: any) => acc + parseFloat(invoice.totalAmount),
+        (acc: number, invoice) =>
+          acc + parseFloat(invoice.totalAmount.toString()),
         0
       )
   );
   const sentAmt = addCommasToNumber(
     invoices
-      .filter((invoice: any) => invoice.status === "Sent")
+      .filter((invoice) => invoice.status === "Sent")
       .reduce(
-        (acc: number, invoice: any) => acc + parseFloat(invoice.totalAmount),
+        (acc: number, invoice) =>
+          acc + parseFloat(invoice.totalAmount.toString()),
         0
       )
   );
   const paidAmt = addCommasToNumber(
     invoices
-      .filter((invoice: any) => invoice.status === "Paid")
+      .filter((invoice) => invoice.status === "Paid")
       .reduce(
-        (acc: number, invoice: any) => acc + parseFloat(invoice.totalAmount),
+        (acc: number, invoice) =>
+          acc + parseFloat(invoice.totalAmount.toString()),
         0
       )
   );
   const totalAmt = addCommasToNumber(
     invoices.reduce(
-      (acc: number, invoice: any) => acc + parseFloat(invoice.totalAmount),
+      (acc: number, invoice) =>
+        acc + parseFloat(invoice.totalAmount.toString()),
       0
     )
   );

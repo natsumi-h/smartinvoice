@@ -1,5 +1,6 @@
 "use client";
 import useToast from "@/app/hooks/useToast";
+import { updateCustomerSchema } from "@/app/schema/Customer/schema";
 import {
   Box,
   Button,
@@ -9,27 +10,14 @@ import {
   Text,
   TextInput,
 } from "@mantine/core";
-import { useForm } from "@mantine/form";
+import { useForm, zodResolver } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
+import { Customer } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { FC, useState } from "react";
 
 type Props = {
-  customer: {
-    id: string;
-    name: string;
-    street: string;
-    city: string;
-    state: string;
-    postcode: string;
-    phone: string;
-    contact: {
-      id: string;
-      name: string;
-      email: string;
-      isPrimary: boolean;
-    };
-  };
+  customer : Customer;
 };
 
 const UpdateCustomer: FC<Props> = ({ customer }) => {
@@ -47,10 +35,8 @@ const UpdateCustomer: FC<Props> = ({ customer }) => {
       state: state,
       postcode: postcode,
       phone: phone,
-      // contactName: "",
-      // title: "Mr.",
-      // email: "",
     },
+    validate: zodResolver(updateCustomerSchema),
   });
 
   const handleSubmit = async () => {
@@ -60,23 +46,21 @@ const UpdateCustomer: FC<Props> = ({ customer }) => {
         method: "POST",
         body: JSON.stringify({
           ...form.values,
-          id,
-          // title: form.values.title.replace(/\.$/, ""),
         }),
       });
-
       const data = await response.json();
-      console.log(data);
-      successToast({
-        title: "Customer updated",
-        message: "Customer has been updated successfully",
-      });
       close();
       setLoading(false);
       router.push(`/customer/${id}`);
       router.refresh();
-    } catch (error) {
+      successToast({
+        title: "Customer updated",
+        message: "Customer has been updated successfully",
+      });
+    } catch (error: any) {
       console.log(error);
+      setLoading(false);
+      errorToast(error.message || "Failed to update customer");
     }
   };
 
@@ -123,31 +107,6 @@ const UpdateCustomer: FC<Props> = ({ customer }) => {
             mt="lg"
             {...form.getInputProps("phone")}
           />
-
-          {/* Primary Person */}
-          {/* <Text fw={500} size="sm" mt="lg">
-            Primary Contact
-          </Text>
-          <Flex gap="lg">
-            <TextInput
-              placeholder="Name"
-              flex={1}
-              {...form.getInputProps("contactName")}
-            />
-            <Select
-              placeholder="Select title"
-              data={["Mr.", "Mrs.", "Ms.", "Dr.", "Prof."]}
-              defaultValue="Mr."
-              allowDeselect={false}
-              {...form.getInputProps("title")}
-            />
-          </Flex>
-
-          <TextInput
-            placeholder="Email"
-            mt="lg"
-            {...form.getInputProps("email")}
-          /> */}
 
           <Group justify="center" mt="xl">
             <Button fullWidth type="submit">

@@ -1,9 +1,8 @@
 import { Box } from "@mantine/core";
-import { Navbar } from "../components/Navbar/Navbar";
-// import { redirect } from "next/navigation";
 import { getSession } from "../lib/action";
 import styles from "../components/Navbar/Navbar.module.css";
 import BurgerButton from "../components/Navbar/BurgerButton";
+import Navbar from "../components/Navbar/Navbar";
 
 const layout = async ({ children }: { children: React.ReactNode }) => {
   const session = await getSession();
@@ -12,10 +11,6 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
       <Navbar session={session} />
       <BurgerButton />
       <Box
-        // px="100px"
-        // py="xl"
-        // ml={rem(300)}
-        // mih={"100vh"}
         className={styles.content}
       >
         {children}

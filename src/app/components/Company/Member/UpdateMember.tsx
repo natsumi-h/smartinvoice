@@ -1,9 +1,10 @@
 "use client";
 import { FC, useEffect, useState } from "react";
 import { Button, Group, Modal, Select, TextInput } from "@mantine/core";
-import { useForm } from "@mantine/form";
+import { useForm, zodResolver } from "@mantine/form";
 import useToast from "@/app/hooks/useToast";
 import { useRouter } from "next/navigation";
+import { createNewUserSchema } from "@/app/schema/Company/schema";
 
 type Props = {
   opened: boolean;
@@ -27,10 +28,7 @@ const UpdateMember: FC<Props> = ({ opened, close, member }) => {
       name: member.name,
       role: member.role,
     },
-
-    validate: {
-      email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
-    },
+    validate: zodResolver(createNewUserSchema),
   });
 
   useEffect(() => {
@@ -42,16 +40,15 @@ const UpdateMember: FC<Props> = ({ opened, close, member }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [opened]);
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (values: Record<string, unknown>) => {
     try {
       setLoading(true);
       const response = await fetch(`/api/user/${member.id}/`, {
         method: "POST",
         body: JSON.stringify({
-          ...form.values,
+          ...values,
         }),
       });
-
       const data = await response.json();
       form.reset();
       setLoading(false);
@@ -61,62 +58,61 @@ const UpdateMember: FC<Props> = ({ opened, close, member }) => {
         title: "Member updated",
         message: "Member has been updated successfully",
       });
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      console.log(error.message);
       setLoading(false);
-      errorToast(error as string);
+      errorToast(error.message);
     }
   };
 
   return (
-    <>
-      {/* Update */}
       <Modal
         opened={opened}
         onClose={() => {
           close();
           form.reset();
         }}
-        title="Update Contact"
+        title="Update Member"
       >
-        <TextInput
-          label="Name"
-          placeholder="John Doe"
-          mt="lg"
-          {...form.getInputProps("name")}
-        />
-        <TextInput
-          label="Email"
-          placeholder="email@email.com"
-          mt="lg"
-          {...form.getInputProps("email")}
-        />
-        <Select
-          label="Role"
-          placeholder="Select role"
-          mt="lg"
-          data={["Admin", "User"]}
-          defaultValue="User"
-          allowDeselect={false}
-          {...form.getInputProps("role")}
-        />
+        <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
+          <TextInput
+            label="Name"
+            placeholder="John Doe"
+            mt="lg"
+            {...form.getInputProps("name")}
+          />
+          <TextInput
+            label="Email"
+            placeholder="email@email.com"
+            mt="lg"
+            {...form.getInputProps("email")}
+          />
+          <Select
+            label="Role"
+            placeholder="Select role"
+            mt="lg"
+            data={["Admin", "User"]}
+            defaultValue="User"
+            allowDeselect={false}
+            {...form.getInputProps("role")}
+          />
 
-        <Group mt="xl" justify="center">
-          <Button
-            variant="outline"
-            onClick={() => {
-              close();
-              form.reset();
-            }}
-          >
-            Cancel
-          </Button>
-          <Button onClick={handleSubmit} loading={loadiing}>
-            Update
-          </Button>
-        </Group>
+          <Group mt="xl" justify="center">
+            <Button
+              variant="outline"
+              onClick={() => {
+                close();
+                form.reset();
+              }}
+            >
+              Cancel
+            </Button>
+            <Button type="submit" loading={loadiing}>
+              Update
+            </Button>
+          </Group>
+        </form>
       </Modal>
-    </>
   );
 };
 

@@ -9,9 +9,9 @@ const page = async ({
     id: string;
   };
 }) => {
-  const customers: any = await getCustomers();
+  const customers = await getCustomers();
   const id = params.id;
-  const invoice: any = await getInvoice(id);
+  const invoice = await getInvoice(id);
   return (
     <Box>
       <Title order={2}>Update Invoice</Title>

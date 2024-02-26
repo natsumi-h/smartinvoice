@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/app/db";
 import { getSession } from "@/app/lib/action";
+import { JWTPayload, JWTVerifyResult } from "jose";
 
 // POST /api/customer
 // @desc: Create a new customer
 export async function POST(request: Request) {
   try {
-    const session: any = await getSession();
+    const session: JWTVerifyResult<JWTPayload> | null = await getSession();
     if (!session) {
       return NextResponse.json(
         {
@@ -15,8 +16,8 @@ export async function POST(request: Request) {
         { status: 401 }
       );
     }
-    const userId = session.payload.id;
-    const userCompany = session.payload.company;
+    const userId = session.payload.id as number;
+    const userCompany = session.payload.company as number;
 
     const req = await request.json();
     // ORM
@@ -51,7 +52,7 @@ export async function POST(request: Request) {
         contact: true,
       },
     });
-    console.log(res);
+
     return NextResponse.json(
       {
         message: "Customer created successfully",
@@ -59,16 +60,18 @@ export async function POST(request: Request) {
       },
       { status: 200 }
     );
-  } catch (e) {
+  } catch (e: any) {
     console.error(e);
-    throw e;
+    const message = e.message || "Internal Server Error";
+    const status = e.status || 500;
+    return NextResponse.json({ error: message }, { status });
   }
 }
 
 // GET /api/customer
 // @desc: Get all customers
 export async function GET(request: NextRequest) {
-  const session: any = await getSession();
+  const session: JWTVerifyResult<JWTPayload> | null = await getSession();
   if (!session) {
     return NextResponse.json(
       {
@@ -77,11 +80,10 @@ export async function GET(request: NextRequest) {
       { status: 401 }
     );
   }
-  const usersCompany = session.payload.company;
+  const usersCompany = session.payload.company as number;
   const searchParams = request.nextUrl.searchParams;
   const query = searchParams.get("query");
   console.log(query);
-
 
   try {
     const whereCondition = {

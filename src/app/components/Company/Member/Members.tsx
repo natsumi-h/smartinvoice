@@ -8,51 +8,20 @@ import {
   Title,
   rem,
 } from "@mantine/core";
-import { FC, useEffect, useState } from "react";
+import { FC, useState } from "react";
 import { IconMail } from "@tabler/icons-react";
 import { useDisclosure } from "@mantine/hooks";
 import Link from "next/link";
 import styles from "../../Customer/CustomerList.module.css";
 import UpdateMember from "./UpdateMember";
 import DeleteMember from "./DeleteMember";
+import { User } from "@prisma/client";
 
 type Props = {
-  company: {
-    id: number;
-    name: string;
-    uen: string;
-    street: string;
-    postcode: string;
-    phone: string;
-    logoUrl: string;
-    city: string;
-    state: string;
-    bankname: string;
-    branchname: string;
-    swiftcode: string;
-    accountname: string;
-    accounttype: string;
-    bankcode: string;
-    branchnumber: string;
-    accountnumber: string;
-    user: {
-      id: number;
-      name: string;
-      email: string;
-      signupDone: boolean;
-      role: "Admin" | "User";
-    }[];
-  };
-  members?: {
-    id: number;
-    name: string;
-    email: string;
-    role: "Admin" | "User";
-    deleted: boolean;
-  }[];
+  members: User[];
 };
 
-const Members: FC<Props> = ({ company, members }) => {
+const Members: FC<Props> = ({ members }) => {
   const [updateOpened, updateOpenedHandlers] = useDisclosure(false);
   const [deleteOpened, deleteOpenedHandlers] = useDisclosure(false);
 
@@ -77,7 +46,7 @@ const Members: FC<Props> = ({ company, members }) => {
       </Button>
       <ul className={styles.ul}>
         {members &&
-          members.map((user: any) => (
+          members.map((user) => (
             <li className={styles.li} key={user.id}>
               <Flex align={"center"} justify={"space-between"}>
                 <Box>

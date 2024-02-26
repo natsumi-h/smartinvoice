@@ -1,4 +1,3 @@
-
 import {
   Box,
   Button,
@@ -9,13 +8,14 @@ import {
   Text,
   TextInput,
 } from "@mantine/core";
-import { useForm } from "@mantine/form";
+import { useForm, zodResolver } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import useToast from "@/app/hooks/useToast";
+import { createCustomerSchema } from "@/app/schema/Customer/schema";
 
-const CreateNewCustomer = () => {
+const CreateCustomer = () => {
   const [opened, { close, open }] = useDisclosure(false);
   const [loading, setLoading] = useState(false);
   const { successToast, errorToast } = useToast();
@@ -29,9 +29,10 @@ const CreateNewCustomer = () => {
       postcode: "",
       phone: "",
       contactName: "",
-      title: "Mr.",
+      title: "",
       email: "",
     },
+    validate: zodResolver(createCustomerSchema),
   });
 
   const handleSubmit = async () => {
@@ -45,18 +46,18 @@ const CreateNewCustomer = () => {
         }),
       });
       const data = await response.json();
-      console.log(data);
-      successToast({
-        title: "Customer created",
-        message: "Customer has been created successfully",
-      });
       close();
       setLoading(false);
       router.push("/customer");
       router.refresh();
-
-    } catch (error) {
+      successToast({
+        title: "Customer created",
+        message: "Customer has been created successfully",
+      });
+    } catch (error: any) {
       console.log(error);
+      setLoading(false);
+      errorToast(error.message || "Failed to create customer");
     }
   };
 
@@ -117,7 +118,6 @@ const CreateNewCustomer = () => {
             <Select
               placeholder="Select title"
               data={["Mr.", "Mrs.", "Ms.", "Dr.", "Prof."]}
-              defaultValue="Mr."
               allowDeselect={false}
               {...form.getInputProps("title")}
             />
@@ -157,4 +157,4 @@ const CreateNewCustomer = () => {
   );
 };
 
-export default CreateNewCustomer;
+export default CreateCustomer;

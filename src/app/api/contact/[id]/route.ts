@@ -3,7 +3,7 @@ import { prisma } from "@/app/db";
 import { getSession } from "@/app/lib/action";
 
 // POST /api/contact/:id
-// @desc: Update a single contact
+// @desc: Update single contact
 export async function POST(
   request: Request,
   { params }: { params: { id: string } }
@@ -16,6 +16,7 @@ export async function POST(
   try {
     const body = await request.json();
     const id = params.id;
+
     const res = await prisma.contact.update({
       where: {
         id: parseInt(id),
@@ -23,33 +24,37 @@ export async function POST(
       data: {
         ...body,
         deletedAt: body.deleted ? new Date() : null,
-      }
+      },
     });
+
+    if (body.isPrimary) {
+      const primary = await prisma.contact.findFirst({
+        where: {
+          customer_id: res.customer_id,
+          isPrimary: true,
+          id: {
+            not: parseInt(id),
+          },
+        },
+      });
+      if (primary) {
+        await prisma.contact.update({
+          where: {
+            id: primary.id,
+          },
+          data: {
+            isPrimary: false,
+          },
+        });
+      }
+    }
+
     return NextResponse.json(res, { status: 200 });
-  } catch (e) {
+  } catch (e: any) {
     console.error(e);
-    throw e;
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
   }
 }
-
-// DELETE /api/contact/:id
-// @desc: Delete a single contact
-// export async function DELETE(
-//   request: Request,
-//   { params }: { params: { id: string } }
-// ) {
-//   try {
-//     const id = params.id;
-//     const res = await prisma.contact.delete({
-//       where: {
-//         id: parseInt(id),
-//       }
-//     });
-//     return NextResponse.json(res, { status: 200 });
-//   } catch (e) {
-//     console.error(e);
-//     throw e;
-//   }
-// }
-
-

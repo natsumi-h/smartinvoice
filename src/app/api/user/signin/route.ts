@@ -17,7 +17,6 @@ export async function GET(request: NextRequest) {
     if (!user) {
       throw new Error("Invalid credentials");
     }
-    // name/salt/iterationsだけを返す
     return NextResponse.json(
       {
         name: user.name,
@@ -74,10 +73,6 @@ export async function POST(request: NextRequest) {
       },
     });
     cookies().set("token", jwt, { expires: expiryDate, httpOnly: true });
-    // 以下のJWTをフロントに返す実装は不要そう
-    // return NextResponse.json({ token: jwt, expiryDate }, { status: 200 });
-
-    // 会社がある場合はinvoiceにリダイレクト、ない場合はcompany/onboardingにリダイレクト(フロントで実装)
     return NextResponse.json({ company: user?.company_id }, { status: 200 });
   } catch (e: any) {
     console.log(e);

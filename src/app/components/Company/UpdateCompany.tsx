@@ -9,16 +9,18 @@ import {
   Select,
   Text,
   TextInput,
-  Textarea,
 } from "@mantine/core";
-import { useForm } from "@mantine/form";
+import { useForm, zodResolver } from "@mantine/form";
 import NextImage from "next/image";
 import noimage from "../../../../public/images/companylogo-noimage.svg";
 import { FC, useState } from "react";
 import { useRouter } from "next/navigation";
+import { updateCompanySchema } from "@/app/schema/Company/schema";
+import useToast from "@/app/hooks/useToast";
+import { Company } from "@prisma/client";
 
 type Props = {
-  company: any;
+  company: Company;
 };
 
 const UpdateCompany: FC<Props> = ({ company }) => {
@@ -26,47 +28,50 @@ const UpdateCompany: FC<Props> = ({ company }) => {
   const [previewUrl, setPreviewUrl] = useState<string | null>(company.logoUrl);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const { successToast, errorToast } = useToast();
 
   const form = useForm({
     initialValues: {
-      name: company?.name || "",
-      uen: company?.uen || "",
-      street: company?.street || "",
-      city: company?.city || "",
-      state: company?.state || "",
-      postcode: company?.postcode || "",
-      phone: company?.phone || "",
-      bankname: company?.bankname || "",
-      branchname: company?.branchname || "",
-      accountname: company?.accountname || "",
-      accounttype: company?.accounttype || "",
-      accountnumber: company?.accountnumber || "",
-      bankcode: company?.bankcode || "",
-      swiftcode: company?.swiftcode || "",
-      branchnumber: company?.branchnumber || "",
-      remarks: company?.remarks || "",
+      name: company.name,
+      uen: company.uen,
+      street: company.street,
+      city: company.city,
+      state: company.state,
+      postcode: company.postcode,
+      phone: company.phone,
+      bankname: company.bankname,
+      branchname: company.branchname,
+      accountname: company.accountname,
+      accounttype: company.accounttype,
+      accountnumber: company?.accountnumber,
+      bankcode: company?.bankcode,
+      swiftcode: company?.swiftcode,
+      branchnumber: company?.branchnumber,
     },
-    // validate: {
-    //   file: (value) => (value ? null : "File is required"),
-    // },
+    validate: zodResolver(updateCompanySchema),
   });
 
-  const handleSubmit = async (values: any) => {
+  const handleSubmit = async (values: Record<string, unknown>) => {
     setLoading(true);
     const formData = new FormData();
     if (file) {
       formData.append("file", file);
     }
-    // テキストフィールドの値を追加
     Object.keys(values).forEach((key) => {
+      const value = values[key];
+
       if (key !== "file") {
-        formData.append(key, values[key]);
+        if (typeof value === "string") {
+          formData.append(key, value);
+        }
       }
+
       if (key === "accounttype") {
-        formData.append(key, values[key].toLowerCase());
+        if (typeof value === "string") {
+          formData.append(key, value.toLowerCase());
+        }
       }
     });
-    console.log(formData);
 
     try {
       const response = await fetch("/api/company/update", {
@@ -74,11 +79,14 @@ const UpdateCompany: FC<Props> = ({ company }) => {
         body: formData,
       });
       const data = await response.json();
-      console.log(data);
       router.push("/company");
       router.refresh();
       setLoading(false);
-    } catch (error) {
+      successToast({
+        title: "Company detail updated",
+        message: "Your company detail has been updated successfully.",
+      });
+    } catch (error: any) {
       console.log(error);
       setLoading(false);
     }
@@ -100,7 +108,7 @@ const UpdateCompany: FC<Props> = ({ company }) => {
             <Image
               radius="md"
               component={NextImage}
-              src={previewUrl || noimage} // 変更部分
+              src={previewUrl || noimage}
               width={100}
               height={100}
               alt="Company Logo"
@@ -217,13 +225,13 @@ const UpdateCompany: FC<Props> = ({ company }) => {
           mt="lg"
           {...form.getInputProps("branchnumber")}
         />
-        <Textarea
+        {/* <Textarea
           label="Invoice Remarks"
           placeholder="Custom layout"
           mt="lg"
           resize="vertical"
           {...form.getInputProps("remarks")}
-        />
+        /> */}
 
         <Group justify="center" mt="xl">
           <Button fullWidth type="submit" loading={loading}>
