@@ -36,6 +36,7 @@ const SignupForm = () => {
     setLoading(true);
     delete values.agreewithtnc;
     delete values.newsletter;
+
     try {
       const response = await fetch("/api/user/signup", {
         method: "POST",

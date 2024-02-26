@@ -207,13 +207,13 @@ const Onboarding = () => {
           mt="lg"
           {...form.getInputProps("branchnumber")}
         />
-        <Textarea
+        {/* <Textarea
           label="Invoice Remarks"
           placeholder="Custom layout"
           mt="lg"
           resize="vertical"
           {...form.getInputProps("remarks")}
-        />
+        /> */}
 
         <Group justify="center" mt="xl">
           <Button fullWidth type="submit" loading={loading}>
