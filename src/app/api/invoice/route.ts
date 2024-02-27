@@ -86,11 +86,11 @@ export async function POST(request: Request) {
       );
     }
 
-    // PDFを生成
+    // Generate PDf
     const html = generateHtml(createRes);
     const pdfBuffer = await generatePdf(html);
     const contentType = "application/pdf";
-    // S3へのアップロード処理
+    // Upload to S#
     const uniqueInvoiceName = `invoice-${createRes.id}.pdf`;
     const fileUrl = await uploadFileToS3(
       pdfBuffer,

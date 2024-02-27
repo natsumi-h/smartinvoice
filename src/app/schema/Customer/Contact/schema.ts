@@ -6,7 +6,7 @@ export const createContactSchema = z.object({
       required_error: "Name is required",
     })
     .min(1, { message: "Name is required" }),
-  title: z.enum(["Mr.", "Mrs.", "Ms.", "Dr.", "Prof."], {
+  title: z.enum(["Mr", "Mrs", "Ms", "Dr", "Prof"], {
     required_error: "Title is required",
   }),
   email: z

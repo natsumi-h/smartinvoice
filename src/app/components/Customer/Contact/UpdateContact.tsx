@@ -17,31 +17,22 @@ import { Contact } from "@prisma/client";
 type Props = {
   opened: boolean;
   close: () => void;
-  contact:Contact;
+  contact: Contact;
 };
 
 const UpdateContact: FC<Props> = ({ opened, close, contact }) => {
   const [loadiing, setLoading] = useState(false);
   const { successToast, errorToast } = useToast();
   const router = useRouter();
-  const title = `${contact.title}.`;
-
   const form = useForm({
-    initialValues: {
-      email: contact.email,
-      name: contact.name,
-      isPrimary: contact.isPrimary,
-      title: title,
-    },
     validate: zodResolver(createContactSchema),
   });
-
   useEffect(() => {
     form.setValues({
       email: contact.email,
       name: contact.name,
       isPrimary: contact.isPrimary,
-      title: title,
+      title: contact.title,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [opened]);
@@ -58,7 +49,9 @@ const UpdateContact: FC<Props> = ({ opened, close, contact }) => {
           title,
         }),
       });
-      const data = await response.json();
+      if (!response.ok) {
+        throw new Error("Failed to update contact");
+      }
       form.reset();
       setLoading(false);
       close();
@@ -96,8 +89,28 @@ const UpdateContact: FC<Props> = ({ opened, close, contact }) => {
             label="Title"
             placeholder="Select title"
             mt="lg"
-            data={["Mr.", "Mrs.", "Ms.", "Dr.", "Prof."]}
-            defaultValue="Mr."
+            data={[
+              {
+                value: "Mr",
+                label: "Mr.",
+              },
+              {
+                value: "Mrs",
+                label: "Mrs.",
+              },
+              {
+                value: "Ms",
+                label: "Ms.",
+              },
+              {
+                value: "Dr",
+                label: "Dr.",
+              },
+              {
+                value: "Prof",
+                label: "Prof.",
+              },
+            ]}
             allowDeselect={false}
             {...form.getInputProps("title")}
           />
