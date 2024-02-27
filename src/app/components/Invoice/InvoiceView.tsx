@@ -5,7 +5,7 @@ import StatusCards from "./StatusCards";
 import { DatePickerInput } from "@mantine/dates";
 import { FC, useCallback, useEffect, useState } from "react";
 import { useForm } from "@mantine/form";
-import { Customer, Invoice as PrismaInvoice } from "@prisma/client";
+import { Customer } from "@prisma/client";
 
 type Props = {
   customers: Customer[];
@@ -25,6 +25,9 @@ const InvoiceView: FC<Props> = ({ customers }) => {
       status: null,
     },
   });
+
+  console.log(invoices);
+  console.log(loading);
 
   // const handleSubmit = async (values: Record<string, unknown>) => {
   //   setFilterLoading(true);
@@ -91,7 +94,6 @@ const InvoiceView: FC<Props> = ({ customers }) => {
       dueDate: [null, null],
       status: null,
     });
-    setLoading(false);
   }, []);
 
   const fetchInvoices = async (values: Record<string, unknown>) => {
@@ -127,6 +129,7 @@ const InvoiceView: FC<Props> = ({ customers }) => {
       const res = await fetch(`/api/invoice${query}`);
       const data = await res.json();
       setInvoices(data.data);
+      setLoading(false);
     } catch (error) {
       console.error("Error fetching data: ", error);
     }
