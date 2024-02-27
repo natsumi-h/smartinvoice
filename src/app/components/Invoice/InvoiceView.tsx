@@ -20,7 +20,6 @@ const InvoiceView: FC<Props> = ({ invoices: i, customers }) => {
   const [filterLoading, setFilterLoading] = useState(false);
   const [clearLoading, setClearLoading] = useState(false);
   const [invoices, setInvoices] = useState(i);
-  // const [customers, _] = useState(c);
   const [loading, setLoading] = useState(false);
 
   const form = useForm({
