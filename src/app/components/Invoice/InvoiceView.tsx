@@ -8,19 +8,14 @@ import { useForm } from "@mantine/form";
 import { Customer, Invoice as PrismaInvoice } from "@prisma/client";
 
 type Props = {
-  invoices: Invoice[];
   customers: Customer[];
 };
 
-type Invoice = PrismaInvoice & {
-  customer: Customer;
-};
-
-const InvoiceView: FC<Props> = ({ invoices: i, customers }) => {
+const InvoiceView: FC<Props> = ({ customers }) => {
   const [filterLoading, setFilterLoading] = useState(false);
   const [clearLoading, setClearLoading] = useState(false);
-  const [invoices, setInvoices] = useState(i);
-  const [loading, setLoading] = useState(false);
+  const [invoices, setInvoices] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const form = useForm({
     initialValues: {
@@ -88,6 +83,7 @@ const InvoiceView: FC<Props> = ({ invoices: i, customers }) => {
   // }, []);
 
   // Fetch invoices
+
   useEffect(() => {
     fetchInvoices({
       customer: null,
@@ -96,7 +92,7 @@ const InvoiceView: FC<Props> = ({ invoices: i, customers }) => {
       status: null,
     });
     setLoading(false);
-  }, [handleClear, handleSubmit]);
+  }, []);
 
   const fetchInvoices = async (values: Record<string, unknown>) => {
     try {
@@ -130,8 +126,6 @@ const InvoiceView: FC<Props> = ({ invoices: i, customers }) => {
       const query = queryParams.length > 0 ? `?${queryParams.join("&")}` : "";
       const res = await fetch(`/api/invoice${query}`);
       const data = await res.json();
-      console.log(data);
-
       setInvoices(data.data);
     } catch (error) {
       console.error("Error fetching data: ", error);
