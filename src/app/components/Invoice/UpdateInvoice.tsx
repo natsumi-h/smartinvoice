@@ -311,7 +311,7 @@ const UpdateInvoice: FC<Props> = ({ invoice }) => {
 
             <Table.Tr>
               <Table.Td>
-                <Text fw={"bold"}>Spacial Discount</Text>
+                <Text fw={"bold"}>Special Discount</Text>
               </Table.Td>
               <Table.Td>
                 <TextInput

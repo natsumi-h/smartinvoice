@@ -129,12 +129,10 @@ export async function GET(request: NextRequest) {
               contact: query
                 ? {
                     some: {
-                      name: {
-                        contains: query,
-                      },
-                      email: {
-                        contains: query,
-                      },
+                      OR: [
+                        { name: { contains: query } },
+                        { email: { contains: query } },
+                      ],
                     },
                   }
                 : undefined,
