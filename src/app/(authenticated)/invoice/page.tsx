@@ -1,8 +1,12 @@
 import InvoiceView from "@/app/components/Invoice/InvoiceView";
+import { getCustomers, getInvoices } from "@/app/lib/data";
 import { Box, Button, Flex, Title } from "@mantine/core";
 import Link from "next/link";
 
-const page = () => {
+const page = async () => {
+  const invoices = await getInvoices();
+  const customers = await getCustomers();
+
   return (
     <Box>
       <Flex justify={"space-between"} align="center">
@@ -17,7 +21,7 @@ const page = () => {
         </Button>
       </Flex>
 
-      <InvoiceView />
+      <InvoiceView invoices={invoices} customers={customers}/>
     </Box>
   );
 };

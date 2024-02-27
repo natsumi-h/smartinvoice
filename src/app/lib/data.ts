@@ -114,15 +114,44 @@ export const getMembers = async () => {
         role: true,
         signupDone: true,
       },
-      orderBy: [{
-        role: "desc",
-      },{
-        name: "asc",
-      }]
+      orderBy: [
+        {
+          role: "desc",
+        },
+        {
+          name: "asc",
+        },
+      ],
     });
     return res;
   } catch (e) {
     console.log(e);
+    throw e;
+  }
+};
+
+export const getInvoices = async () => {
+  noStore();
+  try {
+    await checkIfUserIsLoggedIn();
+    const session: JWTVerifyResult<JWTPayload> | null = await getSession();
+    const usersCompany = session?.payload.company as number;
+    const res = await prisma.invoice.findMany({
+      where: {
+        company_id: usersCompany,
+        deleted: false,
+      },
+      include: {
+        customer: true,
+        items: true,
+      },
+      orderBy: {
+        issueDate: "desc",
+      },
+    });
+    return res;
+  } catch (e) {
+    console.error(e);
     throw e;
   }
 };
