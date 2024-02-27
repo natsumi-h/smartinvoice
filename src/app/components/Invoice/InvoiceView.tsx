@@ -3,16 +3,25 @@ import { Button, Flex, Select } from "@mantine/core";
 import InvoiceList from "./InvoiceList";
 import StatusCards from "./StatusCards";
 import { DatePickerInput } from "@mantine/dates";
-import { useEffect, useState } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
 import { useForm } from "@mantine/form";
-import { Customer } from "@prisma/client";
+import { Customer, Invoice as PrismaInvoice} from "@prisma/client";
 
-const InvoiceView = () => {
+type Props = {
+  invoices: Invoice[];
+  customers: Customer[];
+};
+
+type Invoice = PrismaInvoice & {
+  customer: Customer;
+};
+
+const InvoiceView: FC<Props> = ({ invoices: i, customers: c }) => {
   const [filterLoading, setFilterLoading] = useState(false);
   const [clearLoading, setClearLoading] = useState(false);
-  const [invoices, setInvoices] = useState([]);
-  const [customers, setCustomers] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [invoices, setInvoices] = useState(i);
+  const [customers, setCustomers] = useState(c);
+  const [loading, setLoading] = useState(false);
 
   const form = useForm({
     initialValues: {
@@ -23,24 +32,61 @@ const InvoiceView = () => {
     },
   });
 
-  // Fetch customers
-  useEffect(() => {
-    const fetchCustomers = async () => {
-      const res = await fetch("/api/customer");
-      const data = await res.json();
-      setCustomers(data);
-    };
+  // const handleSubmit = async (values: Record<string, unknown>) => {
+  //   setFilterLoading(true);
+  //   await fetchInvoices(values);
+  //   setFilterLoading(false);
+  // };
 
-    fetchInvoices({
+  const handleSubmit = useCallback(async (values: Record<string, unknown>) => {
+    setFilterLoading(true);
+    await fetchInvoices(values);
+    setFilterLoading(false);
+  }, []);
+
+  // const handleClear = async () => {
+  //   setClearLoading(true);
+  //   form.reset();
+  //   await fetchInvoices({
+  //     customer: null,
+  //     issueDate: [null, null],
+  //     dueDate: [null, null],
+  //     status: null,
+  //   });
+  //   setClearLoading(false);
+  // };
+
+  const handleClear = useCallback(async () => {
+    setClearLoading(true);
+    form.reset();
+    await fetchInvoices({
       customer: null,
       issueDate: [null, null],
       dueDate: [null, null],
       status: null,
     });
-
-    fetchCustomers();
-    setLoading(false);
+    setClearLoading(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Fetch customers
+  // useEffect(() => {
+  //   const fetchCustomers = async () => {
+  //     const res = await fetch("/api/customer");
+  //     const data = await res.json();
+  //     setCustomers(data);
+  //   };
+
+  //   fetchInvoices({
+  //     customer: null,
+  //     issueDate: [null, null],
+  //     dueDate: [null, null],
+  //     status: null,
+  //   });
+
+  //   fetchCustomers();
+  //   setLoading(false);
+  // }, []);
 
   // Fetch invoices
   useEffect(() => {
@@ -51,7 +97,7 @@ const InvoiceView = () => {
       status: null,
     });
     setLoading(false);
-  }, []);
+  }, [handleClear, handleSubmit]);
 
   const fetchInvoices = async (values: Record<string, unknown>) => {
     try {
@@ -91,24 +137,6 @@ const InvoiceView = () => {
     } catch (error) {
       console.error("Error fetching data: ", error);
     }
-  };
-
-  const handleSubmit = async (values: Record<string, unknown>) => {
-    setFilterLoading(true);
-    await fetchInvoices(values);
-    setFilterLoading(false);
-  };
-
-  const handleClear = async () => {
-    setClearLoading(true);
-    form.reset();
-    await fetchInvoices({
-      customer: null,
-      issueDate: [null, null],
-      dueDate: [null, null],
-      status: null,
-    });
-    setClearLoading(false);
   };
 
   return (

@@ -3,8 +3,8 @@ import { getSession } from "@/app/lib/action";
 import { getUser } from "@/app/lib/data";
 import { Title } from "@mantine/core";
 import { Suspense } from "react";
-import AccountLoading from "./loading";
 import { Company, User } from "@prisma/client";
+import AccountLoading from "./loading";
 
 const page = async () => {
   const session = await getSession();
