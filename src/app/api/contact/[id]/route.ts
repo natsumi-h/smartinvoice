@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/app/db";
-import { getSession } from "@/app/lib/action";
 import { checkIfUserIsLoggedIn } from "@/app/lib/apiMiddleware";
+import { createContactSchema } from "@/app/schema/Customer/Contact/schema";
+import { ZodError } from "zod";
 
 // POST /api/contact/:id
 // @desc: Update single contact
@@ -12,14 +13,19 @@ export async function POST(
   try {
     await checkIfUserIsLoggedIn();
     const body = await request.json();
+    let parsedBody;
+    if (!body.deleted) {
+      parsedBody = createContactSchema.parse(body);
+    } else {
+      parsedBody = body;
+    }
     const id = params.id;
-
     const res = await prisma.contact.update({
       where: {
         id: parseInt(id),
       },
       data: {
-        ...body,
+        ...parsedBody,
         deletedAt: body.deleted ? new Date() : null,
       },
     });
@@ -48,10 +54,12 @@ export async function POST(
 
     return NextResponse.json(res, { status: 200 });
   } catch (e: any) {
-    console.error(e);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
+    console.log(e);
+    if (e instanceof ZodError) {
+      return NextResponse.json({ error: e.errors }, { status: 400 });
+    }
+    const message = e.message || "Internal server error";
+    const status = e.status || 500;
+    return NextResponse.json({ error: message }, { status });
   }
 }

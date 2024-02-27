@@ -38,7 +38,7 @@ const CreateContact: FC<Props> = ({ opened, close, customerId }) => {
     try {
       setLoading(true);
       const valuesTitle = values.title as string;
-      const title = valuesTitle.replace(/\.$/, "") ;
+      const title = valuesTitle.replace(/\.$/, "");
       const response = await fetch(`/api/customer/${customerId}/contact`, {
         method: "POST",
         body: JSON.stringify({
@@ -46,7 +46,9 @@ const CreateContact: FC<Props> = ({ opened, close, customerId }) => {
           title,
         }),
       });
-      const data = await response.json();
+      if (!response.ok) {
+        throw new Error("Failed to create contact");
+      }
       form.reset();
       setLoading(false);
       close();
@@ -77,7 +79,28 @@ const CreateContact: FC<Props> = ({ opened, close, customerId }) => {
             label="Title"
             placeholder="Select title"
             mt="lg"
-            data={["Mr.", "Mrs.", "Ms.", "Dr.", "Prof."]}
+            data={[
+              {
+                value: "Mr",
+                label: "Mr.",
+              },
+              {
+                value: "Mrs",
+                label: "Mrs.",
+              },
+              {
+                value: "Ms",
+                label: "Ms.",
+              },
+              {
+                value: "Dr",
+                label: "Dr.",
+              },
+              {
+                value: "Prof",
+                label: "Prof.",
+              },
+            ]}
             allowDeselect={false}
             {...form.getInputProps("title")}
           />

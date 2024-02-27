@@ -7,7 +7,7 @@ import React, { FC, useState } from "react";
 type Props = {
   opened: boolean;
   close: () => void;
-  contact:Contact;
+  contact: Contact;
 };
 
 const DeleteContact: FC<Props> = ({ opened, close, contact }) => {
@@ -24,7 +24,9 @@ const DeleteContact: FC<Props> = ({ opened, close, contact }) => {
           deleted: true,
         }),
       });
-      const data = await response.json();
+      if (!response.ok) {
+        throw new Error("Failed to delete contact");
+      }
       setLoading(false);
       close();
       router.refresh();
@@ -32,10 +34,10 @@ const DeleteContact: FC<Props> = ({ opened, close, contact }) => {
         title: "Contact deleted",
         message: "Contact has been deleted successfully",
       });
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
       setLoading(false);
-      errorToast(error as string);
+      errorToast(error.message);
     }
   };
   return (
