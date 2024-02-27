@@ -5,7 +5,7 @@ import StatusCards from "./StatusCards";
 import { DatePickerInput } from "@mantine/dates";
 import { FC, useCallback, useEffect, useState } from "react";
 import { useForm } from "@mantine/form";
-import { Customer, Invoice as PrismaInvoice} from "@prisma/client";
+import { Customer, Invoice as PrismaInvoice } from "@prisma/client";
 
 type Props = {
   invoices: Invoice[];
@@ -16,11 +16,11 @@ type Invoice = PrismaInvoice & {
   customer: Customer;
 };
 
-const InvoiceView: FC<Props> = ({ invoices: i, customers: c }) => {
+const InvoiceView: FC<Props> = ({ invoices: i, customers }) => {
   const [filterLoading, setFilterLoading] = useState(false);
   const [clearLoading, setClearLoading] = useState(false);
   const [invoices, setInvoices] = useState(i);
-  const [customers, setCustomers] = useState(c);
+  // const [customers, _] = useState(c);
   const [loading, setLoading] = useState(false);
 
   const form = useForm({

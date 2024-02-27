@@ -1,5 +1,5 @@
 "use client";
-import { Badge, Skeleton, Table } from "@mantine/core";
+import { Badge, Skeleton, Table, Text } from "@mantine/core";
 import { FC } from "react";
 import { useRouter } from "next/navigation";
 import dayjs from "dayjs";
@@ -42,24 +42,35 @@ const InvoiceList: FC<Props> = ({ invoices, loading }) => {
 
   return (
     <>
-      <Table.ScrollContainer minWidth={500}>
-        <Table mt={"xl"} fz="md" verticalSpacing="sm" highlightOnHover={true}>
-          <Table.Thead>
-            <Table.Tr>
-              <Table.Th pl="0">Customer</Table.Th>
-              <Table.Th pl="0">Date</Table.Th>
-              <Table.Th pl="0">Due Date</Table.Th>
-              <Table.Th pl="0">Total Amount</Table.Th>
-              <Table.Th pl="0">Status</Table.Th>
-            </Table.Tr>
-          </Table.Thead>
-          <Table.Tbody>{rows}</Table.Tbody>
-        </Table>
-      </Table.ScrollContainer>
+      {invoices.length === 0 && !loading ? (
+        <Text mt={"xl"}>No invoices found</Text>
+      ) : (
+        <>
+          <Table.ScrollContainer minWidth={500}>
+            <Table
+              mt={"xl"}
+              fz="md"
+              verticalSpacing="sm"
+              highlightOnHover={true}
+            >
+              <Table.Thead>
+                <Table.Tr>
+                  <Table.Th pl="0">Customer</Table.Th>
+                  <Table.Th pl="0">Date</Table.Th>
+                  <Table.Th pl="0">Due Date</Table.Th>
+                  <Table.Th pl="0">Total Amount</Table.Th>
+                  <Table.Th pl="0">Status</Table.Th>
+                </Table.Tr>
+              </Table.Thead>
+              <Table.Tbody>{rows}</Table.Tbody>
+            </Table>
+          </Table.ScrollContainer>
 
-      <Skeleton height={15} mt={20} radius="xl" visible={loading} />
-      <Skeleton height={15} mt={20} radius="xl" visible={loading} />
-      <Skeleton height={15} mt={20} radius="xl" visible={loading} />
+          <Skeleton height={15} mt={20} radius="xl" visible={loading} />
+          <Skeleton height={15} mt={20} radius="xl" visible={loading} />
+          <Skeleton height={15} mt={20} radius="xl" visible={loading} />
+        </>
+      )}
     </>
   );
 };
