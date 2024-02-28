@@ -1,10 +1,11 @@
 "use client";
-import { Badge, Skeleton, Table, Text } from "@mantine/core";
+import { Anchor, Badge, Box, Divider, Skeleton, Table, Text } from "@mantine/core";
 import { FC } from "react";
 import { useRouter } from "next/navigation";
 import dayjs from "dayjs";
 import { addCommasToNumber } from "@/app/lib/addCommas";
 import { Invoice as PrismaInvoice, Customer } from "@prisma/client";
+import Link from "next/link";
 
 type Invoice = PrismaInvoice & {
   customer: Customer;
@@ -43,7 +44,22 @@ const InvoiceList: FC<Props> = ({ invoices, loading }) => {
   return (
     <>
       {invoices.length === 0 && !loading ? (
-        <Text mt={"xl"}>No invoices found</Text>
+        <Text mt={"xl"}>
+          No invoices found.{" "}
+          <Anchor component={Link} href="/invoice/create">
+            Create one
+          </Anchor>{" "}
+          to get started.
+        </Text>
+      ) : loading ? (
+        <Box mt={"xl"}>
+          <Skeleton height={15} mt={20} radius="xl" visible={loading} />
+          <Divider mt="md" />
+          <Skeleton height={15} mt={20} radius="xl" visible={loading} />
+          <Divider mt="md" />
+          <Skeleton height={15} mt={20} radius="xl" visible={loading} />
+          <Divider mt="md" />
+        </Box>
       ) : (
         <>
           <Table.ScrollContainer minWidth={500}>
@@ -65,10 +81,6 @@ const InvoiceList: FC<Props> = ({ invoices, loading }) => {
               <Table.Tbody>{rows}</Table.Tbody>
             </Table>
           </Table.ScrollContainer>
-
-          <Skeleton height={15} mt={20} radius="xl" visible={loading} />
-          <Skeleton height={15} mt={20} radius="xl" visible={loading} />
-          <Skeleton height={15} mt={20} radius="xl" visible={loading} />
         </>
       )}
     </>

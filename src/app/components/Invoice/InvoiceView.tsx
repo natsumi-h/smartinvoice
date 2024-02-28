@@ -26,32 +26,11 @@ const InvoiceView: FC<Props> = ({ customers }) => {
     },
   });
 
-  console.log(invoices);
-  console.log(loading);
-
-  // const handleSubmit = async (values: Record<string, unknown>) => {
-  //   setFilterLoading(true);
-  //   await fetchInvoices(values);
-  //   setFilterLoading(false);
-  // };
-
   const handleSubmit = useCallback(async (values: Record<string, unknown>) => {
     setFilterLoading(true);
     await fetchInvoices(values);
     setFilterLoading(false);
   }, []);
-
-  // const handleClear = async () => {
-  //   setClearLoading(true);
-  //   form.reset();
-  //   await fetchInvoices({
-  //     customer: null,
-  //     issueDate: [null, null],
-  //     dueDate: [null, null],
-  //     status: null,
-  //   });
-  //   setClearLoading(false);
-  // };
 
   const handleClear = useCallback(async () => {
     setClearLoading(true);
@@ -65,27 +44,6 @@ const InvoiceView: FC<Props> = ({ customers }) => {
     setClearLoading(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  // Fetch customers
-  // useEffect(() => {
-  //   const fetchCustomers = async () => {
-  //     const res = await fetch("/api/customer");
-  //     const data = await res.json();
-  //     setCustomers(data);
-  //   };
-
-  //   fetchInvoices({
-  //     customer: null,
-  //     issueDate: [null, null],
-  //     dueDate: [null, null],
-  //     status: null,
-  //   });
-
-  //   fetchCustomers();
-  //   setLoading(false);
-  // }, []);
-
-  // Fetch invoices
 
   useEffect(() => {
     fetchInvoices({

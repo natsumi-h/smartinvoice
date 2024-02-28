@@ -6,6 +6,7 @@ import {
   Flex,
   Group,
   Image,
+  Modal,
   Select,
   Text,
   TextInput,
@@ -18,12 +19,14 @@ import { useRouter } from "next/navigation";
 import { updateCompanySchema } from "@/app/schema/Company/schema";
 import useToast from "@/app/hooks/useToast";
 import { Company } from "@prisma/client";
+import { useDisclosure } from "@mantine/hooks";
 
 type Props = {
   company: Company;
 };
 
 const UpdateCompany: FC<Props> = ({ company }) => {
+  const [opened, { close, open }] = useDisclosure(false);
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(company.logoUrl);
   const [loading, setLoading] = useState(false);
@@ -51,24 +54,17 @@ const UpdateCompany: FC<Props> = ({ company }) => {
     validate: zodResolver(updateCompanySchema),
   });
 
-  const handleSubmit = async (values: Record<string, unknown>) => {
+  const handleSubmit = async () => {
     setLoading(true);
     const formData = new FormData();
     if (file) {
       formData.append("file", file);
     }
-    Object.keys(values).forEach((key) => {
-      const value = values[key];
-
+    Object.keys(form.values).forEach((key) => {
+      const value = form.values[key as keyof typeof form.values];
       if (key !== "file") {
         if (typeof value === "string") {
           formData.append(key, value);
-        }
-      }
-
-      if (key === "accounttype") {
-        if (typeof value === "string") {
-          formData.append(key, value.toLowerCase());
         }
       }
     });
@@ -98,134 +94,144 @@ const UpdateCompany: FC<Props> = ({ company }) => {
   };
 
   return (
-    <Box maw="800px">
-      <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
-        <Box mt="lg">
-          <Text fw={500} size="sm">
-            Logo Image
-          </Text>
-          <Flex gap="lg" align={"center"}>
-            <Image
-              radius="md"
-              component={NextImage}
-              src={previewUrl || noimage}
-              width={100}
-              height={100}
-              alt="Company Logo"
+    <>
+      <Box maw="800px">
+        <form onSubmit={form.onSubmit(open)}>
+          <Box mt="lg">
+            <Text fw={500} size="sm">
+              Logo Image
+            </Text>
+            <Flex gap="lg" align={"center"}>
+              <Image
+                radius="md"
+                component={NextImage}
+                src={previewUrl || noimage}
+                width={100}
+                height={100}
+                alt="Company Logo"
+              />
+              <Box>
+                <Group justify="flex-start">
+                  <FileButton
+                    onChange={(file) => file && handleFileChange(file)}
+                    accept="image/png,image/jpeg"
+                  >
+                    {(props) => <Button {...props}>Update image</Button>}
+                  </FileButton>
+                </Group>
+
+                {file && (
+                  <Text size="sm" ta="center" mt="sm">
+                    Picked file: {file.name}
+                  </Text>
+                )}
+              </Box>
+            </Flex>
+          </Box>
+
+          <TextInput
+            label="Legal/Trading name"
+            placeholder="Custom layout"
+            mt="lg"
+            {...form.getInputProps("name")}
+          />
+          <TextInput
+            label="UEN"
+            placeholder="Custom layout"
+            mt="lg"
+            {...form.getInputProps("uen")}
+          />
+
+          <TextInput
+            label="Address"
+            placeholder="Street address"
+            mt="lg"
+            {...form.getInputProps("street")}
+          />
+          <TextInput
+            placeholder="Town/City"
+            mt="lg"
+            {...form.getInputProps("city")}
+          />
+          <Flex gap="md" mt="lg">
+            <TextInput
+              placeholder="State/Region"
+              w="50%"
+              {...form.getInputProps("state")}
             />
-            <Box>
-              <Group justify="flex-start">
-                <FileButton
-                  onChange={(file) => file && handleFileChange(file)}
-                  accept="image/png,image/jpeg"
-                >
-                  {(props) => <Button {...props}>Update image</Button>}
-                </FileButton>
-              </Group>
-
-              {file && (
-                <Text size="sm" ta="center" mt="sm">
-                  Picked file: {file.name}
-                </Text>
-              )}
-            </Box>
+            <TextInput
+              placeholder="Postal code"
+              w="50%"
+              {...form.getInputProps("postcode")}
+            />
           </Flex>
-        </Box>
 
-        <TextInput
-          label="Legal/Trading name"
-          placeholder="Custom layout"
-          mt="lg"
-          {...form.getInputProps("name")}
-        />
-        <TextInput
-          label="UEN"
-          placeholder="Custom layout"
-          mt="lg"
-          {...form.getInputProps("uen")}
-        />
-
-        <TextInput
-          label="Address"
-          placeholder="Street address"
-          mt="lg"
-          {...form.getInputProps("street")}
-        />
-        <TextInput
-          placeholder="Town/City"
-          mt="lg"
-          {...form.getInputProps("city")}
-        />
-        <Flex gap="md" mt="lg">
           <TextInput
-            placeholder="State/Region"
-            w="50%"
-            {...form.getInputProps("state")}
+            label="Phone"
+            placeholder="Custom layout"
+            mt="lg"
+            {...form.getInputProps("phone")}
+          />
+          {/* Bank */}
+          <TextInput
+            label="Bank Name"
+            placeholder="Custom layout"
+            mt="lg"
+            {...form.getInputProps("bankname")}
           />
           <TextInput
-            placeholder="Postal code"
-            w="50%"
-            {...form.getInputProps("postcode")}
+            label="Branch Name"
+            placeholder="Custom layout"
+            mt="lg"
+            {...form.getInputProps("branchname")}
           />
-        </Flex>
-
-        <TextInput
-          label="Phone"
-          placeholder="Custom layout"
-          mt="lg"
-          {...form.getInputProps("phone")}
-        />
-        {/* Bank */}
-        <TextInput
-          label="Bank Name"
-          placeholder="Custom layout"
-          mt="lg"
-          {...form.getInputProps("bankname")}
-        />
-        <TextInput
-          label="Branch Name"
-          placeholder="Custom layout"
-          mt="lg"
-          {...form.getInputProps("branchname")}
-        />
-        <TextInput
-          label="A/C Name"
-          placeholder="Custom layout"
-          mt="lg"
-          {...form.getInputProps("accountname")}
-        />
-        <Select
-          label="A/C Type"
-          placeholder="Custom layout"
-          mt="lg"
-          data={["Savings", "Current"]}
-          {...form.getInputProps("accounttype")}
-        />
-        <TextInput
-          label="A/C #"
-          placeholder="Custom layout"
-          mt="lg"
-          {...form.getInputProps("accountnumber")}
-        />
-        <TextInput
-          label="Bank Code"
-          placeholder="Custom layout"
-          mt="lg"
-          {...form.getInputProps("bankcode")}
-        />
-        <TextInput
-          label="Swift BIC Code"
-          placeholder="Custom layout"
-          mt="lg"
-          {...form.getInputProps("swiftcode")}
-        />
-        <TextInput
-          label="Branch #"
-          placeholder="Custom layout"
-          mt="lg"
-          {...form.getInputProps("branchnumber")}
-        />
-        {/* <Textarea
+          <TextInput
+            label="A/C Name"
+            placeholder="Custom layout"
+            mt="lg"
+            {...form.getInputProps("accountname")}
+          />
+          <Select
+            label="A/C Type"
+            placeholder="Custom layout"
+            mt="lg"
+            data={[
+              {
+                label: "Savings",
+                value: "Savings",
+              },
+              {
+                label: "Current",
+                value: "Current",
+              },
+            ]}
+            {...form.getInputProps("accounttype")}
+          />
+          <TextInput
+            label="A/C #"
+            placeholder="Custom layout"
+            mt="lg"
+            {...form.getInputProps("accountnumber")}
+          />
+          <TextInput
+            label="Bank Code"
+            placeholder="Custom layout"
+            mt="lg"
+            {...form.getInputProps("bankcode")}
+          />
+          <TextInput
+            label="Swift BIC Code"
+            placeholder="Custom layout"
+            mt="lg"
+            {...form.getInputProps("swiftcode")}
+          />
+          <TextInput
+            label="Branch #"
+            placeholder="Custom layout"
+            mt="lg"
+            {...form.getInputProps("branchnumber")}
+          />
+          {/* <Textarea
           label="Invoice Remarks"
           placeholder="Custom layout"
           mt="lg"
@@ -233,13 +239,31 @@ const UpdateCompany: FC<Props> = ({ company }) => {
           {...form.getInputProps("remarks")}
         /> */}
 
-        <Group justify="center" mt="xl">
-          <Button fullWidth type="submit" loading={loading}>
-            Update
+          <Group justify="center" mt="xl">
+            <Button fullWidth type="submit" loading={loading}>
+              Update
+            </Button>
+          </Group>
+        </form>
+      </Box>
+
+      <Modal
+        opened={opened}
+        onClose={close}
+        size="md"
+        title="Update organization"
+      >
+        <Text>Are you sure you want to proceed?</Text>
+        <Group mt="xl" justify="center">
+          <Button variant="outline" onClick={close}>
+            Cancel
+          </Button>
+          <Button onClick={handleSubmit} loading={loading}>
+            Proceed
           </Button>
         </Group>
-      </form>
-    </Box>
+      </Modal>
+    </>
   );
 };
 
