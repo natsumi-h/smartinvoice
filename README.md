@@ -60,6 +60,9 @@ Password: nats723
 ## Key Challenges/takeaways
 
 ### Server side rendering vs Client side rendering
+* Revision of Client-Side Rendering vs Server-Side Rendering
+  * [Intro to Single-Page Applications (SPAs) and the MERN-Stack](https://git.generalassemb.ly/sei-sg/SEIF-15-Course-Materials/blob/bab2a927b522f88998307c8b8a3bf3036c0e2b1d/unit3/w17d02/3.8.1-intro-spas-and-mern-stack/README.md#concept-3-client-side-rendering)
+  
 
 ### Soft delete practice
 * Considering the impact on SQL relational tables, practiced using the `POST` method with manipulation of `deleted` column for all delete operations, instead of the `DELETE`.
