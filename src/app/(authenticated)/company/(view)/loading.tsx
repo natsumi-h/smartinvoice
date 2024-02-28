@@ -1,7 +1,7 @@
 import LoadingSpinner from "@/app/components/LoadingSpinner";
 
-const CompanyLoading = () => {
+const loading = () => {
   return <LoadingSpinner />;
 };
 
-export default CompanyLoading;
+export default loading;
