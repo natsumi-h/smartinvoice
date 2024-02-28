@@ -3,6 +3,10 @@ Smartinvoice is an intuitive application designed for generating professional in
 ## Live URL
 https://smartinvoice-sepia.vercel.app/signin
 
+Demo Account
+Email: natsmy.1211@gmail.com
+Password: nats723
+
 ## Screenshots
 ### Home(Marketing)
 <img width="1362" alt="Screenshot 2024-02-25 at 11 36 20 PM" src="https://github.com/natsumi-h/smartinvoice/assets/88537845/e8743c4c-12c2-40f8-8952-60fec76bf9d2">
@@ -49,11 +53,15 @@ https://smartinvoice-sepia.vercel.app/signin
 * [API Endpoints](https://docs.google.com/spreadsheets/d/1fEhIKWBwyQ6nHCPvhyeVGnzgMv6qiBL49Tq5Oz7gI-s/edit#gid=1534939420)
 * [Database ERD](https://drawsql.app/teams/natsumi-horis-team/diagrams/project4)
 
-![Screenshot 2024-02-25 at 11 20 27 PM](https://github.com/natsumi-h/smartinvoice/assets/88537845/92a2c4e4-d27c-445c-8720-db148a5eb8a7)
+![Screenshot 2024-02-28 at 4 19 39 PM](https://github.com/natsumi-h/smartinvoice/assets/88537845/0f632c03-dfb8-4ac9-bb59-a47fdbb9ef08)
+
 
 
 
 ## Key Challenges/takeaways
+### Server side rendering vs Client side rendering
+
+### Soft delete practice
 
 ## Next Steps
 * UI Enhancement (Pagination, Next.js loading/cache optimization)
