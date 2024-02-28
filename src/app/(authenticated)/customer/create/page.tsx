@@ -1,4 +1,3 @@
-"use client";
 import CreateCustomer from "@/app/components/Customer/CreateCustomer";
 import { Box, Title } from "@mantine/core";
 
