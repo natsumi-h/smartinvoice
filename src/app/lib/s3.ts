@@ -1,6 +1,5 @@
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 
-
 export const s3Client = new S3Client({
   region: process.env.AWS_S3_REGION || "ap-southeast-2",
   credentials: {
@@ -30,7 +29,6 @@ export const uploadFileToS3 = async (
     )}`;
     return fileUrl;
   } catch (e) {
-    console.error(e);
     throw e;
   }
 };

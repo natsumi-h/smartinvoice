@@ -31,7 +31,6 @@ export async function GET(
 
     return NextResponse.json(res, { status: 200 });
   } catch (e) {
-    console.error(e);
     throw e;
   }
 }

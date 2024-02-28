@@ -1,7 +1,5 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/app/db";
-import { getSession } from "@/app/lib/action";
-import { JWTPayload, JWTVerifyResult } from "jose";
 import { checkIfUserIsLoggedIn } from "@/app/lib/apiMiddleware";
 
 // POST /api/invoice/:id/updatestatus

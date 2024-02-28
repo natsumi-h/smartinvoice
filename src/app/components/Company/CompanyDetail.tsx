@@ -1,4 +1,4 @@
-import { Box, Button, Table, Image } from "@mantine/core";
+import { Button, Table, Image } from "@mantine/core";
 import { Company } from "@prisma/client";
 import NextImage from "next/image";
 import Link from "next/link";
@@ -43,18 +43,18 @@ const CompanyDetail: FC<Props> = ({ company }) => {
           </Table.Tr>
           <Table.Tr>
             <Table.Td pl="0">
-              <Image
-                component={NextImage}
-                src={logoUrl}
-                alt={name}
-                width={100}
-                height={50}
-                style={{
-                  width: "200px",
-                  height: "auto",
-                }}
-                priority={true}
-              />
+                <Image
+                  component={NextImage}
+                  src={logoUrl}
+                  alt={name}
+                  width={100}
+                  height={50}
+                  style={{
+                    width: "150px",
+                    height: "auto",
+                  }}
+                  priority={true}
+                />
             </Table.Td>
           </Table.Tr>
           {/* Name */}

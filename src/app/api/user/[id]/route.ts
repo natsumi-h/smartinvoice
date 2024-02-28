@@ -25,7 +25,6 @@ export async function POST(
     });
     return NextResponse.json(res, { status: 200 });
   } catch (e: any) {
-    console.error(e);
     const message = e.message || "Internal Server Error";
     const status = e.status || 500;
     return NextResponse.json({ error: message }, { status });
