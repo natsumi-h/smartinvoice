@@ -83,7 +83,6 @@ const UpdateCompany: FC<Props> = ({ company }) => {
         message: "Your company detail has been updated successfully.",
       });
     } catch (error: any) {
-      console.log(error);
       setLoading(false);
     }
   };

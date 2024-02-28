@@ -70,7 +70,6 @@ export async function GET(request: NextRequest) {
   const usersCompany = session?.payload.company as number;
   const searchParams = request.nextUrl.searchParams;
   const query = searchParams.get("query");
-  console.log(query);
 
   try {
     const whereCondition = {
@@ -153,7 +152,6 @@ export async function GET(request: NextRequest) {
         name: "asc",
       },
     });
-    console.log(res);
 
     return NextResponse.json(res, { status: 200 });
   } catch (e) {

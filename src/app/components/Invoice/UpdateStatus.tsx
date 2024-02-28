@@ -36,7 +36,6 @@ const UpdateStatus: FC<Props> = ({ invoice }) => {
         }),
       });
       const data = await response.json();
-      console.log(data);
       form.reset();
       setLoading(false);
       close();

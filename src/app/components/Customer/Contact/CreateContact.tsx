@@ -58,7 +58,6 @@ const CreateContact: FC<Props> = ({ opened, close, customerId }) => {
         message: "Contact has been created successfully",
       });
     } catch (error: any) {
-      console.log(error);
       setLoading(false);
       errorToast(error.message);
     }

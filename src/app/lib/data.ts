@@ -89,7 +89,6 @@ export const getCompany = async () => {
     });
     return res;
   } catch (e) {
-    console.log(e);
     throw e;
   }
 };
@@ -125,7 +124,6 @@ export const getMembers = async () => {
     });
     return res;
   } catch (e) {
-    console.log(e);
     throw e;
   }
 };
@@ -177,7 +175,6 @@ export const getInvoice = async (id: string) => {
 
     return res;
   } catch (e) {
-    console.log(e);
     throw e;
   }
 };
@@ -206,7 +203,6 @@ export const getUser = async () => {
     });
     return res;
   } catch (e) {
-    console.log(e);
     throw e;
   }
 };

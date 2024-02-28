@@ -61,7 +61,6 @@ const UpdateContact: FC<Props> = ({ opened, close, contact }) => {
         message: "Contact has been updated successfully",
       });
     } catch (error: any) {
-      console.log(error);
       setLoading(false);
       errorToast(error.message);
     }

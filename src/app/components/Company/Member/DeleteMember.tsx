@@ -32,7 +32,6 @@ const DeleteMember: FC<Props> = ({ opened, close, member }) => {
         message: "Member has been deleted successfully",
       });
     } catch (error) {
-      console.log(error);
       setLoading(false);
       errorToast(error as string);
     }

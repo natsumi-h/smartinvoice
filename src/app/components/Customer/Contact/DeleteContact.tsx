@@ -35,7 +35,6 @@ const DeleteContact: FC<Props> = ({ opened, close, contact }) => {
         message: "Contact has been deleted successfully",
       });
     } catch (error: any) {
-      console.log(error);
       setLoading(false);
       errorToast(error.message);
     }

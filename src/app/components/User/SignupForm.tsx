@@ -53,7 +53,6 @@ const SignupForm = () => {
         message: "You will receive an email to verify your account shortly.",
       });
     } catch (error: any) {
-      console.log(error.message);
       setLoading(false);
       errorToast(error.message);
     }

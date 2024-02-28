@@ -58,7 +58,6 @@ const UpdateCustomer: FC<Props> = ({ customer }) => {
         message: "Customer has been updated successfully",
       });
     } catch (error: any) {
-      console.log(error);
       setLoading(false);
       errorToast(error.message || "Failed to update customer");
     }

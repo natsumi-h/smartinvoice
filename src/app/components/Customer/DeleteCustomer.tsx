@@ -34,7 +34,6 @@ const DeleteCustomer: FC<Props> = ({ id }) => {
         message: "Customer has been deleted successfully",
       });
     } catch (error) {
-      console.log(error);
       setLoading(false);
       errorToast(error as string);
     }

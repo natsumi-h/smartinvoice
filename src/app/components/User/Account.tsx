@@ -37,7 +37,6 @@ const Account: FC<Props> = ({ session, user }) => {
         message: "You are now signed out.",
       });
     } catch (error: any) {
-      console.log(error);
       setLoading(false);
       errorToast(error.message || "Logout failed. Please try again.");
     }

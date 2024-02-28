@@ -38,7 +38,6 @@ const CreateNewUser = () => {
         message: "User will receive an email to verify their account shortly.",
       });
     } catch (error: any) {
-      console.log(error.message);
       setLoading(false);
       errorToast(error.message);
     }

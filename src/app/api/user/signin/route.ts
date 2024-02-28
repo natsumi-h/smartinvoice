@@ -26,7 +26,6 @@ export async function GET(request: NextRequest) {
       { status: 200 }
     );
   } catch (e: any) {
-    console.log(e);
     const message =
       e.message === "Invalid credentials" ? e.message : "Internal server error";
     const status = e.message === "Invalid credentials" ? 401 : 500;
@@ -75,7 +74,6 @@ export async function POST(request: NextRequest) {
     cookies().set("token", jwt, { expires: expiryDate, httpOnly: true });
     return NextResponse.json({ company: user?.company_id }, { status: 200 });
   } catch (e: any) {
-    console.log(e);
     const message =
       e.message === "Invalid credentials" ? e.message : "Internal server error";
     const status = e.message === "Invalid credentials" ? 401 : 500;

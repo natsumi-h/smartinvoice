@@ -70,7 +70,6 @@ const SigninForm = () => {
         message: "You are now signed in.",
       });
     } catch (error: any) {
-      console.log(error.message);
       setLoading(false);
       errorToast(error.message);
     }

@@ -61,7 +61,6 @@ const Onboarding = () => {
         message: "Your company detail has been created successfully.",
       });
     } catch (error: any) {
-      console.log(error);
       setLoading(false);
       errorToast(error.message);
     }

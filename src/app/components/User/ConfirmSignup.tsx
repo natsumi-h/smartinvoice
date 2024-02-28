@@ -47,7 +47,6 @@ const ConfirmSignup = () => {
         message: "You have successfully signed up. Please signin to continue.",
       });
     } catch (error: any) {
-      console.log(error);
       setLoading(false);
       errorToast(error.message);
     }

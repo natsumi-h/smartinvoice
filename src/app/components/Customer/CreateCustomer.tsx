@@ -55,7 +55,6 @@ const CreateCustomer = () => {
         message: "Customer has been created successfully",
       });
     } catch (error: any) {
-      console.log(error);
       setLoading(false);
       errorToast(error.message || "Failed to create customer");
     }

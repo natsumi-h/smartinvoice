@@ -107,7 +107,6 @@ const CreateInvoice: FC<Props> = ({ customers }) => {
         customer: values.customer,
         contact: values.contact,
       };
-      console.log(payload);
 
       const response = await fetch("/api/invoice", {
         method: "POST",
@@ -116,7 +115,6 @@ const CreateInvoice: FC<Props> = ({ customers }) => {
         }),
       });
       const data = await response.json();
-      console.log(data);
       router.push(`/invoice/${data.data.id}`);
       successToast({
         title: "Invoice created",
@@ -124,7 +122,6 @@ const CreateInvoice: FC<Props> = ({ customers }) => {
       });
       type === "issue" ? setLoadingIssue(false) : setLoadingDraft(false);
     } catch (error: any) {
-      console.log(error);
       type === "issue" ? setLoadingIssue(false) : setLoadingDraft(false);
       errorToast(error.message);
     }

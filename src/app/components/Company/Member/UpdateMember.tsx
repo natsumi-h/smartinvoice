@@ -55,7 +55,6 @@ const UpdateMember: FC<Props> = ({ opened, close, member }) => {
         message: "Member has been updated successfully",
       });
     } catch (error: any) {
-      console.log(error.message);
       setLoading(false);
       errorToast(error.message);
     }

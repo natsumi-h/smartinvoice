@@ -45,7 +45,6 @@ export async function POST(request: NextRequest) {
     });
     return NextResponse.json({ data: res }, { status: 200 });
   } catch (e: any) {
-    console.log(e);
     const message =
       e.message === "Invalid credentials" ? e.message : "Internal server error";
     const status = e.message === "Invalid credentials" ? 401 : 500;
