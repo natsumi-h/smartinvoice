@@ -57,7 +57,7 @@ Password: nats723
 
 ![Screenshot 2024-02-28 at 4 19 39 PM](https://github.com/natsumi-h/smartinvoice/assets/88537845/08e3cf42-ce58-45c0-9f9f-7eb30222d882)
 
-## Key Challenges/takeaways
+## Key Challenges/Takeaways
 
 ### Server side rendering vs Client side rendering
 * Revision of Client-Side Rendering vs Server-Side Rendering
