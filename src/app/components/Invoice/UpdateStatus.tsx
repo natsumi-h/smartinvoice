@@ -14,7 +14,7 @@ type Props = {
 };
 
 const UpdateStatus: FC<Props> = ({ invoice }) => {
-  const [loadiing, setLoading] = useState(false);
+  const [loadiing, setLoading] = useState<boolean>(false);
   const [opened, { open, close }] = useDisclosure(false);
   const { successToast, errorToast } = useToast();
   const router = useRouter();

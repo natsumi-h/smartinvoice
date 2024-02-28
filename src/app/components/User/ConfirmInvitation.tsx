@@ -10,7 +10,7 @@ import { confirmSignupSchema } from "@/app/schema/User/schema";
 import { zodResolver } from "mantine-form-zod-resolver";
 
 const ConfirmInvitation = () => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const { successToast, errorToast } = useToast();
   const router = useRouter();
   const searchParams = useSearchParams();

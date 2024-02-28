@@ -14,7 +14,7 @@ type Props = {
 };
 
 const UpdateMember: FC<Props> = ({ opened, close, member }) => {
-  const [loadiing, setLoading] = useState(false);
+  const [loadiing, setLoading] = useState<boolean>(false);
   const { successToast, errorToast } = useToast();
   const router = useRouter();
 
@@ -62,53 +62,53 @@ const UpdateMember: FC<Props> = ({ opened, close, member }) => {
   };
 
   return (
-      <Modal
-        opened={opened}
-        onClose={() => {
-          close();
-          form.reset();
-        }}
-        title="Update Member"
-      >
-        <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
-          <TextInput
-            label="Name"
-            placeholder="John Doe"
-            mt="lg"
-            {...form.getInputProps("name")}
-          />
-          <TextInput
-            label="Email"
-            placeholder="email@email.com"
-            mt="lg"
-            {...form.getInputProps("email")}
-          />
-          <Select
-            label="Role"
-            placeholder="Select role"
-            mt="lg"
-            data={["Admin", "User"]}
-            defaultValue="User"
-            allowDeselect={false}
-            {...form.getInputProps("role")}
-          />
+    <Modal
+      opened={opened}
+      onClose={() => {
+        close();
+        form.reset();
+      }}
+      title="Update Member"
+    >
+      <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
+        <TextInput
+          label="Name"
+          placeholder="John Doe"
+          mt="lg"
+          {...form.getInputProps("name")}
+        />
+        <TextInput
+          label="Email"
+          placeholder="email@email.com"
+          mt="lg"
+          {...form.getInputProps("email")}
+        />
+        <Select
+          label="Role"
+          placeholder="Select role"
+          mt="lg"
+          data={["Admin", "User"]}
+          defaultValue="User"
+          allowDeselect={false}
+          {...form.getInputProps("role")}
+        />
 
-          <Group mt="xl" justify="center">
-            <Button
-              variant="outline"
-              onClick={() => {
-                close();
-                form.reset();
-              }}
-            >
-              Cancel
-            </Button>
-            <Button type="submit" loading={loadiing}>
-              Update
-            </Button>
-          </Group>
-        </form>
-      </Modal>
+        <Group mt="xl" justify="center">
+          <Button
+            variant="outline"
+            onClick={() => {
+              close();
+              form.reset();
+            }}
+          >
+            Cancel
+          </Button>
+          <Button type="submit" loading={loadiing}>
+            Update
+          </Button>
+        </Group>
+      </form>
+    </Modal>
   );
 };
 

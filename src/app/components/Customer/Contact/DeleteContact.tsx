@@ -11,7 +11,7 @@ type Props = {
 };
 
 const DeleteContact: FC<Props> = ({ opened, close, contact }) => {
-  const [loadiing, setLoading] = useState(false);
+  const [loadiing, setLoading] = useState<boolean>(false);
   const { successToast, errorToast } = useToast();
   const router = useRouter();
 

@@ -11,7 +11,7 @@ type Props = {
 };
 
 const DeleteMember: FC<Props> = ({ opened, close, member }) => {
-  const [loadiing, setLoading] = useState(false);
+  const [loadiing, setLoading] = useState<boolean>(false);
   const { successToast, errorToast } = useToast();
   const router = useRouter();
 
