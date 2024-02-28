@@ -20,7 +20,7 @@ type Props = {
 };
 
 const CreateContact: FC<Props> = ({ opened, close, customerId }) => {
-  const [loadiing, setLoading] = useState(false);
+  const [loadiing, setLoading] = useState<boolean>(false);
   const { successToast, errorToast } = useToast();
   const router = useRouter();
 

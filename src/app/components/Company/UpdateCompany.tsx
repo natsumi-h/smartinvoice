@@ -29,7 +29,7 @@ const UpdateCompany: FC<Props> = ({ company }) => {
   const [opened, { close, open }] = useDisclosure(false);
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(company.logoUrl);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
   const { successToast, errorToast } = useToast();
 

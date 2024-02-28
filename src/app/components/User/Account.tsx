@@ -16,7 +16,7 @@ type Props = {
 const Account: FC<Props> = ({ session, user }) => {
   const { successToast, errorToast } = useToast();
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleLogout = async () => {
     setLoading(true);

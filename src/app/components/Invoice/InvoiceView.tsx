@@ -12,10 +12,10 @@ type Props = {
 };
 
 const InvoiceView: FC<Props> = ({ customers }) => {
-  const [filterLoading, setFilterLoading] = useState(false);
-  const [clearLoading, setClearLoading] = useState(false);
+  const [filterLoading, setFilterLoading] = useState<boolean>(false);
+  const [clearLoading, setClearLoading] = useState<boolean>(false);
   const [invoices, setInvoices] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const form = useForm({
     initialValues: {

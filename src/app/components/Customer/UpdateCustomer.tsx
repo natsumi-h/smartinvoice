@@ -17,14 +17,14 @@ import { useRouter } from "next/navigation";
 import { FC, useState } from "react";
 
 type Props = {
-  customer : Customer;
+  customer: Customer;
 };
 
 const UpdateCustomer: FC<Props> = ({ customer }) => {
   const { id, name, street, city, state, postcode, phone } = customer;
 
   const [opened, { close, open }] = useDisclosure(false);
-  const [loadiing, setLoading] = useState(false);
+  const [loadiing, setLoading] = useState<boolean>(false);
   const { successToast, errorToast } = useToast();
   const router = useRouter();
   const form = useForm({

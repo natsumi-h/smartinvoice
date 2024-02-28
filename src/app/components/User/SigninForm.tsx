@@ -19,7 +19,7 @@ import { zodResolver } from "mantine-form-zod-resolver";
 import { signinSchema } from "@/app/schema/User/schema";
 
 const SigninForm = () => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const { successToast, errorToast } = useToast();
   const router = useRouter();
 
