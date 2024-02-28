@@ -3,6 +3,8 @@ import {
   Box,
   Button,
   Flex,
+  Group,
+  Modal,
   NumberInput,
   Select,
   Stack,
@@ -21,6 +23,7 @@ import { useRouter } from "next/navigation";
 import useToast from "@/app/hooks/useToast";
 import { addCommasToNumber } from "@/app/lib/addCommas";
 import { Contact, Customer as PrismaCustomer } from "@prisma/client";
+import { useDisclosure } from "@mantine/hooks";
 
 type Props = {
   customers: Customer[];
@@ -31,8 +34,9 @@ type Customer = PrismaCustomer & {
 };
 
 const CreateInvoice: FC<Props> = ({ customers }) => {
-  const [loadingDraft, setLoadingDraft] = useState<boolean>(false);
-  const [loadingIssue, setLoadingIssue] = useState<boolean>(false);
+  const [opened, { close, open }] = useDisclosure(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [submitOption, setSubmitOption] = useState<"issue" | "draft">("issue");
   const { successToast, errorToast } = useToast();
   const [itemLength, setItemLength] = useState<number>(1);
   const [subtotal, setSubtotal] = useState<number>(0.0);
@@ -79,7 +83,7 @@ const CreateInvoice: FC<Props> = ({ customers }) => {
   const handleSubmit = async (type: "issue" | "draft") => {
     const values: Record<string, unknown> = form.values;
     try {
-      type == "issue" ? setLoadingIssue(true) : setLoadingDraft(true);
+      setLoading(true);
       const itemValues = [];
       for (let i = 0; i < itemLength; i++) {
         itemValues.push({
@@ -120,9 +124,11 @@ const CreateInvoice: FC<Props> = ({ customers }) => {
         title: "Invoice created",
         message: "Invoice has been created successfully",
       });
-      type === "issue" ? setLoadingIssue(false) : setLoadingDraft(false);
+      setLoading(false);
+      close();
     } catch (error: any) {
-      type === "issue" ? setLoadingIssue(false) : setLoadingDraft(false);
+      close();
+      setLoading(false);
       errorToast(error.message);
     }
   };
@@ -219,143 +225,173 @@ const CreateInvoice: FC<Props> = ({ customers }) => {
   ));
 
   return (
-    <Box maw={1200}>
-      <form
-      // onSubmit={form.onSubmit((values) => handleSubmit(values))}
-      >
-        <Flex gap="md" mt="lg" justify={"space-between"}>
-          <Stack w={"50%"} gap="md">
-            <Select
-              label="Company"
-              placeholder="Choose Customer"
-              searchable
-              limit={5}
-              data={customers.map((customer) => ({
-                label: customer.name,
-                value: customer.id.toString(),
-              }))}
-              {...form.getInputProps("customer")}
-            />
-            <Select
-              label="Attention to"
-              placeholder="Choose Contact"
-              disabled={!form.values?.customer}
-              data={customers
-                .find(
-                  (customer) => customer.id === Number(form.values?.customer)
-                )
-                ?.contact.map((contact) => ({
-                  label: contact.name,
-                  value: contact.id.toString(),
+    <>
+      <Box maw={1200}>
+        <form
+        // onSubmit={form.onSubmit((values) => handleSubmit(values))}
+        >
+          <Flex gap="md" mt="lg" justify={"space-between"}>
+            <Stack w={"50%"} gap="md">
+              <Select
+                label="Company"
+                placeholder="Choose Customer"
+                searchable
+                limit={5}
+                data={customers.map((customer) => ({
+                  label: customer.name,
+                  value: customer.id.toString(),
                 }))}
-              searchable
-              limit={5}
-              {...form.getInputProps("contact")}
-            />
-          </Stack>
-          <Stack gap="md">
-            <DateInput
-              label="Issue date"
-              placeholder="Date input"
-              {...form.getInputProps("issueDate")}
-            />
-            <DateInput
-              label="Due date"
-              placeholder="Date input"
-              {...form.getInputProps("dueDate")}
-            />
-          </Stack>
-        </Flex>
+                {...form.getInputProps("customer")}
+              />
+              <Select
+                label="Attention to"
+                placeholder="Choose Contact"
+                disabled={!form.values?.customer}
+                data={customers
+                  .find(
+                    (customer) => customer.id === Number(form.values?.customer)
+                  )
+                  ?.contact.map((contact) => ({
+                    label: contact.name,
+                    value: contact.id.toString(),
+                  }))}
+                searchable
+                limit={5}
+                {...form.getInputProps("contact")}
+              />
+            </Stack>
+            <Stack gap="md">
+              <DateInput
+                label="Issue date"
+                placeholder="Date input"
+                {...form.getInputProps("issueDate")}
+              />
+              <DateInput
+                label="Due date"
+                placeholder="Date input"
+                {...form.getInputProps("dueDate")}
+              />
+            </Stack>
+          </Flex>
 
-        <Table mt="xl" verticalSpacing={"md"} horizontalSpacing={"md"}>
-          <Table.Thead>
-            <Table.Tr>
-              <Table.Th pl="0">Description</Table.Th>
-              <Table.Th pl="0">QTY</Table.Th>
-              <Table.Th pl="0">Unit Price</Table.Th>
-              <Table.Th pl="0">Tax Rate</Table.Th>
-              <Table.Th pl="0">Amount($)</Table.Th>
-              <Table.Th pl="0"></Table.Th>
-            </Table.Tr>
-          </Table.Thead>
-          <Table.Tbody>{rows}</Table.Tbody>
-        </Table>
-        <Box ta={"left"} mr="md">
-          <UnstyledButton
+          <Table mt="xl" verticalSpacing={"md"} horizontalSpacing={"md"}>
+            <Table.Thead>
+              <Table.Tr>
+                <Table.Th pl="0">Description</Table.Th>
+                <Table.Th pl="0">QTY</Table.Th>
+                <Table.Th pl="0">Unit Price</Table.Th>
+                <Table.Th pl="0">Tax Rate</Table.Th>
+                <Table.Th pl="0">Amount($)</Table.Th>
+                <Table.Th pl="0"></Table.Th>
+              </Table.Tr>
+            </Table.Thead>
+            <Table.Tbody>{rows}</Table.Tbody>
+          </Table>
+          <Box ta={"left"} mr="md">
+            <UnstyledButton
+              onClick={() => {
+                handleAddItem();
+              }}
+            >
+              <Text c="blue">+ Add item</Text>
+            </UnstyledButton>
+          </Box>
+
+          {/* Total Table */}
+          <Table withRowBorders={false} maw="60%" mt="xl" ml={"auto"}>
+            <Table.Tbody>
+              <Table.Tr>
+                <Table.Td>
+                  <Text fw={"bold"}>Subtotal</Text>
+                </Table.Td>
+                <Table.Td>
+                  <Text ta="right">{addCommasToNumber(subtotal)}</Text>
+                </Table.Td>
+              </Table.Tr>
+
+              <Table.Tr>
+                <Table.Td>
+                  <Text fw={"bold"}>Special Discount</Text>
+                </Table.Td>
+                <Table.Td>
+                  <TextInput
+                    ta="right"
+                    placeholder="500.00"
+                    {...form.getInputProps("specialDiscount")}
+                  ></TextInput>
+                </Table.Td>
+              </Table.Tr>
+
+              <Table.Tr>
+                <Table.Td>
+                  <Text fw={"bold"}>Total Tax</Text>
+                </Table.Td>
+                <Table.Td>
+                  <Text ta="right">{addCommasToNumber(totaltax)}</Text>
+                </Table.Td>
+              </Table.Tr>
+
+              <Table.Tr>
+                <Table.Td>
+                  <Text fw={"bold"}>Total</Text>
+                </Table.Td>
+                <Table.Td>
+                  <Text ta="right">{addCommasToNumber(total)}</Text>
+                </Table.Td>
+              </Table.Tr>
+            </Table.Tbody>
+          </Table>
+
+          <Flex justify="center" mt="xl" gap={"lg"}>
+            <Button
+              fullWidth
+              variant="outline"
+              onClick={() => {
+                open();
+                setSubmitOption("draft");
+              }}
+            >
+              Save Draft
+            </Button>
+            <Button
+              fullWidth
+              onClick={() => {
+                open();
+                setSubmitOption("issue");
+              }}
+            >
+              Issue Invoice
+            </Button>
+          </Flex>
+        </form>
+      </Box>
+
+      <Modal
+        opened={opened}
+        onClose={close}
+        size="md"
+        title={submitOption === "issue" ? "Issue Invoice" : "Save Draft"}
+      >
+        <Text>Are you sure you want to proceed?</Text>
+        <Group mt="xl" justify="center">
+          <Button variant="outline" onClick={close}>
+            Cancel
+          </Button>
+          <Button
             onClick={() => {
-              handleAddItem();
+              if (submitOption === "issue") {
+                handleSubmit("issue");
+              } else if (submitOption === "draft") {
+                handleSubmit("draft");
+              }
             }}
+            loading={loading}
           >
-            <Text c="blue">+ Add item</Text>
-          </UnstyledButton>
-        </Box>
-
-        {/* Total Table */}
-        <Table withRowBorders={false} maw="60%" mt="xl" ml={"auto"}>
-          <Table.Tbody>
-            <Table.Tr>
-              <Table.Td>
-                <Text fw={"bold"}>Subtotal</Text>
-              </Table.Td>
-              <Table.Td>
-                <Text ta="right">{addCommasToNumber(subtotal)}</Text>
-              </Table.Td>
-            </Table.Tr>
-
-            <Table.Tr>
-              <Table.Td>
-                <Text fw={"bold"}>Special Discount</Text>
-              </Table.Td>
-              <Table.Td>
-                <TextInput
-                  ta="right"
-                  placeholder="500.00"
-                  {...form.getInputProps("specialDiscount")}
-                ></TextInput>
-              </Table.Td>
-            </Table.Tr>
-
-            <Table.Tr>
-              <Table.Td>
-                <Text fw={"bold"}>Total Tax</Text>
-              </Table.Td>
-              <Table.Td>
-                <Text ta="right">{addCommasToNumber(totaltax)}</Text>
-              </Table.Td>
-            </Table.Tr>
-
-            <Table.Tr>
-              <Table.Td>
-                <Text fw={"bold"}>Total</Text>
-              </Table.Td>
-              <Table.Td>
-                <Text ta="right">{addCommasToNumber(total)}</Text>
-              </Table.Td>
-            </Table.Tr>
-          </Table.Tbody>
-        </Table>
-
-        <Flex justify="center" mt="xl" gap={"lg"}>
-          <Button
-            fullWidth
-            variant="outline"
-            loading={loadingDraft}
-            disabled={loadingIssue}
-            onClick={() => handleSubmit("draft")}
-          >
-            Save Draft
+            Proceed
           </Button>
-          <Button
-            fullWidth
-            loading={loadingIssue}
-            disabled={loadingDraft}
-            onClick={() => handleSubmit("issue")}
-          >
-            Issue Invoice
-          </Button>
-        </Flex>
-      </form>
-    </Box>
+        </Group>
+      </Modal>
+    </>
   );
 };
 
