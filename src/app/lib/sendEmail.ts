@@ -47,5 +47,8 @@ export async function sendEmail(obj: any) {
     subject: mail?.subject,
     text: mail?.text,
   });
-  console.log(info);
+  if (!info) {
+    throw new Error("Error sending email");
+  }
+  return info;
 }

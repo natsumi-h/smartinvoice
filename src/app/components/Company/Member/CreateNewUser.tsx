@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 const CreateNewUser = () => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const { successToast, errorToast } = useToast();
   const router = useRouter();
 
@@ -38,7 +38,6 @@ const CreateNewUser = () => {
         message: "User will receive an email to verify their account shortly.",
       });
     } catch (error: any) {
-      console.log(error.message);
       setLoading(false);
       errorToast(error.message);
     }

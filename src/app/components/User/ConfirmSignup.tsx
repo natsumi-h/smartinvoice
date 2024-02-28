@@ -10,7 +10,7 @@ import { confirmSignupSchema } from "@/app/schema/User/schema";
 import { zodResolver } from "mantine-form-zod-resolver";
 
 const ConfirmSignup = () => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const { successToast, errorToast } = useToast();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -47,7 +47,6 @@ const ConfirmSignup = () => {
         message: "You have successfully signed up. Please signin to continue.",
       });
     } catch (error: any) {
-      console.log(error);
       setLoading(false);
       errorToast(error.message);
     }

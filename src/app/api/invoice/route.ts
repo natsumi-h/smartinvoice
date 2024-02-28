@@ -77,7 +77,6 @@ export async function POST(request: Request) {
     });
 
     if (payload.requestType === "draft") {
-      console.log(createRes);
       return NextResponse.json(
         {
           data: createRes,
@@ -97,7 +96,6 @@ export async function POST(request: Request) {
       uniqueInvoiceName,
       contentType
     );
-    console.log(fileUrl);
     // ORM update
     const updateRes = await prisma.invoice.update({
       where: {
@@ -126,7 +124,6 @@ export async function POST(request: Request) {
       { status: 200 }
     );
   } catch (e) {
-    console.log(e);
     return NextResponse.json({ error: "Error" }, { status: 400 });
   }
 }
@@ -181,10 +178,8 @@ export async function GET(request: NextRequest) {
         issueDate: "desc",
       },
     });
-    console.log(res);
     return NextResponse.json({ data: res }, { status: 200 });
   } catch (e) {
-    console.log(e);
     return NextResponse.json({ error: "Error" }, { status: 400 });
   }
 }

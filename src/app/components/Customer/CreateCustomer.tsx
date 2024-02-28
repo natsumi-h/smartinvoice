@@ -17,7 +17,7 @@ import { createCustomerSchema } from "@/app/schema/Customer/schema";
 
 const CreateCustomer = () => {
   const [opened, { close, open }] = useDisclosure(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const { successToast, errorToast } = useToast();
   const router = useRouter();
   const form = useForm({
@@ -55,7 +55,6 @@ const CreateCustomer = () => {
         message: "Customer has been created successfully",
       });
     } catch (error: any) {
-      console.log(error);
       setLoading(false);
       errorToast(error.message || "Failed to create customer");
     }

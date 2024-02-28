@@ -28,7 +28,6 @@ export async function POST(request: Request) {
       };
       const uniqueFileName = generateUniqueFileName(file.name);
       fileUrl = await uploadFileToS3(buffer, uniqueFileName, contentType);
-      console.log(fileUrl);
     }
 
     const body = {
@@ -93,14 +92,12 @@ export async function POST(request: Request) {
       where: { id: usersCompany },
       data: file ? dataWithFile : dataWithoutFile,
     });
-    console.log(res);
 
     return NextResponse.json(
       { message: "File upload Success", data: res },
       { status: 200 }
     );
   } catch (e: any) {
-    console.log(e);
     const message = e.message || "An error occurred";
     const status = e.status || 500;
     return NextResponse.json({ error: message }, { status });

@@ -28,7 +28,6 @@ export async function GET(
         issueDate: "desc",
       },
     });
-    console.log(res);
 
     return NextResponse.json(res, { status: 200 });
   } catch (e) {

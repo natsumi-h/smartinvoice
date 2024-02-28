@@ -20,7 +20,7 @@ const CustomerInvoice = () => {
   const [invoices, setInvoices] = useState([]);
   const router = useRouter();
   const customerId = useParams<{ id: string }>();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchInvoices = async () => {

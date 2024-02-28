@@ -21,7 +21,7 @@ type Props = {
 };
 
 const UpdateContact: FC<Props> = ({ opened, close, contact }) => {
-  const [loadiing, setLoading] = useState(false);
+  const [loadiing, setLoading] = useState<boolean>(false);
   const { successToast, errorToast } = useToast();
   const router = useRouter();
   const form = useForm({
@@ -61,7 +61,6 @@ const UpdateContact: FC<Props> = ({ opened, close, contact }) => {
         message: "Contact has been updated successfully",
       });
     } catch (error: any) {
-      console.log(error);
       setLoading(false);
       errorToast(error.message);
     }

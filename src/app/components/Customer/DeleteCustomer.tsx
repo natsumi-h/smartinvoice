@@ -10,7 +10,7 @@ type Props = {
 };
 
 const DeleteCustomer: FC<Props> = ({ id }) => {
-  const [loadiing, setLoading] = useState(false);
+  const [loadiing, setLoading] = useState<boolean>(false);
   const [opened, { open, close }] = useDisclosure(false);
   const { successToast, errorToast } = useToast();
   const router = useRouter();
@@ -34,7 +34,6 @@ const DeleteCustomer: FC<Props> = ({ id }) => {
         message: "Customer has been deleted successfully",
       });
     } catch (error) {
-      console.log(error);
       setLoading(false);
       errorToast(error as string);
     }

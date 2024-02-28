@@ -132,7 +132,6 @@ const UpdateInvoice: FC<Props> = ({ invoice }) => {
         }),
       });
       const data = await response.json();
-      console.log(data);
       router.push(`/invoice/${data.data.id}`);
       router.refresh();
       successToast({
@@ -141,7 +140,6 @@ const UpdateInvoice: FC<Props> = ({ invoice }) => {
       });
       type === "issue" ? setLoadingIssue(false) : setLoadingDraft(false);
     } catch (error) {
-      console.log(error);
       type === "issue" ? setLoadingIssue(false) : setLoadingDraft(false);
     }
   };

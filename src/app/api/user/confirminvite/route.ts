@@ -44,7 +44,6 @@ export async function POST(request: NextRequest) {
     });
     return NextResponse.json({ data: res }, { status: 200 });
   } catch (e: any) {
-    console.log(e);
     const message =
       e.message === "User not found or token expired" ? e.message : "Error";
     return NextResponse.json({ error: message }, { status: 500 });

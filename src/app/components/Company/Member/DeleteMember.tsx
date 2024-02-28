@@ -11,7 +11,7 @@ type Props = {
 };
 
 const DeleteMember: FC<Props> = ({ opened, close, member }) => {
-  const [loadiing, setLoading] = useState(false);
+  const [loadiing, setLoading] = useState<boolean>(false);
   const { successToast, errorToast } = useToast();
   const router = useRouter();
 
@@ -32,7 +32,6 @@ const DeleteMember: FC<Props> = ({ opened, close, member }) => {
         message: "Member has been deleted successfully",
       });
     } catch (error) {
-      console.log(error);
       setLoading(false);
       errorToast(error as string);
     }

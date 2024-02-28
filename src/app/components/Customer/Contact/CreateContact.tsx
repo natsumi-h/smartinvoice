@@ -20,7 +20,7 @@ type Props = {
 };
 
 const CreateContact: FC<Props> = ({ opened, close, customerId }) => {
-  const [loadiing, setLoading] = useState(false);
+  const [loadiing, setLoading] = useState<boolean>(false);
   const { successToast, errorToast } = useToast();
   const router = useRouter();
 
@@ -58,7 +58,6 @@ const CreateContact: FC<Props> = ({ opened, close, customerId }) => {
         message: "Contact has been created successfully",
       });
     } catch (error: any) {
-      console.log(error);
       setLoading(false);
       errorToast(error.message);
     }

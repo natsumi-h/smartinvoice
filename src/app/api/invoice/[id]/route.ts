@@ -64,10 +64,8 @@ export async function POST(
         contact: true,
       },
     });
-    console.log(updateRes);
 
     if (req.payload.requestType === "draft") {
-      console.log(updateRes);
       return NextResponse.json(
         {
           data: updateRes,
@@ -87,7 +85,6 @@ export async function POST(
       uniqueInvoiceName,
       contentType
     );
-    console.log(fileUrl);
     // ORM update
     const updateWithPdfRes = await prisma.invoice.update({
       where: {
@@ -116,7 +113,6 @@ export async function POST(
       { status: 200 }
     );
   } catch (e) {
-    console.log(e);
     return NextResponse.json({ error: "Error" }, { status: 400 });
   }
 }

@@ -31,7 +31,6 @@ export async function POST(request: Request) {
 
     // Uoload to S3
     const fileUrl = await uploadFileToS3(buffer, uniqueFileName, contentType);
-    console.log(fileUrl);
 
     const body = {
       name: formData.get("name"),
@@ -121,7 +120,6 @@ export async function POST(request: Request) {
       { status: 200 }
     );
   } catch (e: any) {
-    console.log(e);
     const message = e.message || "An error occurred";
     const status = e.status || 500;
     return NextResponse.json({ error: message }, { status });
