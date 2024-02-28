@@ -1,8 +1,10 @@
 "use client";
 import {
   Anchor,
+  Box,
   Divider,
   Flex,
+  Skeleton,
   Text,
   TextInput,
   Title,
@@ -77,48 +79,75 @@ const CustomerList = () => {
           {...form.getInputProps("queryParam")}
         />
       </form>
-      <ul className={styles.ul}>
-        {customers.map((customer: Customer) => (
-          <li key={customer.id} className={styles.li}>
-            <Anchor
-              component={Link}
-              href={`/customer/${customer.id}/`}
-              underline="never"
-              inherit
-              style={{ color: "inherit" }}
-            >
-              <Title order={3}>{customer.name}</Title>
-              <Flex align={"center"} gap="sm" mt="xs">
-                <IconMapPin
-                  style={{ width: rem(20), height: rem(20) }}
-                  stroke={1}
-                  color="var(--mantine-color-blue-5)"
-                />
-                <Text>
-                  {customer.street}, {customer.city}, {customer.postcode}
-                </Text>
-              </Flex>
-              <Flex align={"center"} gap="sm">
-                <IconMail
-                  style={{ width: rem(20), height: rem(20) }}
-                  stroke={1}
-                  color="var(--mantine-color-blue-5)"
-                />
-                <Text>
-                  {
-                    (
-                      customer.contact.find(
-                        (contact) => contact.isPrimary === true
-                      ) || {}
-                    ).email
-                  }
-                </Text>
-              </Flex>
-              <Divider mt="md" />
-            </Anchor>
-          </li>
-        ))}
-      </ul>
+      {customers.length === 0 && !loading ? (
+        <Text mt={"xl"}>
+          No customers found.{" "}
+          <Anchor component={Link} href="/customer/create">
+            Create one
+          </Anchor>{" "}
+          to get started.
+        </Text>
+      ) : loading ? (
+        <Box mt={"xl"}>
+          <Skeleton height={15} mt={20} radius="xl" visible={loading} />
+          <Skeleton height={15} mt={20} radius="xl" visible={loading} />
+          <Skeleton height={15} mt={20} radius="xl" visible={loading} />
+          <Divider mt="md" />
+          <Skeleton height={15} mt={20} radius="xl" visible={loading} />
+          <Skeleton height={15} mt={20} radius="xl" visible={loading} />
+          <Skeleton height={15} mt={20} radius="xl" visible={loading} />
+          <Divider mt="md" />
+          <Skeleton height={15} mt={20} radius="xl" visible={loading} />
+          <Skeleton height={15} mt={20} radius="xl" visible={loading} />
+          <Skeleton height={15} mt={20} radius="xl" visible={loading} />
+          <Divider mt="md" />
+        </Box>
+      ) : (
+        <>
+          <ul className={styles.ul}>
+            {customers.map((customer: Customer) => (
+              <li key={customer.id} className={styles.li}>
+                <Anchor
+                  component={Link}
+                  href={`/customer/${customer.id}/`}
+                  underline="never"
+                  inherit
+                  style={{ color: "inherit" }}
+                >
+                  <Title order={3}>{customer.name}</Title>
+                  <Flex align={"center"} gap="sm" mt="xs">
+                    <IconMapPin
+                      style={{ width: rem(20), height: rem(20) }}
+                      stroke={1}
+                      color="var(--mantine-color-blue-5)"
+                    />
+                    <Text>
+                      {customer.street}, {customer.city}, {customer.postcode}
+                    </Text>
+                  </Flex>
+                  <Flex align={"center"} gap="sm">
+                    <IconMail
+                      style={{ width: rem(20), height: rem(20) }}
+                      stroke={1}
+                      color="var(--mantine-color-blue-5)"
+                    />
+                    <Text>
+                      {
+                        (
+                          customer.contact.find(
+                            (contact) => contact.isPrimary === true
+                          ) || {}
+                        ).email
+                      }
+                    </Text>
+                  </Flex>
+                  <Divider mt="md" />
+                </Anchor>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
     </>
   );
 };

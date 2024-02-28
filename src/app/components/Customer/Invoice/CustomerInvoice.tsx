@@ -1,22 +1,33 @@
 "use client";
-import { Badge, Table } from "@mantine/core";
+import {
+  Anchor,
+  Badge,
+  Box,
+  Divider,
+  Skeleton,
+  Table,
+  Text,
+} from "@mantine/core";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import dayjs from "dayjs";
 import { useParams } from "next/navigation";
 import { addCommasToNumber } from "@/app/lib/addCommas";
 import { Invoice } from "@prisma/client";
+import Link from "next/link";
 
 const CustomerInvoice = () => {
   const [invoices, setInvoices] = useState([]);
   const router = useRouter();
   const customerId = useParams<{ id: string }>();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchInvoices = async () => {
       const res = await fetch(`/api/invoice/customer/${customerId.id}`);
       const data = await res.json();
       setInvoices(data);
+      setLoading(false);
     };
     fetchInvoices();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -44,19 +55,40 @@ const CustomerInvoice = () => {
   ));
 
   return (
-    <Table.ScrollContainer minWidth={500}>
-      <Table mt={"lg"} fz="md" verticalSpacing="sm" highlightOnHover={true}>
-        <Table.Thead>
-          <Table.Tr>
-            <Table.Th pl="0">Date</Table.Th>
-            <Table.Th pl="0">Due Date</Table.Th>
-            <Table.Th pl="0">Total Amount</Table.Th>
-            <Table.Th pl="0">Status</Table.Th>
-          </Table.Tr>
-        </Table.Thead>
-        <Table.Tbody>{rows}</Table.Tbody>
-      </Table>
-    </Table.ScrollContainer>
+    <>
+      {invoices.length === 0 && !loading ? (
+        <Text mt={"xl"}>
+          No invoices found.{" "}
+          <Anchor component={Link} href="/invoice/create">
+            Create one
+          </Anchor>{" "}
+          to get started.
+        </Text>
+      ) : loading ? (
+        <Box mt={"xl"}>
+          <Skeleton height={15} mt={20} radius="xl" visible={loading} />
+          <Divider mt="md" />
+          <Skeleton height={15} mt={20} radius="xl" visible={loading} />
+          <Divider mt="md" />
+          <Skeleton height={15} mt={20} radius="xl" visible={loading} />
+          <Divider mt="md" />
+        </Box>
+      ) : (
+        <Table.ScrollContainer minWidth={500}>
+          <Table mt={"lg"} fz="md" verticalSpacing="sm" highlightOnHover={true}>
+            <Table.Thead>
+              <Table.Tr>
+                <Table.Th pl="0">Date</Table.Th>
+                <Table.Th pl="0">Due Date</Table.Th>
+                <Table.Th pl="0">Total Amount</Table.Th>
+                <Table.Th pl="0">Status</Table.Th>
+              </Table.Tr>
+            </Table.Thead>
+            <Table.Tbody>{rows}</Table.Tbody>
+          </Table>
+        </Table.ScrollContainer>
+      )}
+    </>
   );
 };
 
