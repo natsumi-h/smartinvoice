@@ -5,7 +5,7 @@ https://smartinvoice-sepia.vercel.app/signin
 
 ```
 Sample Account(*To be removed)
-Email: natsmy.12112gmail.com
+Email: natsmy.1211gmail.com
 Password: nats723
 ```
 
