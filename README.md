@@ -98,13 +98,15 @@ export async function POST(
 ```
 
 ## Next Steps
-* UI Enhancement (Pagination, Next.js loading/cache optimization)
-* Multiple cases consideration
+* UI Enhancement
+  * Pagination
+  * Next.js loading/cache optimization
+  * List sort
+* Various cases consideration
   * In case of users belonging to multiple organizations
-  * Invoice status handling
-  * User profile update
+  * Admin's availability (i.e. Approval for invoice generation)
 * Security enhancement
-  * Token handling
+  * Email verification token handling
   * S3 data protection
 
 ## References and Inspirations
