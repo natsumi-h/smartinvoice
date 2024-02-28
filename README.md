@@ -4,7 +4,7 @@ Smartinvoice is an intuitive application designed for generating professional in
 https://smartinvoice-sepia.vercel.app
 
 ```
-Sample Account(*To be removed)
+Sample Account(*To be removed after presentation pitch)
 Email: natsmy.1211gmail.com
 Password: nats723
 ```
@@ -62,6 +62,39 @@ Password: nats723
 ### Server side rendering vs Client side rendering
 
 ### Soft delete practice
+* Considering the impact on SQL relational tables, practiced using the `POST` method with manipulation of `deleted` column for all delete operations, instead of the `DELETE`.
+```
+// POST /api/customer/:id
+// @desc: Update a single customer
+export async function POST(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
+  try {
+    await checkIfUserIsLoggedIn();
+    const body = await request.json();
+    const id = params.id;
+    const res = await prisma.customer.update({
+      where: {
+        id: parseInt(id),
+      },
+      data: {
+        ...body,
+        deletedAt: body.deleted ? new Date() : null,
+      },
+      include: {
+        contact: true,
+      },
+    });
+    return NextResponse.json(res, { status: 200 });
+  } catch (e: any) {
+    const message = e.message || "Failed to update customer";
+    const status = e.status || 500;
+    return NextResponse.json({ message }, { status });
+  }
+}
+
+```
 
 ## Next Steps
 * UI Enhancement (Pagination, Next.js loading/cache optimization)
