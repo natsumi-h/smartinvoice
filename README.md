@@ -5,7 +5,7 @@ https://smartinvoice-sepia.vercel.app
 
 ```
 Sample Account(*To be removed after presentation pitch)
-Email: natsmy.1211gmail.com
+Email: natsmy.1211@gmail.com
 Password: nats723
 ```
 
