@@ -59,6 +59,9 @@ Password: nats723
 
 
 ## Key Challenges/takeaways
+### Server side rendering vs Client side rendering
+
+### Soft delete practice
 
 ## Next Steps
 * UI Enhancement (Pagination, Next.js loading/cache optimization)
