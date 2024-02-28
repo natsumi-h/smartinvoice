@@ -1,7 +1,13 @@
 # 📝SmartInvoice
 Smartinvoice is an intuitive application designed for generating professional invoices. It allows users to save their company information, register customer details, and create custom invoices using form inputs. The application features an efficient status management system, viewable through a comprehensive dashboard. Additionally, it supports team collaboration, enabling multiple users to work seamlessly together.
-## Live URL
-https://smartinvoice-sepia.vercel.app/signin
+## Production URL
+https://smartinvoice-sepia.vercel.app
+
+```
+Sample Account(*To be removed after presentation pitch)
+Email: natsmy.1211@gmail.com
+Password: nats723
+```
 
 Demo Account
 Email: natsmy.1211@gmail.com
@@ -53,15 +59,61 @@ Password: nats723
 * [API Endpoints](https://docs.google.com/spreadsheets/d/1fEhIKWBwyQ6nHCPvhyeVGnzgMv6qiBL49Tq5Oz7gI-s/edit#gid=1534939420)
 * [Database ERD](https://drawsql.app/teams/natsumi-horis-team/diagrams/project4)
 
+<<<<<<< HEAD
 ![Screenshot 2024-02-28 at 4 19 39 PM](https://github.com/natsumi-h/smartinvoice/assets/88537845/0f632c03-dfb8-4ac9-bb59-a47fdbb9ef08)
 
+=======
+![Screenshot 2024-02-28 at 4 19 39 PM](https://github.com/natsumi-h/smartinvoice/assets/88537845/08e3cf42-ce58-45c0-9f9f-7eb30222d882)
+>>>>>>> 2894e82c45a701d315686f939597707b4044170e
 
+## Key Challenges/Takeaways
 
+### Server side rendering vs Client side rendering
+* Revision of Client-Side Rendering vs Server-Side Rendering
+  * [Intro to Single-Page Applications (SPAs) and the MERN-Stack](https://git.generalassemb.ly/sei-sg/SEIF-15-Course-Materials/blob/bab2a927b522f88998307c8b8a3bf3036c0e2b1d/unit3/w17d02/3.8.1-intro-spas-and-mern-stack/README.md#concept-3-client-side-rendering)
+  
 
+<<<<<<< HEAD
 ## Key Challenges/takeaways
 ### Server side rendering vs Client side rendering
 
 ### Soft delete practice
+=======
+### Soft delete practice
+* Considering the impact on SQL relational tables, practiced using the `POST` method with manipulation of `deleted` column for all delete operations, instead of the `DELETE`.
+```
+// POST /api/customer/:id
+// @desc: Update a single customer
+export async function POST(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
+  try {
+    await checkIfUserIsLoggedIn();
+    const body = await request.json();
+    const id = params.id;
+    const res = await prisma.customer.update({
+      where: {
+        id: parseInt(id),
+      },
+      data: {
+        ...body,
+        deletedAt: body.deleted ? new Date() : null,
+      },
+      include: {
+        contact: true,
+      },
+    });
+    return NextResponse.json(res, { status: 200 });
+  } catch (e: any) {
+    const message = e.message || "Failed to update customer";
+    const status = e.status || 500;
+    return NextResponse.json({ message }, { status });
+  }
+}
+
+```
+>>>>>>> 2894e82c45a701d315686f939597707b4044170e
 
 ## Next Steps
 * UI Enhancement (Pagination, Next.js loading/cache optimization)
