@@ -43,15 +43,18 @@ const CompanyDetail: FC<Props> = ({ company }) => {
           </Table.Tr>
           <Table.Tr>
             <Table.Td pl="0">
-              <Box
-                w="200px"
-                h="100px"
+              <Image
+                component={NextImage}
+                src={logoUrl}
+                alt={name}
+                width={100}
+                height={50}
                 style={{
-                  position: "relative",
+                  width: "200px",
+                  height: "auto",
                 }}
-              >
-                <Image fill component={NextImage} src={logoUrl} alt={name} />
-              </Box>
+                priority={true}
+              />
             </Table.Td>
           </Table.Tr>
           {/* Name */}

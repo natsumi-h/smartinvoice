@@ -250,7 +250,7 @@ h1 {
 
 .image {
   width: 50%;
-  height: 50px;
+  height: 100px;
 }
 
 img {

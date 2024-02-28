@@ -4,8 +4,6 @@ import { getCompany } from "@/app/lib/data";
 import { Company } from "@prisma/client";
 import { JWTPayload, JWTVerifyResult } from "jose";
 import { redirect } from "next/navigation";
-import CompanyLoading from "./loading";
-import { Suspense } from "react";
 
 const page = async () => {
   const company = await getCompany();
@@ -15,9 +13,7 @@ const page = async () => {
   }
 
   return (
-    <Suspense fallback={<CompanyLoading />}>
       <CompanyView company={company as Company} />
-    </Suspense>
   );
 };
 

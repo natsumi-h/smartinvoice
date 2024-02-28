@@ -83,7 +83,7 @@ const Onboarding = () => {
               <Image
                 radius="md"
                 component={NextImage}
-                src={previewUrl || noimage} // 変更部分
+                src={previewUrl || noimage}
                 width={100}
                 height={100}
                 // fallbackSrc="https://placehold.co/200x200?text=no image"
