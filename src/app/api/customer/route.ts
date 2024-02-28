@@ -55,7 +55,6 @@ export async function POST(request: Request) {
       { status: 200 }
     );
   } catch (e: any) {
-    console.error(e);
     const message = e.message || "Internal Server Error";
     const status = e.status || 500;
     return NextResponse.json({ error: message }, { status });
@@ -155,7 +154,6 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(res, { status: 200 });
   } catch (e) {
-    console.error(e);
     throw e;
   }
 }

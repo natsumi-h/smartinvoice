@@ -1,7 +1,5 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/app/db";
-import { getSession } from "@/app/lib/action";
-import { JWTPayload, JWTVerifyResult } from "jose";
 import { checkIfUserIsLoggedIn } from "@/app/lib/apiMiddleware";
 
 // GET /api/customer/:id
@@ -25,7 +23,6 @@ export async function GET(
     });
     return NextResponse.json(res, { status: 200 });
   } catch (e) {
-    console.error(e);
     throw e;
   }
 }
@@ -54,7 +51,6 @@ export async function POST(
     });
     return NextResponse.json(res, { status: 200 });
   } catch (e: any) {
-    console.error(e);
     const message = e.message || "Failed to update customer";
     const status = e.status || 500;
     return NextResponse.json({ message }, { status });

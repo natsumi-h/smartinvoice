@@ -24,7 +24,6 @@ export async function POST(request: NextRequest) {
     cookies().set("token", "", { expires: new Date(0) });
     return NextResponse.json("signout success", { status: 200 });
   } catch (e: any) {
-    console.error(e);
     const message = e.message || "Internal Server Error";
     const status = e.status || 500;
     return NextResponse.json({ error: message }, { status });

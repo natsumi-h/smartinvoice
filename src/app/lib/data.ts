@@ -25,7 +25,6 @@ export const getCustomers = async () => {
     });
     return res;
   } catch (e) {
-    console.error(e);
     throw e;
   }
 };
@@ -54,7 +53,6 @@ export const getCustomer = async (id: string) => {
     });
     return res;
   } catch (e) {
-    console.error(e);
     throw e;
   }
 };
@@ -72,7 +70,6 @@ export const getContacts = async (id: string) => {
     });
     return res;
   } catch (e) {
-    console.error(e);
     throw e;
   }
 };
@@ -149,7 +146,6 @@ export const getInvoices = async () => {
     });
     return res;
   } catch (e) {
-    console.error(e);
     throw e;
   }
 };

@@ -1,9 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/app/db";
-import { getSession } from "@/app/lib/action";
 import { generateHtml, generatePdf } from "@/app/lib/pdf";
 import { uploadFileToS3 } from "@/app/lib/s3";
-import { JWTPayload, JWTVerifyResult } from "jose";
 import { InvoiceItem } from "@prisma/client";
 import { checkIfUserIsLoggedIn } from "@/app/lib/apiMiddleware";
 
