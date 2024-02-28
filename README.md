@@ -9,10 +9,6 @@ Email: natsmy.1211@gmail.com
 Password: nats723
 ```
 
-Demo Account
-Email: natsmy.1211@gmail.com
-Password: nats723
-
 ## Screenshots
 ### Home(Marketing)
 <img width="1362" alt="Screenshot 2024-02-25 at 11 36 20 PM" src="https://github.com/natsumi-h/smartinvoice/assets/88537845/e8743c4c-12c2-40f8-8952-60fec76bf9d2">
@@ -59,26 +55,13 @@ Password: nats723
 * [API Endpoints](https://docs.google.com/spreadsheets/d/1fEhIKWBwyQ6nHCPvhyeVGnzgMv6qiBL49Tq5Oz7gI-s/edit#gid=1534939420)
 * [Database ERD](https://drawsql.app/teams/natsumi-horis-team/diagrams/project4)
 
-<<<<<<< HEAD
 ![Screenshot 2024-02-28 at 4 19 39 PM](https://github.com/natsumi-h/smartinvoice/assets/88537845/0f632c03-dfb8-4ac9-bb59-a47fdbb9ef08)
-
-=======
-![Screenshot 2024-02-28 at 4 19 39 PM](https://github.com/natsumi-h/smartinvoice/assets/88537845/08e3cf42-ce58-45c0-9f9f-7eb30222d882)
->>>>>>> 2894e82c45a701d315686f939597707b4044170e
 
 ## Key Challenges/Takeaways
 
 ### Server side rendering vs Client side rendering
 * Revision of Client-Side Rendering vs Server-Side Rendering
   * [Intro to Single-Page Applications (SPAs) and the MERN-Stack](https://git.generalassemb.ly/sei-sg/SEIF-15-Course-Materials/blob/bab2a927b522f88998307c8b8a3bf3036c0e2b1d/unit3/w17d02/3.8.1-intro-spas-and-mern-stack/README.md#concept-3-client-side-rendering)
-  
-
-<<<<<<< HEAD
-## Key Challenges/takeaways
-### Server side rendering vs Client side rendering
-
-### Soft delete practice
-=======
 ### Soft delete practice
 * Considering the impact on SQL relational tables, practiced using the `POST` method with manipulation of `deleted` column for all delete operations, instead of the `DELETE`.
 ```
@@ -113,7 +96,6 @@ export async function POST(
 }
 
 ```
->>>>>>> 2894e82c45a701d315686f939597707b4044170e
 
 ## Next Steps
 * UI Enhancement (Pagination, Next.js loading/cache optimization)
