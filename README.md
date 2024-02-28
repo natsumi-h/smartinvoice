@@ -1,6 +1,6 @@
 # 📝SmartInvoice
 Smartinvoice is an intuitive application designed for generating professional invoices. It allows users to save their company information, register customer details, and create custom invoices using form inputs. The application features an efficient status management system, viewable through a comprehensive dashboard. Additionally, it supports team collaboration, enabling multiple users to work seamlessly together.
-## Live URL
+## Production URL
 https://smartinvoice-sepia.vercel.app
 
 ```
