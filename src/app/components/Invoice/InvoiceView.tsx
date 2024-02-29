@@ -1,11 +1,12 @@
 "use client";
-import { Button, Flex, Select } from "@mantine/core";
+import { Button, Flex, Group, Pagination, Select } from "@mantine/core";
 import InvoiceList from "./InvoiceList";
 import StatusCards from "./StatusCards";
 import { DatePickerInput } from "@mantine/dates";
 import { FC, useCallback, useEffect, useState } from "react";
 import { useForm } from "@mantine/form";
-import { Customer } from "@prisma/client";
+import { Customer, Invoice as PrismaInvoice } from "@prisma/client";
+import usePagination from "@/app/hooks/usePagination";
 
 type Props = {
   customers: Customer[];
@@ -16,6 +17,17 @@ const InvoiceView: FC<Props> = ({ customers }) => {
   const [clearLoading, setClearLoading] = useState<boolean>(false);
   const [invoices, setInvoices] = useState([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const { currentPageData, activePage, setPage, paginatedData } =
+    usePagination(invoices);
+
+  useEffect(() => {
+    fetchInvoices({
+      customer: null,
+      issueDate: [null, null],
+      dueDate: [null, null],
+      status: null,
+    });
+  }, []);
 
   const form = useForm({
     initialValues: {
@@ -43,15 +55,6 @@ const InvoiceView: FC<Props> = ({ customers }) => {
     });
     setClearLoading(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    fetchInvoices({
-      customer: null,
-      issueDate: [null, null],
-      dueDate: [null, null],
-      status: null,
-    });
   }, []);
 
   const fetchInvoices = async (values: Record<string, unknown>) => {
@@ -149,10 +152,20 @@ const InvoiceView: FC<Props> = ({ customers }) => {
         loading={filterLoading || clearLoading || loading}
       />
 
+      {/* InvoiceList */}
       <InvoiceList
-        invoices={invoices}
+        invoices={currentPageData}
         loading={filterLoading || clearLoading || loading}
       />
+
+      {/* Pagination */}
+      <Group gap={5} justify="center" mt="lg">
+        <Pagination
+          total={paginatedData.length}
+          value={activePage}
+          onChange={setPage}
+        />
+      </Group>
     </>
   );
 };

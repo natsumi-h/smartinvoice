@@ -1,10 +1,9 @@
 import InvoiceView from "@/app/components/Invoice/InvoiceView";
-import { getCustomers, getInvoices } from "@/app/lib/data";
+import { getCustomers } from "@/app/lib/data";
 import { Box, Button, Flex, Title } from "@mantine/core";
 import Link from "next/link";
 
 const page = async () => {
-  // const invoices = await getInvoices();
   const customers = await getCustomers();
 
   return (
@@ -21,7 +20,6 @@ const page = async () => {
         </Button>
       </Flex>
       <InvoiceView
-      // invoices={invoices}
       customers={customers}
       />
     </Box>

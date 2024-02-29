@@ -10,7 +10,6 @@ import Link from "next/link";
 type Invoice = PrismaInvoice & {
   customer: Customer;
 };
-
 type Props = {
   invoices: Invoice[];
   loading: boolean;

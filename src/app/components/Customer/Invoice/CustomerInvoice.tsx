@@ -4,6 +4,8 @@ import {
   Badge,
   Box,
   Divider,
+  Group,
+  Pagination,
   Skeleton,
   Table,
   Text,
@@ -13,14 +15,17 @@ import { useRouter } from "next/navigation";
 import dayjs from "dayjs";
 import { useParams } from "next/navigation";
 import { addCommasToNumber } from "@/app/lib/addCommas";
-import { Invoice } from "@prisma/client";
 import Link from "next/link";
+import { Invoice } from "@prisma/client";
+import usePagination from "@/app/hooks/usePagination";
 
 const CustomerInvoice = () => {
   const [invoices, setInvoices] = useState([]);
   const router = useRouter();
   const customerId = useParams<{ id: string }>();
   const [loading, setLoading] = useState<boolean>(true);
+  const { currentPageData, activePage, setPage, paginatedData } =
+    usePagination(invoices);
 
   useEffect(() => {
     const fetchInvoices = async () => {
@@ -56,7 +61,7 @@ const CustomerInvoice = () => {
 
   return (
     <>
-      {invoices.length === 0 && !loading ? (
+      {currentPageData.length === 0 && !loading ? (
         <Text mt={"xl"}>
           No invoices found.{" "}
           <Anchor component={Link} href="/invoice/create">
@@ -74,19 +79,35 @@ const CustomerInvoice = () => {
           <Divider mt="md" />
         </Box>
       ) : (
-        <Table.ScrollContainer minWidth={500}>
-          <Table mt={"lg"} fz="md" verticalSpacing="sm" highlightOnHover={true}>
-            <Table.Thead>
-              <Table.Tr>
-                <Table.Th pl="0">Date</Table.Th>
-                <Table.Th pl="0">Due Date</Table.Th>
-                <Table.Th pl="0">Total Amount</Table.Th>
-                <Table.Th pl="0">Status</Table.Th>
-              </Table.Tr>
-            </Table.Thead>
-            <Table.Tbody>{rows}</Table.Tbody>
-          </Table>
-        </Table.ScrollContainer>
+        <>
+          <Table.ScrollContainer minWidth={500}>
+            <Table
+              mt={"lg"}
+              fz="md"
+              verticalSpacing="sm"
+              highlightOnHover={true}
+            >
+              <Table.Thead>
+                <Table.Tr>
+                  <Table.Th pl="0">Date</Table.Th>
+                  <Table.Th pl="0">Due Date</Table.Th>
+                  <Table.Th pl="0">Total Amount</Table.Th>
+                  <Table.Th pl="0">Status</Table.Th>
+                </Table.Tr>
+              </Table.Thead>
+              <Table.Tbody>{rows}</Table.Tbody>
+            </Table>
+          </Table.ScrollContainer>
+
+          {/* Pagination */}
+          <Group gap={5} justify="center" mt="lg">
+            <Pagination
+              total={paginatedData.length}
+              value={activePage}
+              onChange={setPage}
+            />
+          </Group>
+        </>
       )}
     </>
   );
