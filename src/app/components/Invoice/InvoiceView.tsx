@@ -1,5 +1,5 @@
 "use client";
-import { Button, Flex, Select } from "@mantine/core";
+import { Button, Flex, Group, Pagination, Select } from "@mantine/core";
 import InvoiceList from "./InvoiceList";
 import StatusCards from "./StatusCards";
 import { DatePickerInput } from "@mantine/dates";
@@ -11,11 +11,34 @@ type Props = {
   customers: Customer[];
 };
 
+const chunk = <T,>(array: T[], size: number): T[][] => {
+  if (!array.length) {
+    return [];
+  }
+  const head = array.slice(0, size);
+  const tail = array.slice(size);
+  return [head, ...chunk(tail, size)];
+};
+
 const InvoiceView: FC<Props> = ({ customers }) => {
   const [filterLoading, setFilterLoading] = useState<boolean>(false);
   const [clearLoading, setClearLoading] = useState<boolean>(false);
   const [invoices, setInvoices] = useState([]);
   const [loading, setLoading] = useState<boolean>(true);
+  // For Pagination
+  const [activePage, setPage] = useState(1);
+  const itemsPerPage = 10;
+  const paginatedData = chunk(invoices, itemsPerPage);
+  const currentPageData = paginatedData[activePage - 1] || [];
+
+  useEffect(() => {
+    fetchInvoices({
+      customer: null,
+      issueDate: [null, null],
+      dueDate: [null, null],
+      status: null,
+    });
+  }, []);
 
   const form = useForm({
     initialValues: {
@@ -43,15 +66,6 @@ const InvoiceView: FC<Props> = ({ customers }) => {
     });
     setClearLoading(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    fetchInvoices({
-      customer: null,
-      issueDate: [null, null],
-      dueDate: [null, null],
-      status: null,
-    });
   }, []);
 
   const fetchInvoices = async (values: Record<string, unknown>) => {
@@ -149,10 +163,20 @@ const InvoiceView: FC<Props> = ({ customers }) => {
         loading={filterLoading || clearLoading || loading}
       />
 
+      {/* InvoiceList */}
       <InvoiceList
-        invoices={invoices}
+        invoices={currentPageData}
         loading={filterLoading || clearLoading || loading}
       />
+
+      {/* Pagination */}
+      <Group gap={5} justify="center" mt="lg">
+        <Pagination
+          total={paginatedData.length}
+          value={activePage}
+          onChange={setPage}
+        />
+      </Group>
     </>
   );
 };
