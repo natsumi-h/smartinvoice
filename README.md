@@ -103,11 +103,12 @@ export async function POST(
   * List sort
 * Various cases consideration
   * In case of users belonging to multiple organizations
-  * Admin's availability (i.e. Approval for invoice generation)
+  * Admin's availability (i.e. Approval for invoice generation by users)
 * Security enhancement
-  * Email verification token handling
+  * Securerer Email verification token
   * S3 data protection
   * Securer backend validation
+  * Test driven development
 
 ## References and Inspirations
 * [Xero Online Invoicing Software](https://www.xero.com/sg/accounting-software/send-invoices/)
