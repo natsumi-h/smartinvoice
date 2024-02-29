@@ -92,7 +92,7 @@ const InvoiceView: FC<Props> = ({ customers }) => {
       setInvoices(data.data);
       setLoading(false);
     } catch (error) {
-      console.error("Error fetching data: ", error);
+      setLoading(false);
     }
   };
 

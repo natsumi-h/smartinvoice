@@ -15,7 +15,7 @@ import {
   UnstyledButton,
   rem,
 } from "@mantine/core";
-import { useForm } from "@mantine/form";
+import { useForm, zodResolver } from "@mantine/form";
 import { FC, useEffect, useState } from "react";
 import { IconTrash } from "@tabler/icons-react";
 import { DateInput } from "@mantine/dates";
@@ -24,6 +24,7 @@ import useToast from "@/app/hooks/useToast";
 import { addCommasToNumber } from "@/app/lib/addCommas";
 import { Contact, Customer as PrismaCustomer } from "@prisma/client";
 import { useDisclosure } from "@mantine/hooks";
+import { createInvoiceSchema } from "@/app/schema/Invoice/schema";
 
 type Props = {
   customers: Customer[];
@@ -47,17 +48,18 @@ const CreateInvoice: FC<Props> = ({ customers }) => {
     initialValues: {
       specialDiscount: "0.00",
       qty0: 1,
+      description0: "",
       unitPrice0: "0.00",
       taxRate0: "9",
       customer: null,
       contact: null,
     },
+    validate: zodResolver(createInvoiceSchema(itemLength)),
   });
 
   useEffect(() => {
     let newSubtotal = 0.0;
     let newTotaltax = 0.0;
-
     for (let i = 0; i < itemLength; i++) {
       const qty = Number((form.values as Record<string, unknown>)[`qty${i}`]);
       const unitPrice = Number(
@@ -71,10 +73,8 @@ const CreateInvoice: FC<Props> = ({ customers }) => {
       newSubtotal += qty * unitPrice;
       newTotaltax += qty * unitPrice * taxRate;
     }
-
     setSubtotal(Number(newSubtotal));
     setTotaltax(Number(newTotaltax));
-
     const newTotal =
       newSubtotal + newTotaltax - Number(form.values.specialDiscount);
     setTotal(Number(newTotal.toFixed(2)));
@@ -146,7 +146,12 @@ const CreateInvoice: FC<Props> = ({ customers }) => {
 
   // Item
   const rows = Array.from({ length: itemLength }).map((_, index) => (
-    <Table.Tr key={index}>
+    <Table.Tr
+      key={index}
+      style={{
+        verticalAlign: "top",
+      }}
+    >
       <Table.Td pl="0">
         <Textarea
           placeholder="Description"
@@ -160,7 +165,7 @@ const CreateInvoice: FC<Props> = ({ customers }) => {
         <NumberInput
           placeholder=""
           min={1}
-          defaultValue={2}
+          defaultValue={1}
           {...form.getInputProps(`qty${index}`)}
         />
       </Table.Td>
@@ -183,7 +188,12 @@ const CreateInvoice: FC<Props> = ({ customers }) => {
           {...form.getInputProps(`taxRate${index}`)}
         />
       </Table.Td>
-      <Table.Td pl="0">
+      <Table.Td
+        pl="0"
+        style={{
+          verticalAlign: "middle",
+        }}
+      >
         <Text fw={500} size="sm" ta={"right"}>
           {addCommasToNumber(
             (form.values as Record<string, unknown>)[`qty${index}`] &&
@@ -227,13 +237,11 @@ const CreateInvoice: FC<Props> = ({ customers }) => {
   return (
     <>
       <Box maw={1200}>
-        <form
-        // onSubmit={form.onSubmit((values) => handleSubmit(values))}
-        >
+        <form onSubmit={form.onSubmit(open)}>
           <Flex gap="md" mt="lg" justify={"space-between"}>
             <Stack w={"50%"} gap="md">
               <Select
-                label="Company"
+                label="Customer"
                 placeholder="Choose Customer"
                 searchable
                 limit={5}
@@ -317,6 +325,7 @@ const CreateInvoice: FC<Props> = ({ customers }) => {
                   <TextInput
                     ta="right"
                     placeholder="500.00"
+                    defaultValue="0.00"
                     {...form.getInputProps("specialDiscount")}
                   ></TextInput>
                 </Table.Td>
@@ -346,8 +355,9 @@ const CreateInvoice: FC<Props> = ({ customers }) => {
             <Button
               fullWidth
               variant="outline"
+              type="submit"
               onClick={() => {
-                open();
+                // open();
                 setSubmitOption("draft");
               }}
             >
@@ -355,8 +365,9 @@ const CreateInvoice: FC<Props> = ({ customers }) => {
             </Button>
             <Button
               fullWidth
+              type="submit"
               onClick={() => {
-                open();
+                // open();
                 setSubmitOption("issue");
               }}
             >

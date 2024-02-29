@@ -8,7 +8,6 @@ export const checkIfUserIsAdmin = async () => {
       throw new Error("Unauthorized");
     }
   } catch (e: any) {
-    console.error(e.message);
     throw e;
   }
 };
@@ -20,7 +19,6 @@ export const checkIfUserIsLoggedIn = async () => {
       throw new Error("Unauthorized");
     }
   } catch (e: any) {
-    console.error(e.message);
     throw e;
   }
 }
