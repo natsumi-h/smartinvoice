@@ -17,7 +17,6 @@ const page = async ({
     <Box>
       <Title order={2}>Update Invoice</Title>
       <UpdateInvoice
-        customers={customers}
         invoice={
           invoice as Invoice & {
             customer: Customer;
