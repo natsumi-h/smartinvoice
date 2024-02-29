@@ -15,7 +15,7 @@ import {
   UnstyledButton,
   rem,
 } from "@mantine/core";
-import { useForm } from "@mantine/form";
+import { useForm, zodResolver } from "@mantine/form";
 import { FC, useEffect, useState } from "react";
 import { IconTrash } from "@tabler/icons-react";
 import { DateInput } from "@mantine/dates";
@@ -29,9 +29,9 @@ import {
   Invoice as PrismaInvoice,
 } from "@prisma/client";
 import { useDisclosure } from "@mantine/hooks";
+import { updateInvoiceSchema } from "@/app/schema/Invoice/schema";
 
 type Props = {
-  customers: Customer[];
   invoice: PrismaInvoice & {
     customer: Customer;
     items: InvoiceItem[];
@@ -68,9 +68,10 @@ const UpdateInvoice: FC<Props> = ({ invoice }) => {
       customer: invoice.customer.name,
       issueDate: new Date(invoice.issueDate),
       dueDate: new Date(invoice.dueDate),
-      specialDiscount: Number(invoice.discount),
+      specialDiscount: invoice.discount?.toString(),
       ...itemInitialValues,
     },
+    validate: zodResolver(updateInvoiceSchema(itemLength)),
   });
 
   useEffect(() => {
@@ -166,7 +167,12 @@ const UpdateInvoice: FC<Props> = ({ invoice }) => {
 
   // InvoiceItem
   const rows = Array.from({ length: itemLength }).map((_, index) => (
-    <Table.Tr key={index}>
+    <Table.Tr
+      key={index}
+      style={{
+        verticalAlign: "top",
+      }}
+    >
       <Table.Td pl="0">
         <Textarea
           placeholder="Description"
@@ -203,7 +209,12 @@ const UpdateInvoice: FC<Props> = ({ invoice }) => {
           {...form.getInputProps(`taxRate${index}`)}
         />
       </Table.Td>
-      <Table.Td pl="0">
+      <Table.Td
+        pl="0"
+        style={{
+          verticalAlign: "middle",
+        }}
+      >
         <Text fw={500} size="sm" ta={"right"}>
           {addCommasToNumber(
             (form.values as Record<string, unknown>)[`qty${index}`] &&
@@ -226,7 +237,12 @@ const UpdateInvoice: FC<Props> = ({ invoice }) => {
           )}
         </Text>
       </Table.Td>
-      <Table.Td pl="0">
+      <Table.Td
+        pl="0"
+        style={{
+          verticalAlign: "middle",
+        }}
+      >
         <UnstyledButton
           onClick={() => {
             setItemLength((prev) => prev - 1);
@@ -247,9 +263,7 @@ const UpdateInvoice: FC<Props> = ({ invoice }) => {
   return (
     <>
       <Box maw={1200}>
-        <form
-        // onSubmit={form.onSubmit((values) => handleSubmit(values))}
-        >
+        <form onSubmit={form.onSubmit(open)}>
           <Flex gap="md" mt="lg" justify={"space-between"}>
             <Stack gap="md">
               <Box>
@@ -349,43 +363,44 @@ const UpdateInvoice: FC<Props> = ({ invoice }) => {
               </Table.Tr>
             </Table.Tbody>
           </Table>
+
+          <Flex justify="center" mt="xl" gap={"lg"}>
+            {invoice.status === "Draft" && (
+              <>
+                <Button
+                  fullWidth
+                  variant="outline"
+                  type="submit"
+                  onClick={() => {
+                    setSubmitOption("draft");
+                  }}
+                >
+                  Save Draft
+                </Button>
+                <Button
+                  fullWidth
+                  type="submit"
+                  onClick={() => {
+                    setSubmitOption("issue");
+                  }}
+                >
+                  Issue Invoice
+                </Button>
+              </>
+            )}
+            {invoice.status !== "Draft" && (
+              <Button
+                fullWidth
+                type="submit"
+                onClick={() => {
+                  setSubmitOption("update");
+                }}
+              >
+                Update Invoice
+              </Button>
+            )}
+          </Flex>
         </form>
-        <Flex justify="center" mt="xl" gap={"lg"}>
-          {invoice.status === "Draft" && (
-            <>
-              <Button
-                fullWidth
-                variant="outline"
-                onClick={() => {
-                  open();
-                  setSubmitOption("draft");
-                }}
-              >
-                Save Draft
-              </Button>
-              <Button
-                fullWidth
-                onClick={() => {
-                  open();
-                  setSubmitOption("issue");
-                }}
-              >
-                Issue Invoice
-              </Button>
-            </>
-          )}
-          {invoice.status !== "Draft" && (
-            <Button
-              fullWidth
-              onClick={() => {
-                open();
-                setSubmitOption("update");
-              }}
-            >
-              Update Invoice
-            </Button>
-          )}
-        </Flex>
       </Box>
 
       <Modal

@@ -216,7 +216,12 @@ const CreateInvoice: FC<Props> = ({ customers }) => {
           )}
         </Text>
       </Table.Td>
-      <Table.Td pl="0">
+      <Table.Td
+        pl="0"
+        style={{
+          verticalAlign: "middle",
+        }}
+      >
         <UnstyledButton
           onClick={() => {
             setItemLength((prev) => prev - 1);
@@ -357,7 +362,6 @@ const CreateInvoice: FC<Props> = ({ customers }) => {
               variant="outline"
               type="submit"
               onClick={() => {
-                // open();
                 setSubmitOption("draft");
               }}
             >
@@ -367,7 +371,6 @@ const CreateInvoice: FC<Props> = ({ customers }) => {
               fullWidth
               type="submit"
               onClick={() => {
-                // open();
                 setSubmitOption("issue");
               }}
             >
