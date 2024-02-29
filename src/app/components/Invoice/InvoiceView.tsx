@@ -5,19 +5,11 @@ import StatusCards from "./StatusCards";
 import { DatePickerInput } from "@mantine/dates";
 import { FC, useCallback, useEffect, useState } from "react";
 import { useForm } from "@mantine/form";
-import { Customer } from "@prisma/client";
+import { Customer, Invoice as PrismaInvoice } from "@prisma/client";
+import usePagination from "@/app/hooks/usePagination";
 
 type Props = {
   customers: Customer[];
-};
-
-const chunk = <T,>(array: T[], size: number): T[][] => {
-  if (!array.length) {
-    return [];
-  }
-  const head = array.slice(0, size);
-  const tail = array.slice(size);
-  return [head, ...chunk(tail, size)];
 };
 
 const InvoiceView: FC<Props> = ({ customers }) => {
@@ -25,11 +17,8 @@ const InvoiceView: FC<Props> = ({ customers }) => {
   const [clearLoading, setClearLoading] = useState<boolean>(false);
   const [invoices, setInvoices] = useState([]);
   const [loading, setLoading] = useState<boolean>(true);
-  // For Pagination
-  const [activePage, setPage] = useState(1);
-  const itemsPerPage = 10;
-  const paginatedData = chunk(invoices, itemsPerPage);
-  const currentPageData = paginatedData[activePage - 1] || [];
+  const { currentPageData, activePage, setPage, paginatedData } =
+    usePagination(invoices);
 
   useEffect(() => {
     fetchInvoices({

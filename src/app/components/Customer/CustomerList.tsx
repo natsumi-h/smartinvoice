@@ -4,6 +4,8 @@ import {
   Box,
   Divider,
   Flex,
+  Group,
+  Pagination,
   Skeleton,
   Text,
   TextInput,
@@ -16,6 +18,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useForm } from "@mantine/form";
 import { Customer as PrismaCustomer } from "@prisma/client";
+import usePagination from "@/app/hooks/usePagination";
 
 type Customer = PrismaCustomer & {
   contact: {
@@ -27,6 +30,8 @@ type Customer = PrismaCustomer & {
 const CustomerList = () => {
   const [customers, setCustomers] = useState([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const { currentPageData, activePage, setPage, paginatedData } =
+    usePagination(customers);
 
   useEffect(() => {
     fetchCustomers();
@@ -105,7 +110,7 @@ const CustomerList = () => {
       ) : (
         <>
           <ul className={styles.ul}>
-            {customers.map((customer: Customer) => (
+            {currentPageData.map((customer:Customer) => (
               <li key={customer.id} className={styles.li}>
                 <Anchor
                   component={Link}
@@ -146,6 +151,15 @@ const CustomerList = () => {
               </li>
             ))}
           </ul>
+
+          {/* Pagination */}
+          <Group gap={5} justify="center" mt="lg">
+            <Pagination
+              total={paginatedData.length}
+              value={activePage}
+              onChange={setPage}
+            />
+          </Group>
         </>
       )}
     </>
