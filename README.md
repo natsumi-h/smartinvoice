@@ -101,13 +101,15 @@ export async function POST(
 * UI Enhancement
   * Next.js loading/cache optimization
   * List sort
+  * Rich dashboard for data visualization
 * Various cases consideration
   * In case of users belonging to multiple organizations
   * Admin's availability (i.e. Approval for invoice generation by users)
 * Security enhancement
-  * Securerer Email verification token
+  * More secure Email verification token
   * S3 data protection
-  * Securer backend validation
+* No-bug application
+  * Implement more secure frontend/backend validation
   * Test driven development
 
 ## References and Inspirations
