@@ -99,7 +99,6 @@ export async function POST(
 
 ## Next Steps
 * UI Enhancement
-  * Pagination
   * Next.js loading/cache optimization
   * List sort
 * Various cases consideration
@@ -108,6 +107,7 @@ export async function POST(
 * Security enhancement
   * Email verification token handling
   * S3 data protection
+  * Securer backend validation
 
 ## References and Inspirations
 * [Xero Online Invoicing Software](https://www.xero.com/sg/accounting-software/send-invoices/)
