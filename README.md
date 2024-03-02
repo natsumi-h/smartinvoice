@@ -3,12 +3,6 @@ Smartinvoice is an intuitive application designed for generating professional in
 ## Production URL
 https://smartinvoice-sepia.vercel.app
 
-```
-Sample Account(*To be removed after presentation pitch)
-Email: natsmy.1211@gmail.com
-Password: nats723
-```
-
 ## Screenshots
 ### Home(Marketing)
 <img width="1362" alt="Screenshot 2024-02-25 at 11 36 20 PM" src="https://github.com/natsumi-h/smartinvoice/assets/88537845/e8743c4c-12c2-40f8-8952-60fec76bf9d2">
